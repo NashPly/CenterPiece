@@ -21,7 +21,7 @@ public class CenterPiece {
         var client = HttpClient.newBuilder()
                 .build();
 
-        itemParseProcess(client);
+        //itemParseProcess(client);
 
         ScheduledExecutorService sesh = Executors.newSingleThreadScheduledExecutor();
         mainProcess(client,sesh);
@@ -85,7 +85,7 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, minutesToNextHour(calendar), 30, TimeUnit.MINUTES);
+        }, minutesToNextHour(calendar), 60, TimeUnit.MINUTES);
     }
 
     private static long minutesToNextHour(Calendar calendar) {
@@ -342,34 +342,29 @@ public class CenterPiece {
         name = name.replace(" ", "%20");
         String idList = "61f2d5c461ac134ef274ae5f";
         String idLabels = "60c26dfc44555566d32ae700";
-        String key = "90fb4c3f6615067b94535f130c0d7b4f";
-        String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
+//        String key = "90fb4c3f6615067b94535f130c0d7b4f";
+//        String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
+//
+//        String uri = String.format("https://api.trello.com/1/cards?idList=%s&name=%s&idLabels=%s&key=%s&token=%s", idList, name, idLabels, key, token);
+//
+//        var request = HttpRequest.newBuilder(
+//                URI.create(uri))
+//                .header("accept", "application/json")
+//                .POST(HttpRequest.BodyPublishers.ofString(""))
+//                .build();
+//
+//        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//        JSONObject json = new JSONObject(response.body());
 
-        String uri = String.format("https://api.trello.com/1/cards?idList=%s&name=%s&idLabels=%s&key=%s&token=%s", idList, name, idLabels, key, token);
+        TrelloAPICall trelloAPICall = new TrelloAPICall(client, "cards", String.format("idList=%s&name=%s&idLabels=%s", idList, name, idLabels));
 
-//        "https://api.trello.com/1/cards?" +
-//                "&name=" + name +
-//                "idList=" + idList +
-//                "&idLabels="+ idLabels +
-//                "&key=" + key +
-//                "&token=" + token);
+        var response = trelloAPICall.postTrelloAPICall();
+        System.out.println(response);
 
-        var request = HttpRequest.newBuilder(
-                URI.create(uri))
-                .header("accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(""))
-                .build();
-
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        JSONObject json = new JSONObject(response.body());
-
-        System.out.println(json);
-
-        return "hello";
+        return response.toString();
     }
 
     //TODO retrofit get call
-    //TODO Under Construction
     public static String getTrelloCardById(HttpClient client, String cardId) throws IOException, InterruptedException {
 
         //String cardId = "62bdc0a16bb6051ddde68d28";
@@ -381,8 +376,9 @@ public class CenterPiece {
         String urlEndpoint = "cards/";
         String parameters = String.format("%s?", cardId);
 
+        TrelloAPICall trelloAPICall = new TrelloAPICall(client,urlEndpoint, parameters);
 
-        var response = getTrelloAPICall(client,urlEndpoint, parameters);
+        var response = trelloAPICall.getTrelloAPICall();
 
         System.out.println(response);
         System.out.println(response.get("closed"));
@@ -390,69 +386,22 @@ public class CenterPiece {
         return "hello";
     }
 
-    public static JSONObject postAgilityAPICall(HttpClient client, String contextId, String urlEndpoint, HttpRequest.BodyPublisher requestBody) throws IOException, InterruptedException {
+//    public static JSONObject postAgilityAPICall(HttpClient client, String contextId, String urlEndpoint, HttpRequest.BodyPublisher requestBody) throws IOException, InterruptedException {
+//
+//        var request = HttpRequest.newBuilder(
+//                URI.create("https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/" + urlEndpoint))
+//                .header("accept", "application/json")
+//                .header("ContextId", contextId)
+//                .header("Branch", "CABINETS")
+//                .POST(requestBody)
+//                .build();
+//
+//        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//        JSONObject responseBody = new JSONObject(response.body());
+//        return responseBody;
+//    }
 
-        var request = HttpRequest.newBuilder(
-                URI.create("https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/" + urlEndpoint))
-                .header("accept", "application/json")
-                .header("ContextId", contextId)
-                .header("Branch", "CABINETS")
-                .POST(requestBody)
-                .build();
 
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        JSONObject responseBody = new JSONObject(response.body());
-        return responseBody;
-    }
-
-    //TODO under construction
-    public static JSONObject getTrelloAPICall(HttpClient client, String urlEndpoint, String parameters) throws IOException, InterruptedException {
-
-        String key = "90fb4c3f6615067b94535f130c0d7b4f";
-        String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
-
-        String uri = String.format("https://api.trello.com/1/%s?%s&key=%s&token=%s", urlEndpoint, parameters, key, token);
-
-        var request = HttpRequest.newBuilder(
-                URI.create(uri))
-                .header("accept", "application/json")
-                .GET()
-                .build();
-
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        JSONObject responseBody = new JSONObject(response.body());
-        return responseBody;
-    }
-
-    //TODO under construction
-    public static JSONObject postTrelloAPICall(HttpClient client, String urlEndpoint, String parameters, HttpRequest.BodyPublisher requestBody) throws IOException, InterruptedException {
-
-        String key = "90fb4c3f6615067b94535f130c0d7b4f";
-        String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
-
-        String uri = String.format("https://api.trello.com/1/%s?%s&key=%s&token=%s", urlEndpoint, parameters, key, token);
-
-        var request = HttpRequest.newBuilder(
-                URI.create(uri))
-                .header("accept", "application/json")
-                .POST(buildRequest())
-                .build();
-
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        JSONObject responseBody = new JSONObject(response.body());
-        return responseBody;
-    }
-
-    public static HttpRequest.BodyPublisher buildRequest(){
-        return HttpRequest.BodyPublishers.ofString("");
-    }
-
-    public static HttpRequest.BodyPublisher buildRequest(JSONObject innerRequestBody){
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("request", innerRequestBody);
-        return HttpRequest.BodyPublishers.ofString(requestBody.toString());
-
-    }
 }
