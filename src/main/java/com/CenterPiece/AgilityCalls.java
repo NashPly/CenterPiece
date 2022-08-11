@@ -17,7 +17,7 @@ class AgilityAPICall {
     private String urlEndpoint;
 
 
-    AgilityAPICall(HttpClient cl, String cId, String ue, JSONObject bod,){
+    AgilityAPICall(HttpClient cl, String cId, String ue, JSONObject bod){
         url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
         client = cl;
         contextId = cId;
