@@ -86,7 +86,7 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, 0, 60, TimeUnit.SECONDS);
+        }, minutesToNextHour(calendar), 30, TimeUnit.MINUTES);
     }
     //minutesToNextHour(calendar)
 
