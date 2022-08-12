@@ -12,9 +12,11 @@ public class ItemCodeHandler {
     private HttpClient client;
     private String contextId;
     private JSONArray salesOrderArray;
-    private String salesOrder;
+    private JSONObject salesOrder;
+    private JSONArray salesOrderItemsArray;
+    private String salesOrderNumber;
     private String itemCode;
-    private String itemGroup;
+    private String itemGroup = "None";
     private JSONObject agilityItemSearchResult;
 
 //    private static void itemParseProcess(HttpClient client) throws IOException, InterruptedException {
@@ -38,7 +40,7 @@ public class ItemCodeHandler {
     ItemCodeHandler (HttpClient cl, String context, String sO){
         client = cl;
         contextId = context;
-        salesOrder = sO;
+        salesOrderNumber = sO;
     }
 
     ItemCodeHandler (HttpClient cl, String context) throws IOException, InterruptedException {
@@ -107,20 +109,25 @@ public class ItemCodeHandler {
     public JSONObject itemParseProcess() throws IOException, InterruptedException {
 
         this.salesOrderArray = agilitySalesOrderListLookup();
-        System.out.println("this.salesOrderArray");
-        System.out.println(this.salesOrderArray);
 
-        this.itemCode = getItemCodeFromSoLookupResult();
-        System.out.println("this.itemCode");
-        System.out.println(this.itemCode);
+        for(int i = 0; i < this.salesOrderArray.length(); i++){
+            if(this.salesOrderNumber.equals(this.salesOrderArray.getJSONObject(i).get("OrderID").toString())){
+                this.salesOrder = this.salesOrderArray.getJSONObject(i);
+            }
+        }
+
+        this.salesOrderItemsArray = this.salesOrder
+                .getJSONArray("dtOrderDetailResponse");
+
+        if(this.salesOrderItemsArray.length()>0){
+            this.itemCode = this.salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
+            System.out.println("itemCode");
+            System.out.println(this.itemCode);
+        }
 
         //TODO search for this item
         this.agilityItemSearchResult = agilityItemSearch();
-        System.out.println("this.agilityItemSearchResult");
-        System.out.println(this.agilityItemSearchResult);
 
-
-        System.out.println("Destination Result");
         this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
 
         System.out.println("this.getCardDestinationFromItemCodeResult");
@@ -146,8 +153,6 @@ public class ItemCodeHandler {
             currentDay = "0" + dt.getDayOfMonth();
         else
             currentDay = "" + dt.getDayOfMonth();
-
-//        currentDay = "08";
 
         String currentMonth;
         if(dt.getMonthOfYear()<10)
@@ -179,7 +184,7 @@ public class ItemCodeHandler {
 
         var response = agilityAPICall.postAgilityAPICall();
 
-        System.out.println(response);
+//        System.out.println(response);
         JSONArray json = response.getJSONObject("response")
                 .getJSONObject("OrdersResponse")
                 .getJSONObject("dsOrdersResponse")
@@ -187,7 +192,6 @@ public class ItemCodeHandler {
 
         return json;
     }
-
 
     //    private static List<String> itemListParser(HttpClient client, String contextId, JSONArray salesOrdersArray){
 //
@@ -204,12 +208,6 @@ public class ItemCodeHandler {
 //
 //        return items;
 //    }
-
-    public String getItemCodeFromSoLookupResult() {
-
-        return this.salesOrderArray.getJSONObject(0).getJSONArray("dtOrderDetailResponse").getJSONObject(0).getString("ItemCode");
-
-    }
 
 //
 //    //TODO needs to be converted to automatically put item list together
@@ -255,9 +253,6 @@ public class ItemCodeHandler {
         innerDtItemsListRequest.put("dtItemsListRequest", dtItemsListRequestArray);
         dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
 
-//        System.out.println("dsItemsListRequest");
-//        System.out.println(dsItemsListRequest);
-
         AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
 
         JSONObject response =  agilityPostCall.postAgilityAPICall();
@@ -273,9 +268,6 @@ public class ItemCodeHandler {
                 .getJSONArray("dtItemsListResponse")
                 .getJSONObject(0);
 
-        System.out.println("json");
-        System.out.println(json);
-
         return json;
 
     }
@@ -283,8 +275,8 @@ public class ItemCodeHandler {
     //TODO gather various ID's
     public JSONObject getCardDestinationFromItemCodeResult(){
 
-        String idList = "asdf";
-        String idLabel = "adsf";
+        String idList = "";
+        String idLabel = "";
 
         if(this.itemGroup.equals("3300")){
 
@@ -294,6 +286,7 @@ public class ItemCodeHandler {
 
         }else if(this.itemGroup.equals("3350")){
 
+            System.out.println("Success");
             //cnc cabinets
             idList = "62869b5c1351de037ffd2cc4";
             idLabel = "62869e47dcae4f52e15c90e1";
@@ -316,6 +309,16 @@ public class ItemCodeHandler {
             idList = "60c26dfb44555566d32ae651";
             idLabel = "60c26dfc44555566d32ae700";
 
+        }else if(this.itemGroup.equals("None")){
+
+            idList = "61f2d5c461ac134ef274ae5f";
+            idLabel = "62f6a75f8db34f1e9ac4467e";
+
+        }else{
+
+            idList = "61f2d5c461ac134ef274ae5f";
+            idLabel = "62f6a75f8db34f1e9ac4467e";
+
         }
 
 //TODO fix this
@@ -325,6 +328,7 @@ public class ItemCodeHandler {
 
         return json;
     }
+
 
 
 }

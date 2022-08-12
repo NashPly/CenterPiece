@@ -44,11 +44,10 @@ public class CenterPiece {
 
             JSONArray currentSalesOrders = null;
             try {
-//                System.out.println("made it");
+
                 ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId);
                 currentSalesOrders = itemCodeHandler.agilitySalesOrderListLookup();
-                System.out.println("currentsalesOrders");
-//                System.out.println(currentSalesOrders.length());
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -69,7 +68,8 @@ public class CenterPiece {
             //Test using the first to be created
             for(int x = 0 ; x < toBeCreatedSOs.size(); x++) {
                 try {
-                    System.out.println("createTrelloCard");
+                   System.out.println("createTrelloCard");
+                    System.out.println(currentSalesOrderNums.get(x));
                     createTrelloCard(client, contextId, currentSalesOrders.getJSONObject(toBeCreatedSOs.get(x)));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -86,7 +86,7 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, minutesToNextHour(calendar), 30, TimeUnit.MINUTES);
+        }, 0, 60, TimeUnit.SECONDS);
     }
     //minutesToNextHour(calendar)
 
@@ -156,6 +156,9 @@ public class CenterPiece {
 
     public static boolean checkTrelloForSO(HttpClient client, String soNum) throws IOException, InterruptedException {
 
+        System.out.println("soNum");
+        System.out.println(soNum);
+
         String query = soNum;
         String modelTypes = "cards";
         String card_fields = "name,closed";
@@ -165,9 +168,6 @@ public class CenterPiece {
                 query, modelTypes, card_fields));
 
         var response = trelloAPICall.getTrelloAPICall();
-
-//        System.out.println("Check Trello For SO Response");
-//        System.out.println(response);
 
         JSONArray cards = response.getJSONArray("cards");
 
@@ -207,11 +207,13 @@ public class CenterPiece {
     //TODO retrofit post call
     public static String createTrelloCard(HttpClient client, String contextId, JSONObject jsonSO) throws IOException, InterruptedException {
 
+        System.out.println("JSON jsonSO");
+        System.out.println(jsonSO);
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId, jsonSO.get("OrderID").toString());
 
-        System.out.println("ItemCodeHandler result");
-        System.out.println(itemCodeHandler.itemParseProcess());
+//        System.out.println("ItemCodeHandler result");
+//        System.out.println(itemCodeHandler.itemParseProcess());
 
         String idList = itemCodeHandler.itemParseProcess().getString("idList");
         String idLabels = itemCodeHandler.itemParseProcess().getString("idLabel");
