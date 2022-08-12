@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.joda.time.DateTime;
+
+import com.CenterPiece.APICalls.*;
 import org.json.*;
 
 
@@ -18,11 +19,7 @@ public class CenterPiece {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        var client = HttpClient.newBuilder()
-                .build();
-
-        //itemParseProcess(client);
-
+        var client = HttpClient.newBuilder().build();
         ScheduledExecutorService sesh = Executors.newSingleThreadScheduledExecutor();
         mainProcess(client,sesh);
 
@@ -47,9 +44,11 @@ public class CenterPiece {
 
             JSONArray currentSalesOrders = null;
             try {
-                System.out.println("made it");
-                currentSalesOrders = agilitySalesOrderListLookup(client,contextId);
+//                System.out.println("made it");
+                ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId);
+                currentSalesOrders = itemCodeHandler.agilitySalesOrderListLookup();
                 System.out.println("currentsalesOrders");
+//                System.out.println(currentSalesOrders.length());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -60,6 +59,7 @@ public class CenterPiece {
             List<Integer> toBeCreatedSOs = null;
             try {
                 toBeCreatedSOs = tallySOsToBeCreated(client, currentSalesOrderNums.size(), currentSalesOrderNums);
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -69,7 +69,8 @@ public class CenterPiece {
             //Test using the first to be created
             for(int x = 0 ; x < toBeCreatedSOs.size(); x++) {
                 try {
-                    createTrelloCard(client, currentSalesOrders.getJSONObject(toBeCreatedSOs.get(x)));
+                    System.out.println("createTrelloCard");
+                    createTrelloCard(client, contextId, currentSalesOrders.getJSONObject(toBeCreatedSOs.get(x)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -85,8 +86,9 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, minutesToNextHour(calendar), 60, TimeUnit.MINUTES);
+        }, 0, 60, TimeUnit.SECONDS);
     }
+    //minutesToNextHour(calendar)
 
     private static long minutesToNextHour(Calendar calendar) {
         int minutes = calendar.get(Calendar.MINUTE);
@@ -121,7 +123,7 @@ public class CenterPiece {
         return contextID;
     }
 
-    public static void  logout(HttpClient client, String contextId) throws IOException, InterruptedException {
+    public static void logout(HttpClient client, String contextId) throws IOException, InterruptedException {
         JSONObject innerRequestBody = new JSONObject();
         innerRequestBody.put("LoginID","tbeals");
         innerRequestBody.put("Password","123");
@@ -141,121 +143,6 @@ public class CenterPiece {
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    private static void itemParseProcess(HttpClient client) throws IOException, InterruptedException {
-
-        String contextId = login(client);
-
-        JSONArray salesOrdersArray = agilitySalesOrderListLookup(client, contextId);
-
-        List<String> itemList = itemListParser(client, contextId, salesOrdersArray);
-
-        JSONObject jsonObject = agilityItemSearch(client, contextId, itemList);
-
-        System.out.println("Json Object: " + jsonObject);
-
-        logout(client, contextId);
-
-    }
-
-    //Returns a list of SO Orders
-    public static JSONArray agilitySalesOrderListLookup(HttpClient client, String contextId) throws IOException, InterruptedException {
-
-        JSONObject innerRequestBody = new JSONObject();
-
-        DateTime dt = new DateTime();
-        String currentHour;
-        if(dt.getHourOfDay()<10)
-            currentHour = "0" + dt.getHourOfDay();
-        else
-            currentHour = "" + dt.getHourOfDay();
-
-        String currentDay;
-        if(dt.getDayOfMonth()<10)
-            currentDay = "0" + dt.getDayOfMonth();
-        else
-            currentDay = "" + dt.getDayOfMonth();
-
-        String currentMonth;
-        if(dt.getMonthOfYear()<10)
-            currentMonth = "0" + dt.getMonthOfYear();
-        else
-            currentMonth = "" + dt.getMonthOfYear();
-
-        innerRequestBody.put("IncludeOpenOrders", true);
-        innerRequestBody.put("IncludeInvoicedOrders", false);
-        innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":59:59-6:00");
-//        innerRequestBody.put("SearchBy", "Order ID");
-//        innerRequestBody.put("SearchValue", "204929");
-
-        //requestBody.put("request", innerRequestBody);
-
-//        var request = HttpRequest.newBuilder(
-//                URI.create("https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/Orders/SalesOrderList"))
-//                .header("accept", "application/json")
-//                .header("ContextId", contextId)
-//                .header("Branch", "CABINETS")
-//                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-//                .build();
-//
-//        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        AgilityAPICall agilityAPICall = new AgilityAPICall(client, contextId, "Orders/SalesOrderList", innerRequestBody);
-
-        var response = agilityAPICall.postAgilityAPICall();
-
-        System.out.println(response);
-        JSONArray json = response.getJSONObject("response")
-                .getJSONObject("OrdersResponse")
-                .getJSONObject("dsOrdersResponse")
-                .getJSONArray("dtOrderResponse");
-
-        return json;
-    }
-
-    private static List<String> itemListParser(HttpClient client, String contextId, JSONArray salesOrdersArray){
-
-        List<String> items = new ArrayList<>();
-
-        for (int x = 0; x < salesOrdersArray.length(); x++){
-            items.add(salesOrdersArray.getJSONObject(x).getJSONArray("dtOrderDetailResponse").getJSONObject(0).getString("ItemCode"));
-        }
-        //var item = salesOrdersArray.getJSONObject(0).getJSONArray("dtOrderDetailResponse").getJSONObject(0).getString("ItemCode");
-
-        //TODO search for this item
-
-        System.out.println("Item: " + items);
-
-        return items;
-    }
-
-    //TODO needs to be converted to automatically put item list together
-    private static JSONObject agilityItemSearch(HttpClient client, String contextId, List<String> itemList) throws IOException, InterruptedException {
-        JSONObject dsItemsListRequest = new JSONObject();
-        JSONObject innerDtItemsListRequest = new JSONObject();
-        JSONArray dtItemsListRequestArray = new JSONArray();
-        JSONObject dtItemsListRequestBody = new JSONObject();
-
-        dtItemsListRequestBody.put("SearchBy", "Item Code");
-        dtItemsListRequestBody.put("SearchValue", "NS0000022413");
-        dtItemsListRequestBody.put("IncludeNonStock", true);
-        dtItemsListRequestBody.put("IncludePriceData", true);
-        dtItemsListRequestBody.put("IncludeQuantityData", true);
-        dtItemsListRequestBody.put("IncludeNonSaleable", true);
-
-        dtItemsListRequestArray.put(dtItemsListRequestBody);
-        innerDtItemsListRequest.put("dtItemsListResponse", dtItemsListRequestArray);
-        dsItemsListRequest.put("dtItemsListResponse", innerDtItemsListRequest);
-
-        AgilityAPICall agilityPostCall = new AgilityAPICall(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
-
-        return agilityPostCall.postAgilityAPICall();
-        //old
-        //return postAgilityAPICall(client, contextId, "Inventory/ItemsList", buildRequest(dsItemsListRequest));
-    }
-
-
     //Parses SO Orders to get SO Nums
     public static List<String> salesOrderParser(JSONArray jsonArray){
 
@@ -266,40 +153,31 @@ public class CenterPiece {
         return soList;
     }
 
-    //TODO retrofit post call
+
     public static boolean checkTrelloForSO(HttpClient client, String soNum) throws IOException, InterruptedException {
 
         String query = soNum;
         String modelTypes = "cards";
         String card_fields = "name,closed";
-        String key = "90fb4c3f6615067b94535f130c0d7b4f";
-        String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
+//        String uri = String.format("https://api.trello.com/1/search?query=%s&modelTypes=%s&card_fields=%s&key=%s&token=%s",
+//                query, modelTypes, card_fields);
+        TrelloCalls trelloAPICall = new TrelloCalls(client, "search", String.format("query=%s&modelTypes=%s&card_fields=%s",
+                query, modelTypes, card_fields));
 
-        String uri = String.format("https://api.trello.com/1/search?query=%s&modelTypes=%s&card_fields=%s&key=%s&token=%s",
-                query, modelTypes, card_fields, key, token);
+        var response = trelloAPICall.getTrelloAPICall();
 
-        var request = HttpRequest.newBuilder(
-                URI.create(uri))
-                .header("accept", "application/json")
-                .GET()
-                .build();
+//        System.out.println("Check Trello For SO Response");
+//        System.out.println(response);
 
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        JSONObject json = new JSONObject(response.body());
-
-        JSONArray cards = json.getJSONArray("cards");
+        JSONArray cards = response.getJSONArray("cards");
 
         Boolean result = false;
 
         for (int i = 0; i < cards.length(); i++){
-
             if(cards.getJSONObject(i).getBoolean("closed") == false) {
                 result =  true;
             }
-
         }
-
         //TODO Logic around multiples where one might be archived and one isnt
 //        if(cards.length() > 0){
 //
@@ -312,7 +190,6 @@ public class CenterPiece {
 //        else
 //            return false;
         return result;
-
     }
 
     public static List<Integer> tallySOsToBeCreated(HttpClient client, int size, List<String> currentList) throws IOException, InterruptedException {
@@ -328,20 +205,36 @@ public class CenterPiece {
     }
 
     //TODO retrofit post call
-    public static String createTrelloCard(HttpClient client, JSONObject jsonSO) throws IOException, InterruptedException {
+    public static String createTrelloCard(HttpClient client, String contextId, JSONObject jsonSO) throws IOException, InterruptedException {
 
-        String name = (
+
+        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId, jsonSO.get("OrderID").toString());
+
+        System.out.println("ItemCodeHandler result");
+        System.out.println(itemCodeHandler.itemParseProcess());
+
+        String idList = itemCodeHandler.itemParseProcess().getString("idList");
+        String idLabels = itemCodeHandler.itemParseProcess().getString("idLabel");
+
+        System.out.println("idList");
+        System.out.println(idList);
+
+        System.out.println("idLabels");
+        System.out.println(idLabels);
+
+
+                String name = (
                 "SO "+
                 jsonSO.get("OrderID") +
                 " - " +
                 jsonSO.getString("ShipToName") +
-                ": " +
+                " - " +
                 jsonSO.getString("TransactionJob")
         );
 
         name = name.replace(" ", "%20");
-        String idList = "61f2d5c461ac134ef274ae5f";
-        String idLabels = "60c26dfc44555566d32ae700";
+        // = "61f2d5c461ac134ef274ae5f";
+        //String idLabels = "60c26dfc44555566d32ae700";
 //        String key = "90fb4c3f6615067b94535f130c0d7b4f";
 //        String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
 //
@@ -356,7 +249,7 @@ public class CenterPiece {
 //        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 //        JSONObject json = new JSONObject(response.body());
 
-        TrelloAPICall trelloAPICall = new TrelloAPICall(client, "cards", String.format("idList=%s&name=%s&idLabels=%s", idList, name, idLabels));
+        TrelloCalls trelloAPICall = new TrelloCalls(client, "cards", String.format("idList=%s&name=%s&idLabels=%s", idList, name, idLabels));
 
         var response = trelloAPICall.postTrelloAPICall();
         System.out.println(response);
@@ -376,7 +269,7 @@ public class CenterPiece {
         String urlEndpoint = "cards/";
         String parameters = String.format("%s?", cardId);
 
-        TrelloAPICall trelloAPICall = new TrelloAPICall(client,urlEndpoint, parameters);
+        TrelloCalls trelloAPICall = new TrelloCalls(client,urlEndpoint, parameters);
 
         var response = trelloAPICall.getTrelloAPICall();
 

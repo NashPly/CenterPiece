@@ -1,4 +1,4 @@
-package com.CenterPiece;
+package com.CenterPiece.APICalls;
 
 import org.json.JSONObject;
 
@@ -8,8 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-class TrelloAPICall {
-
+public class TrelloCalls {
 
     private String baseUrl;
     private HttpClient client;
@@ -18,11 +17,11 @@ class TrelloAPICall {
     private String key = "90fb4c3f6615067b94535f130c0d7b4f";
     private String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
 
-    TrelloAPICall(HttpClient cl, String ue, String param){
-        baseUrl = "https://api.trello.com/1/";
-        client = cl;
-        urlEndpoint = ue;
-        parameters = param;
+    public TrelloCalls(HttpClient client, String trelloUrlEndPoint, String parameters){
+        this.baseUrl = "https://api.trello.com/1/";
+        this.client = client;
+        this.urlEndpoint = trelloUrlEndPoint;
+        this.parameters = parameters;
 
     }
 

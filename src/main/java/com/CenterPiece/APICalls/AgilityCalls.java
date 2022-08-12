@@ -1,4 +1,4 @@
-package com.CenterPiece;
+package com.CenterPiece.APICalls;
 
 import org.json.JSONObject;
 
@@ -8,7 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-class AgilityAPICall {
+public class AgilityCalls {
 
     private String url = "";
     private HttpClient client;
@@ -17,7 +17,7 @@ class AgilityAPICall {
     private String urlEndpoint;
 
 
-    AgilityAPICall(HttpClient cl, String cId, String ue, JSONObject bod){
+    public AgilityCalls(HttpClient cl, String cId, String ue, JSONObject bod){
         url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
         client = cl;
         contextId = cId;
@@ -37,6 +37,9 @@ class AgilityAPICall {
                 .POST(buildRequest())
                 .build();
 
+//            System.out.println("buildRequest()");
+//        System.out.println(this.requestBody);
+
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         JSONObject responseBody = new JSONObject(response.body());
@@ -46,6 +49,10 @@ class AgilityAPICall {
     public HttpRequest.BodyPublisher buildRequest(){
         JSONObject requestBody = new JSONObject();
         requestBody.put("request", this.requestBody);
+
+//                    System.out.println("buildRequest()");
+//        System.out.println(requestBody.toString());
+
         return HttpRequest.BodyPublishers.ofString(requestBody.toString());
 
     }
