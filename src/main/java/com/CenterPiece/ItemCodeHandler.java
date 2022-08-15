@@ -17,6 +17,8 @@ public class ItemCodeHandler {
     private String salesOrderNumber;
     private String itemCode;
     private String itemGroup = "None";
+    private String linkedTranType;
+    private String linkedTranID;
     private JSONObject agilityItemSearchResult;
 
 //    private static void itemParseProcess(HttpClient client) throws IOException, InterruptedException {
@@ -116,23 +118,23 @@ public class ItemCodeHandler {
             }
         }
 
-        this.salesOrderItemsArray = this.salesOrder
-                .getJSONArray("dtOrderDetailResponse");
+        if(this.salesOrder.has("dtOrderDetailResponse")){
+            this.salesOrderItemsArray = this.salesOrder
+                    .getJSONArray("dtOrderDetailResponse");
+            var item = this.salesOrderItemsArray.getJSONObject(0);
+            this.itemCode = item.getString("ItemCode");
+            this.linkedTranType = item.getString("LinkedTranType");
+            this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
 
-        if(this.salesOrderItemsArray.length()>0){
-            this.itemCode = this.salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
-            System.out.println("itemCode");
-            System.out.println(this.itemCode);
+
+            //TODO search for this item
+            this.agilityItemSearchResult = agilityItemSearch();
+
+            //this.extItemDesc = agilityItemSearchResult.getString("ExtendedDescription").split("\\(\\{0,2}\\)-\\( \\{0,2}\\)\\{0,1}\\|\\( \\{0,2}\\):\\( \\{0,2}\\)\\{0,1}")[1];
+
+            this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
+
         }
-
-        //TODO search for this item
-        this.agilityItemSearchResult = agilityItemSearch();
-
-        this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-
-        System.out.println("this.getCardDestinationFromItemCodeResult");
-        System.out.println(this.getCardDestinationFromItemCodeResult());
-
         return this.getCardDestinationFromItemCodeResult();
     }
 
@@ -179,11 +181,11 @@ public class ItemCodeHandler {
 //                .build();
 //
 //        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
         AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
 
         var response = agilityAPICall.postAgilityAPICall();
 
+//        System.out.println("agilitySalesOrderListLookup");
 //        System.out.println(response);
         JSONArray json = response.getJSONObject("response")
                 .getJSONObject("OrdersResponse")
@@ -192,7 +194,6 @@ public class ItemCodeHandler {
 
         return json;
     }
-
     //    private static List<String> itemListParser(HttpClient client, String contextId, JSONArray salesOrdersArray){
 //
 //        List<String> items = new ArrayList<>();
@@ -208,7 +209,6 @@ public class ItemCodeHandler {
 //
 //        return items;
 //    }
-
 //
 //    //TODO needs to be converted to automatically put item list together
 //    private static JSONObject agilityItemSearch(HttpClient client, String contextId, List<String> itemList) throws IOException, InterruptedException {
@@ -253,10 +253,13 @@ public class ItemCodeHandler {
         innerDtItemsListRequest.put("dtItemsListRequest", dtItemsListRequestArray);
         dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
 
+        System.out.println("AgilityItemSearch response");
         AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
 
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
+        System.out.println("AgilityItemSearch response");
+        System.out.println(response);
 //        if(response.getString("_errors").length() <0){
 //            System.out.println(response);
 //            System.out.println("Errors");
@@ -277,6 +280,9 @@ public class ItemCodeHandler {
 
         String idList = "";
         String idLabel = "";
+        String colorCode = "";
+        String linkedType = "";
+        String linkedID = "";
 
         if(this.itemGroup.equals("3300")){
 
@@ -308,6 +314,13 @@ public class ItemCodeHandler {
             //counter tops
             idList = "60c26dfb44555566d32ae651";
             idLabel = "60c26dfc44555566d32ae700";
+            var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
+
+            //TODO Not a long term parsing solution
+            colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
+
+            linkedType = this.linkedTranType;
+            linkedID = this.linkedTranID;
 
         }else if(this.itemGroup.equals("None")){
 
@@ -321,14 +334,14 @@ public class ItemCodeHandler {
 
         }
 
-//TODO fix this
         JSONObject json = new JSONObject();
         json.put("idList", idList);
         json.put("idLabel", idLabel);
+        json.put("colorCode", colorCode);
+        json.put("linkedType", linkedType);
+        json.put("linkedID", linkedID);
 
         return json;
     }
-
-
 
 }

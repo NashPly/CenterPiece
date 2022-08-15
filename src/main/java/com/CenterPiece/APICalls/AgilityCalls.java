@@ -25,8 +25,6 @@ public class AgilityCalls {
         urlEndpoint = ue;
     }
 
-    //public static JSONObject postAgilityAPICall(HttpClient client, String contextId, String urlEndpoint, HttpRequest.BodyPublisher requestBody) throws IOException, InterruptedException {
-
     public JSONObject postAgilityAPICall() throws IOException, InterruptedException {
 
             var request = HttpRequest.newBuilder(
@@ -37,23 +35,17 @@ public class AgilityCalls {
                 .POST(buildRequest())
                 .build();
 
-//            System.out.println("buildRequest()");
-//        System.out.println(this.requestBody);
-
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         JSONObject responseBody = new JSONObject(response.body());
+//        System.out.println("postAgility");
+//        System.out.println(responseBody);
         return responseBody;
     }
 
     public HttpRequest.BodyPublisher buildRequest(){
         JSONObject requestBody = new JSONObject();
         requestBody.put("request", this.requestBody);
-
-//                    System.out.println("buildRequest()");
-//        System.out.println(requestBody.toString());
-
         return HttpRequest.BodyPublishers.ofString(requestBody.toString());
-
     }
 }

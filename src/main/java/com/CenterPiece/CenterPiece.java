@@ -22,7 +22,7 @@ public class CenterPiece {
         var client = HttpClient.newBuilder().build();
         ScheduledExecutorService sesh = Executors.newSingleThreadScheduledExecutor();
         mainProcess(client,sesh);
-
+//        updateTrelloCard(client,"623b29cbed4f428e2fd2711c", "asdf");
     }
 
     private static void mainProcess(HttpClient client, ScheduledExecutorService sesh){
@@ -36,6 +36,7 @@ public class CenterPiece {
             String contextId = null;
             try {
                 contextId = login(client);
+//                System.out.println(contextId);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -68,8 +69,6 @@ public class CenterPiece {
             //Test using the first to be created
             for(int x = 0 ; x < toBeCreatedSOs.size(); x++) {
                 try {
-                   System.out.println("createTrelloCard");
-                    System.out.println(currentSalesOrderNums.get(x));
                     createTrelloCard(client, contextId, currentSalesOrders.getJSONObject(toBeCreatedSOs.get(x)));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -212,18 +211,14 @@ public class CenterPiece {
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId, jsonSO.get("OrderID").toString());
 
-//        System.out.println("ItemCodeHandler result");
-//        System.out.println(itemCodeHandler.itemParseProcess());
+        var itemInformation = itemCodeHandler.itemParseProcess();
+        String idList = itemInformation.getString("idList");
+        String idLabels = itemInformation.getString("idLabel");
 
-        String idList = itemCodeHandler.itemParseProcess().getString("idList");
-        String idLabels = itemCodeHandler.itemParseProcess().getString("idLabel");
+        String description = jsonSO.getString("CustomerPO").replace(" ", "%20");
 
-        System.out.println("idList");
-        System.out.println(idList);
-
-        System.out.println("idLabels");
-        System.out.println(idLabels);
-
+        String dueDate = jsonSO.getString("ExpectedDate");
+        dueDate = dueDate.substring(0,8)+ (Integer.valueOf(dueDate.substring(8,10))+1);
 
                 String name = (
                 "SO "+
@@ -251,12 +246,50 @@ public class CenterPiece {
 //        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 //        JSONObject json = new JSONObject(response.body());
 
-        TrelloCalls trelloAPICall = new TrelloCalls(client, "cards", String.format("idList=%s&name=%s&idLabels=%s", idList, name, idLabels));
+        String parameters = String.format("idList=%s&name=%s&idLabels=%s&due=%s", idList, name, idLabels, dueDate);
+
+        if(!description.isEmpty()){
+            parameters += String.format("&desc=%s", description);
+        }
+
+        TrelloCalls trelloAPICall = new TrelloCalls(client, "cards", parameters);
 
         var response = trelloAPICall.postTrelloAPICall();
-        System.out.println(response);
+
+        updateTrelloCard(client, response.getString("id"), itemInformation);
 
         return response.toString();
+    }
+
+    public static void updateTrelloCard(HttpClient client, String cardId, JSONObject itemInformation) throws IOException, InterruptedException {
+
+        JSONObject request = new JSONObject();
+        JSONObject innerRequest = new JSONObject();
+        String colorCodeFieldId = "6197b500bbb79658801189ce";
+        String remanFieldId = "621519b6944e3c4fc091a515";
+        String poFieldId = "";
+
+        customFieldTrello(client,cardId, colorCodeFieldId, itemInformation.getString("colorCode"));
+
+        if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("RM"))
+        customFieldTrello(client,cardId, remanFieldId, itemInformation.getString("linkedID"));
+
+        if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("PO"))
+            customFieldTrello(client,cardId, poFieldId, itemInformation.getString("linkedID"));
+
+    }
+
+    public static void customFieldTrello(HttpClient client, String cardId, String customFieldID, String value) throws IOException, InterruptedException {
+
+        String urlEndpoint = String.format("cards/%s/customField/%s/item", cardId, customFieldID );
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("text", value);
+        TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
+        var response = trelloCalls.putTrelloAPICall(jsonObject);
+
+        System.out.println("Update Card Response");
+        System.out.println(response);
+
     }
 
     //TODO retrofit get call

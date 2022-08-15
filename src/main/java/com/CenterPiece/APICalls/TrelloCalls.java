@@ -48,6 +48,7 @@ public class TrelloCalls {
         var request = HttpRequest.newBuilder(
                 URI.create(uri))
                 .header("accept", "application/json")
+                .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
 
@@ -57,7 +58,29 @@ public class TrelloCalls {
         return responseBody;
     }
 
+    public JSONObject putTrelloAPICall(JSONObject innerRequestBody) throws IOException, InterruptedException {
 
+        String uri = String.format("%s%s?&key=%s&token=%s",
+                this.baseUrl, this.urlEndpoint, this.key, this.token);
+
+        var request = HttpRequest.newBuilder(
+                URI.create(uri))
+                .header("accept", "application/json")
+                .header("Content-Type", "application/json")
+                .PUT(buildRequest(innerRequestBody))
+                .build();
+
+        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        JSONObject responseBody = new JSONObject(response.body());
+        return responseBody;
+    }
+
+    public HttpRequest.BodyPublisher buildRequest(JSONObject innerRequest){
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("value", innerRequest);
+        return HttpRequest.BodyPublishers.ofString(requestBody.toString());
+    }
 
 
 }
