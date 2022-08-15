@@ -263,19 +263,20 @@ public class CenterPiece {
 
     public static void updateTrelloCard(HttpClient client, String cardId, JSONObject itemInformation) throws IOException, InterruptedException {
 
-        JSONObject request = new JSONObject();
-        JSONObject innerRequest = new JSONObject();
-        String colorCodeFieldId = "6197b500bbb79658801189ce";
-        String remanFieldId = "621519b6944e3c4fc091a515";
-        String poFieldId = "";
+//        JSONObject request = new JSONObject();
+//        JSONObject innerRequest = new JSONObject();
+//        String remanFieldId = "621519b6944e3c4fc091a515";
+//        String poFieldId = "";
 
-        customFieldTrello(client,cardId, colorCodeFieldId, itemInformation.getString("colorCode"));
+        customFieldTrello(client,cardId, itemInformation.getString("colorCustomField"), itemInformation.getString("colorCode"));
 
         if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("RM"))
-        customFieldTrello(client,cardId, remanFieldId, itemInformation.getString("linkedID"));
+        customFieldTrello(client,cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedID"));
 
-        if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("PO"))
-            customFieldTrello(client,cardId, poFieldId, itemInformation.getString("linkedID"));
+        //TODO Look into auto populating PO's
+        //Probably aplicable with Tru and CNC
+//        if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("PO"))
+//            customFieldTrello(client,cardId, poFieldId, itemInformation.getString("linkedID"));
 
     }
 

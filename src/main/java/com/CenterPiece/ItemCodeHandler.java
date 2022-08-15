@@ -283,12 +283,18 @@ public class ItemCodeHandler {
         String colorCode = "";
         String linkedType = "";
         String linkedID = "";
+        String colorCustomFieldID = "";
+        String rmCustomField = "";
 
         if(this.itemGroup.equals("3300")){
 
             //kk cabinets
             idList = "62869b5c1351de037ffd2cc4";
             idLabel = "62869b5c1351de037ffd2d26";
+            colorCustomFieldID = "62869b5c1351de037ffd2da7";
+            rmCustomField = "62869b5c1351de037ffd2dab";
+            colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+
 
         }else if(this.itemGroup.equals("3350")){
 
@@ -308,12 +314,17 @@ public class ItemCodeHandler {
             //choice cabinets
             idList = "62869b5c1351de037ffd2cc4";
             idLabel = "62869b5c1351de037ffd2d32";
+            colorCustomFieldID = "62869b5c1351de037ffd2da7";
+            rmCustomField = "62869b5c1351de037ffd2dab";
+            colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
 
         }else if(this.itemGroup.equals("3500")){
 
             //counter tops
             idList = "60c26dfb44555566d32ae651";
             idLabel = "60c26dfc44555566d32ae700";
+            colorCustomFieldID = "6197b500bbb79658801189ce";
+            rmCustomField = "621519b6944e3c4fc091a515";
             var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
 
             //TODO Not a long term parsing solution
@@ -337,6 +348,8 @@ public class ItemCodeHandler {
         JSONObject json = new JSONObject();
         json.put("idList", idList);
         json.put("idLabel", idLabel);
+        json.put("colorCustomField", colorCustomFieldID);
+        json.put("rmCustomField", rmCustomField);
         json.put("colorCode", colorCode);
         json.put("linkedType", linkedType);
         json.put("linkedID", linkedID);
