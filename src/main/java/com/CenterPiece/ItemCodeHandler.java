@@ -39,16 +39,17 @@ public class ItemCodeHandler {
 //
 //    }
 
+    ItemCodeHandler (HttpClient cl, String context) throws IOException, InterruptedException {
+        client = cl;
+        contextId = context;
+    }
+
     ItemCodeHandler (HttpClient cl, String context, String sO){
         client = cl;
         contextId = context;
         salesOrderNumber = sO;
     }
 
-    ItemCodeHandler (HttpClient cl, String context) throws IOException, InterruptedException {
-        client = cl;
-        contextId = context;
-    }
 
     //    //Returns a list of SO Orders
 //    public static JSONArray agilitySalesOrderListLookup(HttpClient client, String contextId) throws IOException, InterruptedException {
@@ -138,6 +139,36 @@ public class ItemCodeHandler {
         return this.getCardDestinationFromItemCodeResult();
     }
 
+//    public JSONObject itemUpdateProcess() throws IOException, InterruptedException {
+//
+//        this.salesOrderArray = agilitySalesOrderListLookup();
+//
+//        for(int i = 0; i < this.salesOrderArray.length(); i++){
+//            if(this.salesOrderNumber.equals(this.salesOrderArray.getJSONObject(i).get("OrderID").toString())){
+//                this.salesOrder = this.salesOrderArray.getJSONObject(i);
+//            }
+//        }
+//
+//        if(this.salesOrder.has("dtOrderDetailResponse")){
+//            this.salesOrderItemsArray = this.salesOrder
+//                    .getJSONArray("dtOrderDetailResponse");
+//            var item = this.salesOrderItemsArray.getJSONObject(0);
+//            this.itemCode = item.getString("ItemCode");
+//            this.linkedTranType = item.getString("LinkedTranType");
+//            this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
+//
+//
+//            //TODO search for this item
+//            this.agilityItemSearchResult = agilityItemSearch();
+//
+//            //this.extItemDesc = agilityItemSearchResult.getString("ExtendedDescription").split("\\(\\{0,2}\\)-\\( \\{0,2}\\)\\{0,1}\\|\\( \\{0,2}\\):\\( \\{0,2}\\)\\{0,1}")[1];
+//
+//            this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
+//
+//        }
+//        return this.getCardDestinationFromItemCodeResult();
+//    }
+
     //Returns a list of SO Orders
     public JSONArray agilitySalesOrderListLookup() throws IOException, InterruptedException {
 
@@ -194,6 +225,69 @@ public class ItemCodeHandler {
 
         return json;
     }
+
+    public JSONObject agilityChangedSalesOrderListLookup() throws IOException, InterruptedException {
+
+        JSONObject innerRequestBody = new JSONObject();
+
+        DateTime dt = new DateTime();
+
+        int minHold = dt.getMinuteOfHour()-2;
+        int hourHold = dt.getHourOfDay();
+
+        if(minHold<0){
+            minHold = dt.getMinuteOfHour()+58;
+            hourHold--;
+            if(hourHold<0)
+                hourHold += 24;
+        }
+
+        String searchHour = "";
+        if(hourHold<10)
+            searchHour = "0" + hourHold;
+        else
+            searchHour = "" + hourHold;
+
+        String searchMinute = "";
+        if(minHold<10)
+            searchMinute = "0" + minHold;
+        else
+            searchMinute = "" + minHold;
+
+        String currentDay;
+        if(dt.getDayOfMonth()<10)
+            currentDay = "0" + dt.getDayOfMonth();
+        else
+            currentDay = "" + dt.getDayOfMonth();
+
+        String currentMonth;
+        if(dt.getMonthOfYear()<10)
+            currentMonth = "0" + dt.getMonthOfYear();
+        else
+            currentMonth = "" + dt.getMonthOfYear();
+
+        innerRequestBody.put("IncludeOpenOrders", true);
+        innerRequestBody.put("IncludeInvoicedOrders", true);
+        innerRequestBody.put("IncludeCanceledOrders", true);
+        innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T23:59:59-6:00");
+
+        //TODO Dynamic
+        innerRequestBody.put("FetchOnlyChangedSince", "2022-"+currentMonth+"-"+currentDay+"T"+searchHour+":"+searchMinute+":00-6:00");
+
+        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
+
+        var response = agilityAPICall.postAgilityAPICall();
+
+//        System.out.println("agilitySalesOrderListLookup");
+//        System.out.println(response);
+        JSONObject json = response.getJSONObject("response")
+                .getJSONObject("OrdersResponse")
+                .getJSONObject("dsOrdersResponse");
+
+        return json;
+    }
+
     //    private static List<String> itemListParser(HttpClient client, String contextId, JSONArray salesOrdersArray){
 //
 //        List<String> items = new ArrayList<>();

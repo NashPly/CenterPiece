@@ -37,6 +37,10 @@ public class TrelloCalls {
                 .build();
 
         var response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("GetTrelloCall");
+        System.out.println(response);
+
         JSONObject responseBody = new JSONObject(response.body());
         return responseBody;
     }
@@ -54,6 +58,8 @@ public class TrelloCalls {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        System.out.println("PostTrelloCall");
+        System.out.println(response);
         JSONObject responseBody = new JSONObject(response.body());
         return responseBody;
     }
@@ -71,6 +77,9 @@ public class TrelloCalls {
                 .build();
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("PutTrelloCall");
+        System.out.println(response);
 
         JSONObject responseBody = new JSONObject(response.body());
         return responseBody;

@@ -37,9 +37,11 @@ public class AgilityCalls {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        System.out.println("postAgility");
+        System.out.println(response);
+
         JSONObject responseBody = new JSONObject(response.body());
-//        System.out.println("postAgility");
-//        System.out.println(responseBody);
+
         return responseBody;
     }
 
