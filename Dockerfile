@@ -4,7 +4,7 @@
 # RUN javac src/main/java/com/CenterPiece/CenterPiece.java
 # CMD ["java", "CenterPiece"]
 
-FROM maven:3.6.3-sdk-17
+FROM maven:3.8.6-jdk-11
 
 COPY ./ ./
 
