@@ -22,4 +22,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) -t centerpiece
     - name: Push Docker Image
-      run: docker push centerpiece
+      run: docker push beakston/centerpiece
