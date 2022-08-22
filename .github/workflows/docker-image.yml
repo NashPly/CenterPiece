@@ -21,5 +21,5 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-    - name: Run Docker Image
-      run: docker
+    - name: Push Docker Image
+      run: docker push my-image-name:$(date +%s)
