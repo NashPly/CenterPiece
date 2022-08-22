@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Docker Build
-        run: dir
+        run: docker build src/main/java/com/CenterPiece
