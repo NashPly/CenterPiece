@@ -9,35 +9,15 @@ import java.net.http.HttpClient;
 
 public class ItemCodeHandler {
 
-    private HttpClient client;
-    private String contextId;
-    private JSONArray salesOrderArray;
+    private final HttpClient client;
+    private final String contextId;
     private JSONObject salesOrder;
-    private JSONArray salesOrderItemsArray;
-    private String salesOrderNumber;
+    private String salesOrderNumber = "0";
     private String itemCode;
     private String itemGroup = "None";
     private String linkedTranType;
     private String linkedTranID;
     private JSONObject agilityItemSearchResult;
-
-//    private static void itemParseProcess(HttpClient client) throws IOException, InterruptedException {
-//
-//        String contextId = login(client);
-//
-//        JSONArray salesOrdersArray = agilitySalesOrderListLookup(client, contextId);
-//
-//        List<String> itemList = itemListParser(client, contextId, salesOrdersArray);
-//
-//
-//
-//        JSONObject jsonObject = agilityItemSearch();
-//
-//        System.out.println("Json Object: " + jsonObject);
-//
-//        logout(client, contextId);
-//
-//    }
 
     ItemCodeHandler (HttpClient cl, String context) throws IOException, InterruptedException {
         client = cl;
@@ -50,126 +30,40 @@ public class ItemCodeHandler {
         salesOrderNumber = sO;
     }
 
-
-    //    //Returns a list of SO Orders
-//    public static JSONArray agilitySalesOrderListLookup(HttpClient client, String contextId) throws IOException, InterruptedException {
-//
-//        JSONObject innerRequestBody = new JSONObject();
-//
-//        DateTime dt = new DateTime();
-//        String currentHour;
-//        if(dt.getHourOfDay()<10)
-//            currentHour = "0" + dt.getHourOfDay();
-//        else
-//            currentHour = "" + dt.getHourOfDay();
-//
-//        String currentDay;
-//        if(dt.getDayOfMonth()<10)
-//            currentDay = "0" + dt.getDayOfMonth();
-//        else
-//            currentDay = "" + dt.getDayOfMonth();
-//
-//        String currentMonth;
-//        if(dt.getMonthOfYear()<10)
-//            currentMonth = "0" + dt.getMonthOfYear();
-//        else
-//            currentMonth = "" + dt.getMonthOfYear();
-//
-//        innerRequestBody.put("IncludeOpenOrders", true);
-//        innerRequestBody.put("IncludeInvoicedOrders", false);
-//        innerRequestBody.put("IncludeCanceledOrders", false);
-//        innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":00:00-6:00");
-//        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":59:59-6:00");
-////        innerRequestBody.put("SearchBy", "Order ID");
-////        innerRequestBody.put("SearchValue", "204929");
-//
-//        //requestBody.put("request", innerRequestBody);
-//
-////        var request = HttpRequest.newBuilder(
-////                URI.create("https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/Orders/SalesOrderList"))
-////                .header("accept", "application/json")
-////                .header("ContextId", contextId)
-////                .header("Branch", "CABINETS")
-////                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-////                .build();
-////
-////        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//
-//        AgilityAPICall agilityAPICall = new AgilityAPICall(client, contextId, "Orders/SalesOrderList", innerRequestBody);
-//
-//        var response = agilityAPICall.postAgilityAPICall();
-//
-//        System.out.println(response);
-//        JSONArray json = response.getJSONObject("response")
-//                .getJSONObject("OrdersResponse")
-//                .getJSONObject("dsOrdersResponse")
-//                .getJSONArray("dtOrderResponse");
-//
-//        return json;
-//    }
-//
+    ItemCodeHandler (HttpClient cl, String context, JSONObject salesOrder){
+        client = cl;
+        contextId = context;
+        this.salesOrder = salesOrder;
+    }
 
     public JSONObject itemParseProcess() throws IOException, InterruptedException {
 
-        this.salesOrderArray = agilitySalesOrderListLookup();
+        JSONArray salesOrderArray = agilitySalesOrderListLookup();
 
-        for(int i = 0; i < this.salesOrderArray.length(); i++){
-            if(this.salesOrderNumber.equals(this.salesOrderArray.getJSONObject(i).get("OrderID").toString())){
-                this.salesOrder = this.salesOrderArray.getJSONObject(i);
+        for(int i = 0; i < salesOrderArray.length(); i++){
+            if(!this.salesOrderNumber.equals("0")){
+                if (this.salesOrderNumber.equals(salesOrderArray.getJSONObject(i).getNumber("OrderID").toString())) {
+                    this.salesOrder = salesOrderArray.getJSONObject(i);
+                }
             }
         }
+        System.out.println("");
 
         if(this.salesOrder.has("dtOrderDetailResponse")){
-            this.salesOrderItemsArray = this.salesOrder
+            JSONArray salesOrderItemsArray = this.salesOrder
                     .getJSONArray("dtOrderDetailResponse");
-            var item = this.salesOrderItemsArray.getJSONObject(0);
+            var item = salesOrderItemsArray.getJSONObject(0);
             this.itemCode = item.getString("ItemCode");
             this.linkedTranType = item.getString("LinkedTranType");
             this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
 
-
-            //TODO search for this item
             this.agilityItemSearchResult = agilityItemSearch();
 
-            //this.extItemDesc = agilityItemSearchResult.getString("ExtendedDescription").split("\\(\\{0,2}\\)-\\( \\{0,2}\\)\\{0,1}\\|\\( \\{0,2}\\):\\( \\{0,2}\\)\\{0,1}")[1];
-
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-
         }
         return this.getCardDestinationFromItemCodeResult();
     }
 
-//    public JSONObject itemUpdateProcess() throws IOException, InterruptedException {
-//
-//        this.salesOrderArray = agilitySalesOrderListLookup();
-//
-//        for(int i = 0; i < this.salesOrderArray.length(); i++){
-//            if(this.salesOrderNumber.equals(this.salesOrderArray.getJSONObject(i).get("OrderID").toString())){
-//                this.salesOrder = this.salesOrderArray.getJSONObject(i);
-//            }
-//        }
-//
-//        if(this.salesOrder.has("dtOrderDetailResponse")){
-//            this.salesOrderItemsArray = this.salesOrder
-//                    .getJSONArray("dtOrderDetailResponse");
-//            var item = this.salesOrderItemsArray.getJSONObject(0);
-//            this.itemCode = item.getString("ItemCode");
-//            this.linkedTranType = item.getString("LinkedTranType");
-//            this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
-//
-//
-//            //TODO search for this item
-//            this.agilityItemSearchResult = agilityItemSearch();
-//
-//            //this.extItemDesc = agilityItemSearchResult.getString("ExtendedDescription").split("\\(\\{0,2}\\)-\\( \\{0,2}\\)\\{0,1}\\|\\( \\{0,2}\\):\\( \\{0,2}\\)\\{0,1}")[1];
-//
-//            this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-//
-//        }
-//        return this.getCardDestinationFromItemCodeResult();
-//    }
-
-    //Returns a list of SO Orders
     public JSONArray agilitySalesOrderListLookup() throws IOException, InterruptedException {
 
         JSONObject innerRequestBody = new JSONObject();
@@ -198,32 +92,24 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":00:00-6:00");
         innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":59:59-6:00");
-//        innerRequestBody.put("SearchBy", "Order ID");
-//        innerRequestBody.put("SearchValue", "204929");
 
-        //requestBody.put("request", innerRequestBody);
-
-//        var request = HttpRequest.newBuilder(
-//                URI.create("https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/Orders/SalesOrderList"))
-//                .header("accept", "application/json")
-//                .header("ContextId", contextId)
-//                .header("Branch", "CABINETS")
-//                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-//                .build();
-//
-//        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("\n-- AgilitySalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
 
         var response = agilityAPICall.postAgilityAPICall();
 
-//        System.out.println("agilitySalesOrderListLookup");
-//        System.out.println(response);
-        JSONArray json = response.getJSONObject("response")
-                .getJSONObject("OrdersResponse")
-                .getJSONObject("dsOrdersResponse")
-                .getJSONArray("dtOrderResponse");
 
-        return json;
+//        System.out.println(response);
+
+        JSONObject json = response.getJSONObject("response")
+                .getJSONObject("OrdersResponse")
+                .getJSONObject("dsOrdersResponse");
+
+        if(json.has("dtOrderResponse")){
+            return json.getJSONArray("dtOrderResponse");
+        }
+
+        return new JSONArray();
     }
 
     public JSONObject agilityChangedSalesOrderListLookup() throws IOException, InterruptedException {
@@ -234,6 +120,9 @@ public class ItemCodeHandler {
 
         int minHold = dt.getMinuteOfHour()-2;
         int hourHold = dt.getHourOfDay();
+        int dayHold = dt.getDayOfMonth();
+        int monthHold = dt.getMonthOfYear();
+        int yearHold = dt.getYear();
 
         if(minHold<0){
             minHold = dt.getMinuteOfHour()+58;
@@ -242,93 +131,50 @@ public class ItemCodeHandler {
                 hourHold += 24;
         }
 
-        String searchHour = "";
+        String searchHour;
         if(hourHold<10)
             searchHour = "0" + hourHold;
         else
             searchHour = "" + hourHold;
 
-        String searchMinute = "";
+        String searchMinute;
         if(minHold<10)
             searchMinute = "0" + minHold;
         else
             searchMinute = "" + minHold;
 
         String currentDay;
-        if(dt.getDayOfMonth()<10)
-            currentDay = "0" + dt.getDayOfMonth();
+
+        if(dayHold<10)
+            currentDay = "0" + dayHold;
         else
-            currentDay = "" + dt.getDayOfMonth();
+            currentDay = "" + dayHold;
 
         String currentMonth;
-        if(dt.getMonthOfYear()<10)
-            currentMonth = "0" + dt.getMonthOfYear();
+
+        if(monthHold<10)
+            currentMonth = "0" + monthHold;
         else
-            currentMonth = "" + dt.getMonthOfYear();
+            currentMonth = "" + monthHold;
+
+        String currentYear = String.valueOf(yearHold);
 
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", true);
         innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T23:59:59-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", currentYear+"-"+currentMonth+"-"+currentDay+"T23:59:59-6:00");
+        innerRequestBody.put("FetchOnlyChangedSince", currentYear+"-"+currentMonth+"-"+currentDay+"T"+searchHour+":"+searchMinute+":00-6:00");
 
-        //TODO Dynamic
-        innerRequestBody.put("FetchOnlyChangedSince", "2022-"+currentMonth+"-"+currentDay+"T"+searchHour+":"+searchMinute+":00-6:00");
-
+        System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
-
         var response = agilityAPICall.postAgilityAPICall();
 
-//        System.out.println("agilitySalesOrderListLookup");
-//        System.out.println(response);
-        JSONObject json = response.getJSONObject("response")
+        return response.getJSONObject("response")
                 .getJSONObject("OrdersResponse")
                 .getJSONObject("dsOrdersResponse");
-
-        return json;
     }
 
-    //    private static List<String> itemListParser(HttpClient client, String contextId, JSONArray salesOrdersArray){
-//
-//        List<String> items = new ArrayList<>();
-//
-//        for (int x = 0; x < salesOrdersArray.length(); x++){
-//            items.add(salesOrdersArray.getJSONObject(x).getJSONArray("dtOrderDetailResponse").getJSONObject(0).getString("ItemCode"));
-//        }
-//        //var item = salesOrdersArray.getJSONObject(0).getJSONArray("dtOrderDetailResponse").getJSONObject(0).getString("ItemCode");
-//
-//        //TODO search for this item
-//
-//        System.out.println("Item: " + items);
-//
-//        return items;
-//    }
-//
-//    //TODO needs to be converted to automatically put item list together
-//    private static JSONObject agilityItemSearch(HttpClient client, String contextId, List<String> itemList) throws IOException, InterruptedException {
-//        JSONObject dsItemsListRequest = new JSONObject();
-//        JSONObject innerDtItemsListRequest = new JSONObject();
-//        JSONArray dtItemsListRequestArray = new JSONArray();
-//        JSONObject dtItemsListRequestBody = new JSONObject();
-//
-//        dtItemsListRequestBody.put("SearchBy", "Item Code");
-//        dtItemsListRequestBody.put("SearchValue", "NS0000022413");
-//        dtItemsListRequestBody.put("IncludeNonStock", true);
-//        dtItemsListRequestBody.put("IncludePriceData", true);
-//        dtItemsListRequestBody.put("IncludeQuantityData", true);
-//        dtItemsListRequestBody.put("IncludeNonSaleable", true);
-//
-//        dtItemsListRequestArray.put(dtItemsListRequestBody);
-//        innerDtItemsListRequest.put("dtItemsListResponse", dtItemsListRequestArray);
-//        dsItemsListRequest.put("dtItemsListResponse", innerDtItemsListRequest);
-//
-//        AgilityAPICall agilityPostCall = new AgilityAPICall(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
-//
-//        return agilityPostCall.postAgilityAPICall();
-//        //old
-//        //return postAgilityAPICall(client, contextId, "Inventory/ItemsList", buildRequest(dsItemsListRequest));
-//    }
-    //TODO needs to be converted to automatically put item list together
     public JSONObject agilityItemSearch() throws IOException, InterruptedException {
 
         JSONObject dsItemsListRequest = new JSONObject();
@@ -347,96 +193,83 @@ public class ItemCodeHandler {
         innerDtItemsListRequest.put("dtItemsListRequest", dtItemsListRequestArray);
         dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
 
-        System.out.println("AgilityItemSearch response");
+        System.out.println("- AgilityItemSearch Response -");
         AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
-
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
-        System.out.println("AgilityItemSearch response");
-        System.out.println(response);
-//        if(response.getString("_errors").length() <0){
-//            System.out.println(response);
-//            System.out.println("Errors");
-//        }
 
-        JSONObject json = response.getJSONObject("response")
+        return response.getJSONObject("response")
                 .getJSONObject("ItemsListResponse")
                 .getJSONObject("dsItemsListResponse")
                 .getJSONArray("dtItemsListResponse")
                 .getJSONObject(0);
 
-        return json;
-
     }
 
-    //TODO gather various ID's
     public JSONObject getCardDestinationFromItemCodeResult(){
 
-        String idList = "";
-        String idLabel = "";
-        String colorCode = "";
-        String linkedType = "";
-        String linkedID = "";
-        String colorCustomFieldID = "";
-        String rmCustomField = "";
+        String idList;
+        String idLabel;
+        String colorCode = null;
+        String linkedType = null;
+        String linkedID = null;
+        String colorCustomFieldID = null;
+        String rmCustomField = null;
 
-        if(this.itemGroup.equals("3300")){
+        switch (this.itemGroup) {
+            case "3300" -> {
 
-            //kk cabinets
-            idList = "62869b5c1351de037ffd2cc4";
-            idLabel = "62869b5c1351de037ffd2d26";
-            colorCustomFieldID = "62869b5c1351de037ffd2da7";
-            rmCustomField = "62869b5c1351de037ffd2dab";
-            colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+                //kk cabinets
+                idList = "62869b5c1351de037ffd2cc4";
+                idLabel = "62869b5c1351de037ffd2d26";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
+                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+            }
+            case "3350" -> {
+                System.out.println("Success");
+                //cnc cabinets
+                idList = "62869b5c1351de037ffd2cc4";
+                idLabel = "62869e47dcae4f52e15c90e1";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+            }
+            case "3455" -> {
 
+                //tru cabinets
+                idList = "62869b5c1351de037ffd2cc4";
+                idLabel = "62869db3e04b83468347996b";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+            }
+            case "3450" -> {
 
-        }else if(this.itemGroup.equals("3350")){
+                //choice cabinets
+                idList = "62869b5c1351de037ffd2cc4";
+                idLabel = "62869b5c1351de037ffd2d32";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
+                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+            }
+            case "3500" -> {
 
-            System.out.println("Success");
-            //cnc cabinets
-            idList = "62869b5c1351de037ffd2cc4";
-            idLabel = "62869e47dcae4f52e15c90e1";
-
-        }else if(this.itemGroup.equals("3455")){
-
-            //tru cabinets
-            idList = "62869b5c1351de037ffd2cc4";
-            idLabel = "62869db3e04b83468347996b";
-
-        }else if(this.itemGroup.equals("3450")){
-
-            //choice cabinets
-            idList = "62869b5c1351de037ffd2cc4";
-            idLabel = "62869b5c1351de037ffd2d32";
-            colorCustomFieldID = "62869b5c1351de037ffd2da7";
-            rmCustomField = "62869b5c1351de037ffd2dab";
-            colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-
-        }else if(this.itemGroup.equals("3500")){
-
-            //counter tops
-            idList = "60c26dfb44555566d32ae651";
-            idLabel = "60c26dfc44555566d32ae700";
-            colorCustomFieldID = "6197b500bbb79658801189ce";
-            rmCustomField = "621519b6944e3c4fc091a515";
-            var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
-
-            //TODO Not a long term parsing solution
-            colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
-
-            linkedType = this.linkedTranType;
-            linkedID = this.linkedTranID;
-
-        }else if(this.itemGroup.equals("None")){
-
-            idList = "61f2d5c461ac134ef274ae5f";
-            idLabel = "62f6a75f8db34f1e9ac4467e";
-
-        }else{
-
-            idList = "61f2d5c461ac134ef274ae5f";
-            idLabel = "62f6a75f8db34f1e9ac4467e";
-
+                //counter tops
+                idList = "60c26dfb44555566d32ae651";
+                idLabel = "60c26dfc44555566d32ae700";
+                colorCustomFieldID = "6197b500bbb79658801189ce";
+                rmCustomField = "621519b6944e3c4fc091a515";
+                if(this.agilityItemSearchResult.getString("ExtendedDescription").contains("FAB")){
+                    var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
+                    //TODO Not a long term parsing solution
+                    colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
+                }
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+            }
+            default -> {
+                idList = "61f2d5c461ac134ef274ae5f";
+                idLabel = "62f6a75f8db34f1e9ac4467e";
+            }
         }
 
         JSONObject json = new JSONObject();
@@ -450,5 +283,4 @@ public class ItemCodeHandler {
 
         return json;
     }
-
 }

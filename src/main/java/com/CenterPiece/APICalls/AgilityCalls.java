@@ -10,15 +10,13 @@ import java.net.http.HttpResponse;
 
 public class AgilityCalls {
 
-    private String url = "";
-    private HttpClient client;
-    private String contextId;
-    private JSONObject requestBody;
-    private String urlEndpoint;
+    private final HttpClient client;
+    private final String contextId;
+    private final JSONObject requestBody;
+    private final String urlEndpoint;
 
 
     public AgilityCalls(HttpClient cl, String cId, String ue, JSONObject bod){
-        url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
         client = cl;
         contextId = cId;
         requestBody = bod;
@@ -27,8 +25,9 @@ public class AgilityCalls {
 
     public JSONObject postAgilityAPICall() throws IOException, InterruptedException {
 
-            var request = HttpRequest.newBuilder(
-                URI.create("https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/" + urlEndpoint))
+        String url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
+        var request = HttpRequest.newBuilder(
+                URI.create(url + urlEndpoint))
                 .header("accept", "application/json")
                 .header("ContextId", this.contextId)
                 .header("Branch", "CABINETS")
@@ -37,12 +36,11 @@ public class AgilityCalls {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("postAgility");
+        System.out.println("- POST Call to Agility -");
         System.out.println(response);
+        System.out.println(response.body());
 
-        JSONObject responseBody = new JSONObject(response.body());
-
-        return responseBody;
+        return new JSONObject(response.body());
     }
 
     public HttpRequest.BodyPublisher buildRequest(){
