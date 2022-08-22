@@ -27,5 +27,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Docker Build
-        run: cd src/main/java/com | docker build ../../src/main/java/com/CenterPiece/CenterPiece.java -t
+        run: docker build ../../src/main/java/com/CenterPiece/CenterPiece.java -t
         
