@@ -20,6 +20,6 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) -t centerpiece
+      run: docker build . --file Dockerfile --tag beakston -t centerpiece
     - name: Push Docker Image
       run: docker push beakston/centerpiece
