@@ -21,5 +21,7 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag beakston -t centerpiece
+    - name: Commit Docker image
+      run: docket commit beakston/centerpiece:latest
     - name: Push Docker Image
-      run: docker push beakston/centerpiece
+      run: docker push beakston/centerpiece:latest
