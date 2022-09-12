@@ -118,14 +118,14 @@ public class ItemCodeHandler {
 
         DateTime dt = new DateTime();
 
-        int minHold = dt.getMinuteOfHour()-2;
+        int minHold = dt.getMinuteOfHour()-3;
         int hourHold = dt.getHourOfDay();
         int dayHold = dt.getDayOfMonth();
         int monthHold = dt.getMonthOfYear();
         int yearHold = dt.getYear();
 
         if(minHold<0){
-            minHold = dt.getMinuteOfHour()+58;
+            minHold = dt.getMinuteOfHour()+57;
             hourHold--;
             if(hourHold<0)
                 hourHold += 24;
@@ -215,6 +215,11 @@ public class ItemCodeHandler {
         String linkedID = null;
         String colorCustomFieldID = null;
         String rmCustomField = null;
+        //TODO Could to enum for status
+        String status = null;
+
+        //TODO figure out order status in IF statement
+        // Set status variable to go into the various cases
 
         switch (this.itemGroup) {
             case "3300" -> {
@@ -253,6 +258,10 @@ public class ItemCodeHandler {
             }
             case "3500" -> {
 
+                //TODO add in dynamic locations
+                // whether it be in side the CASE or determined globally within the function
+                // check to see OrderStatus to determine placement
+                // pass that in to determine respective location
                 //counter tops
                 idList = "60c26dfb44555566d32ae651";
                 idLabel = "60c26dfc44555566d32ae700";

@@ -87,7 +87,7 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, 0, 90, TimeUnit.SECONDS);
+        }, 0, 2, TimeUnit.MINUTES);
     }
     //minutesToNextHour(calendar)
 
@@ -151,7 +151,8 @@ public class CenterPiece {
     public static JSONObject checkTrelloForSO(HttpClient client, String soNum) throws IOException, InterruptedException {
 
         String modelTypes = "cards";
-        String card_fields = "name,closed,desc,idList";
+//        String card_fields = "name,closed,desc,idList,labels";
+        String card_fields = "closed,idList,labels";
 
         TrelloCalls trelloAPICall = new TrelloCalls(client, "search", String.format("query=%s&modelTypes=%s&card_fields=%s",
                 soNum, modelTypes, card_fields));
@@ -180,9 +181,11 @@ public class CenterPiece {
     public static List<Integer> tallySOsToBeCreated(HttpClient client, int size, List<String> currentList) throws IOException, InterruptedException {
 
         List<Integer> tally = new ArrayList<>();
+
         for (int i = 0; i< size; i++){
-            if(checkTrelloForSO(client, currentList.get(i)).has("id")){
-                if (checkTrelloForSO(client, currentList.get(i)).getString("id").equals("Empty")) {
+            var checkHold = checkTrelloForSO(client, currentList.get(i));
+            if(checkHold.has("id")){
+                if (checkHold.getString("id").equals("Empty")) {
                     System.out.println("Tally: " + tally);
                     tally.add(i);
                 }
@@ -231,6 +234,18 @@ public class CenterPiece {
                         itemInformation.remove("idList");
                         itemInformation.put("idList", result.getString("idList"));
 
+                        ArrayList<String> labelIds = new ArrayList<>();
+                        if(result.has("labels")) {
+                            for(int x = 0; x < result.getJSONArray("labels").length(); x++){
+
+                                labelIds.add(result.getJSONArray("labels")
+                                        .getJSONObject(x).getString("id"));
+                            }
+
+                            itemInformation.remove("idLabel");
+                            itemInformation.put("idLabel", String.join(",", labelIds));
+                        }
+
                         String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
 
                         System.out.println("\n--- Updated a Trello Card ---");
@@ -242,9 +257,12 @@ public class CenterPiece {
                         System.out.println("\nUpdates Applied");
                     }else{
                         System.out.println("\n- Trello Hasn't Updated Yet -");
+                        //TODO Work out some way to create a card if there isn't one on Trello yet
                     }
                 }else{
-                    System.out.println("\n- Trello Hasn't Updated Yet -");
+                    System.out.println("\n- Trello Hasn't Updated Yet 2 -");
+
+                    //TODO Work out some way to create a card if there isn't one on Trello yet
                 }
             }
         }else{
@@ -308,12 +326,15 @@ public class CenterPiece {
                         jsonSO.getString("TransactionJob")
         );
 
+
+
         name = name.replace(" ", "%20");
         name = name.replace("&", "%26");
         name = name.replace(",", "%2C");
         name = name.replace("#", "%23");
         name = name.replace("@", "%40");
         name = name.replace("*", "%2A");
+        name = name.replace("'", "%27");
 
         description = description.replace(" ", "%20");
         description = description.replace("&", "%26");
@@ -321,6 +342,7 @@ public class CenterPiece {
         description = description.replace("#", "%23");
         description = description.replace("@", "%40");
         description = description.replace("*", "%2A");
+        description = description.replace("'", "%27");
 
         String parameters = String.format("idList=%s&name=%s&idLabels=%s&due=%s", idList, name, idLabels, dueDate);
 
