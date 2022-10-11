@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.CenterPiece.APICalls.*;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import org.json.*;
 
 
@@ -87,7 +88,7 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, 0, 2, TimeUnit.MINUTES);
+        }, 0, 5, TimeUnit.MINUTES);
     }
     //minutesToNextHour(calendar)
 
@@ -154,26 +155,57 @@ public class CenterPiece {
 //        String card_fields = "name,closed,desc,idList,labels";
         String card_fields = "closed,idList,labels";
 
-        TrelloCalls trelloAPICall = new TrelloCalls(client, "search", String.format("query=%s&modelTypes=%s&card_fields=%s",
+        TrelloCalls trelloAPICall = new TrelloCalls(client, "search", String.format("query=%s&modelTypes=%s&card_fields=%s&card_attachments=true",
                 soNum, modelTypes, card_fields));
 
         System.out.println("\n-- Check Trello For SO --");
         var response = trelloAPICall.getTrelloAPICall();
         System.out.println(response);
 
+        if(response.has("cards")){
+            if(response.getJSONArray("cards").length() > 0){
+                JSONArray cards = response.getJSONArray("cards");
 
-        JSONArray cards = response.getJSONArray("cards");
+                List<JSONObject> openTrelloCards = new ArrayList<>();
 
-        for (int i = 0; i < cards.length(); i++){
-            if(!cards.getJSONObject(i).getBoolean("closed")) {
-//                System.out.println("\n-- Check Trello For SO --");
-//                System.out.println(cards.getJSONObject(i));
-                return cards.getJSONObject(i);
+                for (int i = 0; i < cards.length(); i++) {
+                    if (!cards.getJSONObject(i).getBoolean("closed")) {
+        //                System.out.println("\n-- Check Trello For SO --");
+        //                System.out.println(cards.getJSONObject(i));
+                        //return cards.getJSONObject(i);
+                        openTrelloCards.add(cards.getJSONObject(i));
+                    }
+                }
+                if(openTrelloCards.size() > 1){
+
+                    JSONObject desiredCard = new JSONObject();
+
+                    TrelloCalls trelloCalls = new TrelloCalls(client,"cards/");
+                    for(int i = 0; i < openTrelloCards.size(); i++){
+                        //TODO Handle Multiple cards with attachments
+                            if(desiredCard.isEmpty() && openTrelloCards.get(i).getJSONArray("attachments").length() > 0){
+                                desiredCard = openTrelloCards.get(i);
+                                openTrelloCards.remove(i);
+                            }
+                    }
+                    if(desiredCard.isEmpty()){
+                        desiredCard = openTrelloCards.get(0);
+                        openTrelloCards.remove(0);
+                    }
+
+                    for(JSONObject json: openTrelloCards){
+                        System.out.println("\n - Deleted Duplicate TrelloCard -\n" + json + "\n");
+                        var deleteResponse = trelloCalls.deleteTrelloAPICall(json.getString("id"));
+                    }
+
+                    return desiredCard;
+                }else{
+                    return openTrelloCards.get(0);
+                }
             }
         }
 
         JSONObject json = new JSONObject();
-
         json.put("id","Empty");
         return json;
     }
@@ -201,12 +233,17 @@ public class CenterPiece {
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId, jsonSO.get("OrderID").toString());
         JSONObject itemInformation = itemCodeHandler.itemParseProcess();
+
+
+
         String parameters = agilityDataForTrelloGather(jsonSO, itemInformation);
 
 
         System.out.println("\n-- Created Card --");
         TrelloCalls trelloAPICall = new TrelloCalls(client, "cards", parameters);
         var response = trelloAPICall.postTrelloAPICall();
+
+
 
         checkTrelloCardForEmptyCustomFields(client, response.getString("id"), itemInformation);
     }
@@ -231,8 +268,21 @@ public class CenterPiece {
 
                         JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
 
-                        itemInformation.remove("idList");
-                        itemInformation.put("idList", result.getString("idList"));
+//                        if(result.getString("idList").equals("60c26dfb44555566d32ae651") ||
+//                                result.getString("idList").equals("62c4430fcdfa097c5642436b") ||
+//                                result.getString("idList").equals("61c1e06cdc22878b2e8c7ae7") ||
+//                                result.getString("idList").equals("60c26dfb44555566d32ae64c") ||
+//                                result.getString("idList").equals("") ||
+//                                result.getString("idList").equals("") ||
+//                                result.getString("idList").equals("")) {
+                        System.out.println(itemInformation.getString("idList"));
+                        if(result.has("idList") &&
+                                !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                        itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))) {
+                            itemInformation.remove("idList");
+                            itemInformation.put("idList", result.getString("idList"));
+                        }
+                       // }
 
                         ArrayList<String> labelIds = new ArrayList<>();
                         if(result.has("labels")) {
@@ -259,7 +309,9 @@ public class CenterPiece {
                         System.out.println("\n- Trello Hasn't Updated Yet -");
                         //TODO Work out some way to create a card if there isn't one on Trello yet
                     }
-                }else{
+                }else if (result.has("error")) {
+                    System.out.println(result);
+                } else{
                     System.out.println("\n- Trello Hasn't Updated Yet 2 -");
 
                     //TODO Work out some way to create a card if there isn't one on Trello yet
@@ -311,17 +363,19 @@ public class CenterPiece {
 
         int dateHold = Integer.parseInt(dueDate.substring(8, 10));
 
+
         if(dateHold+1>31) {
             dueDate = dueDate.substring(0, 8) + (Integer.valueOf(dueDate.substring(8, 10)));
         }else{
             dateHold++;
             dueDate = dueDate.substring(0, 8) + dateHold;
         }
+
         String name = (
                 "SO "+
                         jsonSO.getNumber("OrderID") +
                         " - " +
-                        jsonSO.getString("ShipToName") +
+                        jsonSO.getString("BillToName") +
                         " - " +
                         jsonSO.getString("TransactionJob")
         );
@@ -349,6 +403,7 @@ public class CenterPiece {
         if(!description.isEmpty()){
             parameters += String.format("&desc=%s", description);
         }
+
         return parameters;
     }
 }

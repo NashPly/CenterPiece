@@ -61,6 +61,7 @@ public class ItemCodeHandler {
 
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
         }
+        System.out.println("Here");
         return this.getCardDestinationFromItemCodeResult();
     }
 
@@ -118,14 +119,14 @@ public class ItemCodeHandler {
 
         DateTime dt = new DateTime();
 
-        int minHold = dt.getMinuteOfHour()-3;
+        int minHold = dt.getMinuteOfHour()-6;
         int hourHold = dt.getHourOfDay();
         int dayHold = dt.getDayOfMonth();
         int monthHold = dt.getMonthOfYear();
         int yearHold = dt.getYear();
 
         if(minHold<0){
-            minHold = dt.getMinuteOfHour()+57;
+            minHold = dt.getMinuteOfHour()+54;
             hourHold--;
             if(hourHold<0)
                 hourHold += 24;
@@ -197,7 +198,6 @@ public class ItemCodeHandler {
         AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
-
         return response.getJSONObject("response")
                 .getJSONObject("ItemsListResponse")
                 .getJSONObject("dsItemsListResponse")
@@ -208,7 +208,7 @@ public class ItemCodeHandler {
 
     public JSONObject getCardDestinationFromItemCodeResult(){
 
-        String idList;
+        String idList = null;
         String idLabel;
         String colorCode = null;
         String linkedType = null;
@@ -221,40 +221,48 @@ public class ItemCodeHandler {
         //TODO figure out order status in IF statement
         // Set status variable to go into the various cases
 
+
         switch (this.itemGroup) {
             case "3300" -> {
-
                 //kk cabinets
-                idList = "62869b5c1351de037ffd2cc4";
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
                 idLabel = "62869b5c1351de037ffd2d26";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 rmCustomField = "62869b5c1351de037ffd2dab";
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
             }
             case "3350" -> {
-                System.out.println("Success");
                 //cnc cabinets
-                idList = "62869b5c1351de037ffd2cc4";
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
                 idLabel = "62869e47dcae4f52e15c90e1";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
             }
             case "3455" -> {
-
                 //tru cabinets
-                idList = "62869b5c1351de037ffd2cc4";
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
                 idLabel = "62869db3e04b83468347996b";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
             }
             case "3450" -> {
-
                 //choice cabinets
-                idList = "62869b5c1351de037ffd2cc4";
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
                 idLabel = "62869b5c1351de037ffd2d32";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 rmCustomField = "62869b5c1351de037ffd2dab";
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
             }
             case "3500" -> {
 
@@ -262,12 +270,18 @@ public class ItemCodeHandler {
                 // whether it be in side the CASE or determined globally within the function
                 // check to see OrderStatus to determine placement
                 // pass that in to determine respective location
+
                 //counter tops
-                idList = "60c26dfb44555566d32ae651";
+
+                //idList = "60c26dfb44555566d32ae651";
+                //System.out.println(orderStatusLogic("Tops"));
+
+                idList = orderStatusLogic("Tops");
                 idLabel = "60c26dfc44555566d32ae700";
                 colorCustomFieldID = "6197b500bbb79658801189ce";
                 rmCustomField = "621519b6944e3c4fc091a515";
-                if(this.agilityItemSearchResult.getString("ExtendedDescription").contains("FAB")){
+
+                if(this.agilityItemSearchResult.getString("ExtendedDescription").contains("FAB") || this.agilityItemSearchResult.getString("ExtendedDescription").contains("SLAB")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
                     //TODO Not a long term parsing solution
                     colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
@@ -291,5 +305,89 @@ public class ItemCodeHandler {
         json.put("linkedID", linkedID);
 
         return json;
+    }
+
+    public String orderStatusLogic(String board){
+
+        JSONObject itemDetails = new JSONObject();
+
+        if(this.salesOrder.has("dtOrderDetailResponse")) {
+             itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
+        } else {
+            //return "inboxList";
+            return whichBoard("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f", board);
+        }
+
+        String orderStatus = this.salesOrder.getString("OrderStatus");
+        String orderProcessStatus = this.salesOrder.getString("OrderProcessStatus");
+        String saleType = this.salesOrder.getString("SaleType"); //WHSE or WILLCALL
+
+//        if(orderStatus.equals("Open")){
+//
+//            switch(orderProcessStatus){
+//                case "" -> {
+//                    System.out.println("Here");
+//                    //Fresh order
+//
+//                    if(itemDetails.has("LinkedTranType")){
+//                        if(itemDetails.getString("LinkedTranType").equals("RM")){
+//                            //return whichBoard("cablistProcessingUnstaged", "topListProcessingUnstaged", board);
+//                            return whichBoard("cablistProcessingUnstaged", "61b35f8a4f5eab8d0b16235e", board);
+//                            //return "processingList";
+//                        }else if (itemDetails.getString("LinkedTranType").equals("PO")){
+//                            return whichBoard("cablistOrderUnstaged", "topListOrderUnstaged", board);
+//                            //return "orderList";
+//                        }
+//                    } else{
+//                        //return whichBoard("cablistBatchingUnstaged", "topListBatchingUnstaged", board);
+//                        return whichBoard("cablistBatchingUnstaged", "60c26dfb44555566d32ae651", board);
+//                        //return "batching/processing list";
+//                    }
+//
+//                }
+//                case "Unstaged" -> {
+//
+//                }
+//                case "Picked" -> {
+//                    //return whichBoard("cablistPicked", "topListPicked", board);
+//                    return whichBoard("cablistPicked", "60c26dfb44555566d32ae64d", board);
+//                    //return "pickedList";
+//                    //return "list";
+//                }
+//                case "Staged" -> {
+//                    return whichBoard("cablistStaged", "topListStaged", board);
+//                    //return "stagedList";
+//                    //return "list";
+//                }
+//            }
+//
+//        }else
+            if(orderStatus.equals("Invoiced")) {
+                return whichBoard("62869b5c1351de037ffd2cd4", "61b360e35ab37c0d9037c19f", board);
+
+            }else{
+                return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+            }
+//        }else if(orderStatus.equals("Closed")){
+//
+//            return "closedList";
+//        }
+//        return "List";
+    }
+
+    public String whichBoard(String cabList, String topList, String boardName){
+        String destination = "";
+        switch(boardName){
+            case "Tops" -> {
+                destination = topList;
+                break;
+            }
+            case "Cabinets" -> {
+                destination = cabList;
+                break;
+            }
+            
+        }
+        return destination;
     }
 }
