@@ -254,13 +254,13 @@ public class CenterPiece {
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId);
 
         List<String> liveTrelloBuckets = new ArrayList<>();
-        liveTrelloBuckets.addAll(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f", "62869b5c1351de037ffd2ccb",
-                "60c26dfb44555566d32ae64c", "62869b5c1351de037ffd2cc4", "61b35f8a4f5eab8d0b16235e",
-                "62869b5c1351de037ffd2cc4", "61b35f8a4f5eab8d0b16235e", "62869b5c1351de037ffd2ccd",
-                "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d",
-                "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9", "62869b5c1351de037ffd2cd1",
-                "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4", "61b360e35ab37c0d9037c19f",
-                "62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651"));
+        liveTrelloBuckets.addAll(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
+                "62869b5c1351de037ffd2ccb", "60c26dfb44555566d32ae64c", "61b35f8a4f5eab8d0b16235e",
+                "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
+                "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
+                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
+                "61b360e35ab37c0d9037c19f", "60c26dfb44555566d32ae651", "60c26dfb44555566d32ae64c",
+                "62869b5c1351de037ffd2ccb"));
 
         JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 

@@ -325,6 +325,28 @@ public class ItemCodeHandler {
         if(orderStatus.equals("Open")){
 
             switch(orderProcessStatus){
+                case "Picked" -> {
+                    if(saleType.equals("WHSE")) {
+
+                        System.out.println(" - " + board + " Picked - ");
+                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
+                    } else if (saleType.equals("WILLCALL")){
+
+                        System.out.println(" - " + board + " Picked - ");
+                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
+
+                    }
+                }
+                case "Staged" -> {
+                    if(saleType.equals("WHSE")) {
+                        System.out.println(" - " + board + " Staged - ");
+                        return whichBoard("62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", board);
+                    }
+                    if(saleType.equals("WILLCALL")) {
+                        System.out.println(" - " + board + " Willcall - ");
+                        return whichBoard("62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9", board);
+                    }
+                }
                 case "" -> {
                     //Fresh order
 
@@ -340,8 +362,10 @@ public class ItemCodeHandler {
 
                                 //TODO Review
                                 //In Production
-                                System.out.println(" - " + board + " In Production - ");
-                                return whichBoard("62869b5c1351de037ffd2ccb", "60c26dfb44555566d32ae64c", board);
+                                //System.out.println(" - " + board + " In Production - ");
+                                System.out.println(" - " + board + " Processing || Batching - ");
+                                return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+                                //return whichBoard("62869b5c1351de037ffd2ccb", "60c26dfb44555566d32ae64c", board);
                             }else {
 
                                 //In Processing
@@ -364,24 +388,6 @@ public class ItemCodeHandler {
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
                         return whichBoard("62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", board);
-                    }
-                }
-
-                case "Picked" -> {
-                    if(saleType.equals("WHSE")) {
-
-                        System.out.println(" - " + board + " Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
-                    } else if (saleType.equals("WILLCALL")){
-
-                        System.out.println(" - " + board + " Willcall - ");
-                        return whichBoard("62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9", board);
-                    }
-                }
-                case "Staged" -> {
-                    if(saleType.equals("WHSE")) {
-                        System.out.println(" - " + board + " Staged - ");
-                        return whichBoard("62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", board);
                     }
                 }
             }
