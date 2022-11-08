@@ -16,4 +16,4 @@ FROM maven:3.8.3-openjdk-17 AS Run
 
 COPY --from=build ./target/CenterPiece-1.0-SNAPSHOT.jar /usr/local/lib/centerpiece.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "./target/CenterPiece-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/usr/local/lib/centerpiece.jar"]
