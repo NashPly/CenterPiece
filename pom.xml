@@ -19,20 +19,40 @@
                 </configuration>
             </plugin>
             <plugin>
-      <!-- Build an executable JAR -->
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <version>3.2.0</version>
-      <configuration>
-        <archive>
-          <manifest>
-            <addClasspath>true</addClasspath>
-            <classpathPrefix>src/main/java/</classpathPrefix>
-            <mainClass>com.CenterPiece.CenterPiece</mainClass>
-          </manifest>
-        </archive>
-      </configuration>
-    </plugin>
+               <!-- Build an executable JAR -->
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-jar-plugin</artifactId>
+               <version>3.2.0</version>
+               <configuration>
+                 <archive>
+                   <manifest>
+                     <addClasspath>true</addClasspath>
+                     <classpathPrefix>src/main/java/</classpathPrefix>
+                     <mainClass>com.CenterPiece.CenterPiece</mainClass>
+                   </manifest>
+                 </archive>
+               </configuration>
+             </plugin>
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.json:json</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
