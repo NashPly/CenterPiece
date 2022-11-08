@@ -8,8 +8,8 @@ on:
 
 jobs:
 
-  build:
-
+  build-conteiner:
+    name: Build container
     runs-on: ubuntu-latest
 
     steps:     
@@ -19,9 +19,10 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag beakston -t centerpiece
-    - name: Commit Docker image
-      run: docker commit beakston/centerpiece:latest
-    - name: Push Docker Image
-      run: docker push beakston/centerpiece:latest
+    - name: Build and push to Docker
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: beakston/centerpiece:latest, beakston centerpiece:${{ github.run_number }}
+     
