@@ -30,6 +30,7 @@
                             <mainClass>com.CenterPiece.CenterPiece</mainClass>
                         </manifest>
                     </archive>
+
                 </configuration>
             </plugin>
         </plugins>
