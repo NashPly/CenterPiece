@@ -12,7 +12,7 @@ COPY pom.xml ./
 # RUN mvn -f pom.xml clean package
 RUN mvn -f pom.xml install
 
-FROM maven:3.8.3-openjdk-17 AS Run
+FROM maven:3.8.6-openjdk-18 AS Run
 
 COPY --from=build ./target/CenterPiece-1.0-SNAPSHOT.jar /usr/local/lib/centerpiece.jar
 EXPOSE 8080
