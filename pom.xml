@@ -18,6 +18,20 @@
                     <target>16</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <!-- Building an executable jar -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- give full qualified name of your main class-->
+                            <mainClass>com.CenterPiece</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
