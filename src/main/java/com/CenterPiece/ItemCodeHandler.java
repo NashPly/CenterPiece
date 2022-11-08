@@ -119,14 +119,14 @@ public class ItemCodeHandler {
 
         DateTime dt = new DateTime();
 
-        int minHold = dt.getMinuteOfHour()-6;
+        int minHold = dt.getMinuteOfHour()-4;
         int hourHold = dt.getHourOfDay();
         int dayHold = dt.getDayOfMonth();
         int monthHold = dt.getMonthOfYear();
         int yearHold = dt.getYear();
 
         if(minHold<0){
-            minHold = dt.getMinuteOfHour()+54;
+            minHold = dt.getMinuteOfHour()+56;
             hourHold--;
             if(hourHold<0)
                 hourHold += 24;

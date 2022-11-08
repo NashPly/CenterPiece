@@ -1,0 +1,1 @@
+cmd /k java -jar "out\artifacts\CenterPiece_Test_Scripts_jar\CenterPiece Test Scripts.jar"

@@ -89,7 +89,7 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
-        }, 0, 5, TimeUnit.MINUTES);
+        }, 0, 3, TimeUnit.MINUTES);
     }
     //minutesToNextHour(calendar)
 
@@ -134,7 +134,7 @@ public class CenterPiece {
                 .header("accept", "application/json")
                 .header("accept", "application/json")
                 .header("ContextId", contextId)
-                .header("Branch", "CABINETS")
+                .header("Branch", "FABRICATION")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                 .build();
 
@@ -255,12 +255,10 @@ public class CenterPiece {
 
         List<String> liveTrelloBuckets = new ArrayList<>();
         liveTrelloBuckets.addAll(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
-                "62869b5c1351de037ffd2ccb", "60c26dfb44555566d32ae64c", "61b35f8a4f5eab8d0b16235e",
                 "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
                 "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
                 "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
-                "61b360e35ab37c0d9037c19f", "60c26dfb44555566d32ae651", "60c26dfb44555566d32ae64c",
-                "62869b5c1351de037ffd2ccb"));
+                "61b360e35ab37c0d9037c19f"));
 
         JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 
@@ -289,11 +287,14 @@ public class CenterPiece {
 
 
                         System.out.println(itemInformation.getString("idList"));
-                        if(result.has("idList") && !(liveTrelloBuckets.contains(result.getString("idList")))) {
-                            itemInformation.remove("idList");
-                            itemInformation.put("idList", result.getString("idList"));
+                        if(result.has("idList") &&
+                                !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                        itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))){
+                            if(!liveTrelloBuckets.contains(result.getString("idList"))) {
+                                itemInformation.remove("idList");
+                                itemInformation.put("idList", result.getString("idList"));
+                            }
                         }
-                       // }
 
                         ArrayList<String> labelIds = new ArrayList<>();
                         if(result.has("labels")) {

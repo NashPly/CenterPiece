@@ -4,10 +4,15 @@
 # RUN javac src/main/java/com/CenterPiece/CenterPiece.java
 # CMD ["java", "CenterPiece"]
 
+FROM maven:3.8.6-openjdk-18 AS build
+
+COPY src ./
+COPY pom.xml ./
+
+RUN mvn -f pom.xml clean package
+
 FROM maven:3.8.6-openjdk-18
 
-COPY ./ ./
-
-RUN mvn clean package
-
-CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
+COPY --from=build ./target/CenterPiece-1.0-SNAPSHOT.jar /usr/local/lib/centerpiece.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/usr/local/lib/centerpiece.jar"]
