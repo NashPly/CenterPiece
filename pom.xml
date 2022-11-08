@@ -27,7 +27,7 @@
                     <archive>
                         <manifest>
                             <!-- give full qualified name of your main class-->
-                            <mainClass>com.CenterPiece.CenterPiece</mainClass>
+                            <mainClass>com.CenterPiece</mainClass>
                         </manifest>
                     </archive>
 
