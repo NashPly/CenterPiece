@@ -13,8 +13,8 @@ COPY pom.xml ./
 RUN mvn -f pom.xml install
 
 FROM openjdk:18
-
-COPY --from=build target/CenterPiece-1.0-SNAPSHOT.jar com.CenterPiece.CenterPiece
+COPY --from=build target/CenterPiece-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-cp", "com.CenterPiece.CenterPiece"]
+ENTRYPOINT ["java","-jar","/app.jar"]
+#ENTRYPOINT ["java", "-cp", "com.CenterPiece.CenterPiece"]
 #CMD java -cp target/CenterPiece-1.0-SNAPSHOT.jar com.CenterPiece.CenterPiece
