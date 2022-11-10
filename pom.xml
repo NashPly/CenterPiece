@@ -21,17 +21,17 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-jar-plugin</artifactId>
-                     <version>3.1.0</version>
+                     <version>3.2.0</version>
                   <configuration>
                            <archive>
                               <manifest>
                                   <addClasspath>true</addClasspath>
-                                  <classpathPrefix>lib/</classpathPrefix>
                                   <mainClass>com.CenterPiece.CenterPiece</mainClass>
                               </manifest>
                            </archive>
                   </configuration>
              </plugin>
+
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -53,9 +53,10 @@
                 </executions>
             </plugin>
         </plugins>
-              <finalName>centerpiece-app</finalName>
+<!--              <finalName>centerpiece-app</finalName>-->
     </build>
     <dependencies>
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>

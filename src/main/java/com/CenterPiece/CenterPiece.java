@@ -44,10 +44,13 @@ public class CenterPiece {
                 e.printStackTrace();
             }
 
+
+
             JSONArray currentSalesOrders = new JSONArray();
             try {
 
                 ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId);
+
                 currentSalesOrders = itemCodeHandler.agilitySalesOrderListLookup();
 
             } catch (IOException | InterruptedException e) {

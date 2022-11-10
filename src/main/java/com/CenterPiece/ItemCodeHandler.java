@@ -75,13 +75,11 @@ public class ItemCodeHandler {
             currentHour = "0" + dt.getHourOfDay();
         else
             currentHour = "" + dt.getHourOfDay();
-
         String currentDay;
         if(dt.getDayOfMonth()<10)
             currentDay = "0" + dt.getDayOfMonth();
         else
             currentDay = "" + dt.getDayOfMonth();
-
         String currentMonth;
         if(dt.getMonthOfYear()<10)
             currentMonth = "0" + dt.getMonthOfYear();
