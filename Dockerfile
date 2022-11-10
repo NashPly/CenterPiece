@@ -13,7 +13,7 @@ RUN mvn -f pom.xml install
 
 FROM maven:3.8.6-openjdk-18 AS build
 #FROM openjdk:18
-ADD --from=build target/CenterPiece-1.0-SNAPSHOT.jar CenterPiece-1.0-SNAPSHOT.jar
+ADD target/CenterPiece-1.0-SNAPSHOT.jar CenterPiece-1.0-SNAPSHOT.jar
 ENTRYPOINT ["java","-jar","CenterPiece-1.0-SNAPSHOT.jar"]
 #COPY --from=build target/CenterPiece-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8080
