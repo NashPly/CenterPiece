@@ -1,4 +1,4 @@
-com\CenterPiece\CenterPiece.class
-com\CenterPiece\APICalls\TrelloCalls.class
-com\CenterPiece\ItemCodeHandler.class
-com\CenterPiece\APICalls\AgilityCalls.class
+com\CenterPiece\CenterPiece\APICalls\AgilityCalls.class
+com\CenterPiece\CenterPiece\CenterPieceApplication.class
+com\CenterPiece\CenterPiece\APICalls\TrelloCalls.class
+com\CenterPiece\CenterPiece\ItemCodeHandler.class
