@@ -44,6 +44,8 @@ public class CenterPieceApplication {
 				e.printStackTrace();
 			}
 
+
+
 			JSONArray currentSalesOrders = new JSONArray();
 			try {
 
@@ -270,7 +272,7 @@ public class CenterPieceApplication {
 
 				JSONObject result = checkTrelloForSO(client, String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID")));
 
-				ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(client, contextId, salesOrderDataArray.getJSONObject(i).toString());
+				ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(client, contextId, salesOrderDataArray.getJSONObject(i));
 
 				if (result.has("id")){
 					if (!result.getString("id").equals("Empty")) {
