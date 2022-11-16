@@ -11,7 +11,7 @@ public class ItemCodeHandler {
 
     private final HttpClient client;
     private final String contextId;
-    private JSONObject salesOrder;
+    private JSONObject salesOrder = new JSONObject();
     private String salesOrderNumber = "0";
     private String itemCode;
     private String itemGroup = "None";
@@ -30,12 +30,6 @@ public class ItemCodeHandler {
         salesOrderNumber = sO;
     }
 
-    ItemCodeHandler (HttpClient cl, String context, JSONObject salesOrder){
-        client = cl;
-        contextId = context;
-        this.salesOrder = salesOrder;
-    }
-
     public JSONObject itemParseProcess() throws IOException, InterruptedException {
 
         JSONArray salesOrderArray = agilitySalesOrderListLookup();
@@ -47,9 +41,8 @@ public class ItemCodeHandler {
                 }
             }
         }
-        System.out.println("");
 
-        if(this.salesOrder.has("dtOrderDetailResponse")){
+        if (!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
             JSONArray salesOrderItemsArray = this.salesOrder
                     .getJSONArray("dtOrderDetailResponse");
             var item = salesOrderItemsArray.getJSONObject(0);
@@ -60,8 +53,8 @@ public class ItemCodeHandler {
             this.agilityItemSearchResult = agilityItemSearch();
 
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-        }
 
+        }
         return this.getCardDestinationFromItemCodeResult();
     }
 
@@ -309,7 +302,7 @@ public class ItemCodeHandler {
 
         JSONObject itemDetails = new JSONObject();
 
-        if(this.salesOrder.has("dtOrderDetailResponse")) {
+        if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
             System.out.println(" - " + board + " Inbox - ");

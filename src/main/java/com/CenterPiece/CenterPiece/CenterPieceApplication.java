@@ -1,5 +1,7 @@
 package com.CenterPiece.CenterPiece;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -13,8 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import com.CenterPiece.CenterPiece.APICalls.*;
-import org.json.JSONObject;
-import org.json.JSONArray;
+
 
 public class CenterPieceApplication {
 
@@ -44,8 +45,6 @@ public class CenterPieceApplication {
 				e.printStackTrace();
 			}
 
-
-
 			JSONArray currentSalesOrders = new JSONArray();
 			try {
 
@@ -53,6 +52,7 @@ public class CenterPieceApplication {
 
 				currentSalesOrders = itemCodeHandler.agilitySalesOrderListLookup();
 
+				System.out.println("Hello");
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -166,7 +166,7 @@ public class CenterPieceApplication {
 		var response = trelloAPICall.getTrelloAPICall();
 		System.out.println(response);
 
-		if(response.has("cards")){
+		if(!(response == null) && response.has("cards")){
 			if(response.getJSONArray("cards").length() > 0){
 				JSONArray cards = response.getJSONArray("cards");
 
@@ -220,7 +220,7 @@ public class CenterPieceApplication {
 
 		for (int i = 0; i< size; i++){
 			var checkHold = checkTrelloForSO(client, currentList.get(i));
-			if(checkHold.has("id")){
+			if(!(checkHold == null) && checkHold.has("id")){
 				if (checkHold.getString("id").equals("Empty")) {
 					System.out.println("Tally: " + tally);
 					tally.add(i);
@@ -265,16 +265,18 @@ public class CenterPieceApplication {
 
 		JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 
-		if(fetchedSalesOrderData.has("dtOrderResponse")) {
+
+
+		if(!(fetchedSalesOrderData == null) && fetchedSalesOrderData.has("dtOrderResponse")) {
 			JSONArray salesOrderDataArray = fetchedSalesOrderData.getJSONArray("dtOrderResponse");
 
 			for(int i = 0; i < salesOrderDataArray.length(); i++) {
 
 				JSONObject result = checkTrelloForSO(client, String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID")));
 
-				ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(client, contextId, salesOrderDataArray.getJSONObject(i));
+				ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(client, contextId, salesOrderDataArray.getJSONObject(i).toString());
 
-				if (result.has("id")){
+				if (!(result == null) && result.has("id")){
 					if (!result.getString("id").equals("Empty")) {
 
 						JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
@@ -324,7 +326,7 @@ public class CenterPieceApplication {
 						System.out.println("\n- Trello Hasn't Updated Yet -");
 						//TODO Work out some way to create a card if there isn't one on Trello yet
 					}
-				}else if (result.has("error")) {
+				}else if (!(result == null) && result.has("error")) {
 					System.out.println(result);
 				} else{
 					System.out.println("\n- Trello Hasn't Updated Yet 2 -");
@@ -339,13 +341,13 @@ public class CenterPieceApplication {
 
 	public static void checkTrelloCardForEmptyCustomFields(HttpClient client, String cardId, JSONObject itemInformation) throws IOException, InterruptedException {
 
-		if(itemInformation.has("colorCode")){
+		if(!(itemInformation == null) && itemInformation.has("colorCode")){
 			if (itemInformation.getString("colorCode") != null)
 				updateCustomFieldTrello(client, cardId, itemInformation.getString("colorCustomField"), itemInformation.getString("colorCode"));
 		}
 
-		if(itemInformation.has("linkedID") && itemInformation.has("linkedType")){
-			if (!(itemInformation.getString("linkedID").equals(null)) && itemInformation.getString("linkedType").equals("RM"))
+		if(!(itemInformation == null) && itemInformation.has("linkedID") && itemInformation.has("linkedType")){
+			if (itemInformation.getString("linkedID") != null && itemInformation.getString("linkedType").equals("RM"))
 				updateCustomFieldTrello(client, cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedID"));
 		}
 		//TODO Look into auto populating PO's

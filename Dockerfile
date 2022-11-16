@@ -1,7 +1,9 @@
 FROM maven:3.8.6-openjdk-18 AS build
 COPY pom.xml ./
-#COPY target/classes ./
-RUN mvn clean install
-ADD docker/CenterPiece-0.0.1-SNAPSHOT.jar center.jar
+COPY target/classes ./
+RUN mvn install
+ADD target/CenterPiece-0.0.1-SNAPSHOT.jar CenterPiece-0.0.1-SNAPSHOT.jar
 #ENTRYPOINT ["mvn", "exec:java"]
-CMD ["/usr/bin/java", "-jar", "-Dspring.profiles.active=default", "/center.jar"]
+#ENTRYPOINT ["java", "-jar", "target\CenterPiece-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "CenterPiece-0.0.1-SNAPSHOT.jar"]
+#RUN java -jar target/CenterPiece-0.0.1-SNAPSHOT.jar
