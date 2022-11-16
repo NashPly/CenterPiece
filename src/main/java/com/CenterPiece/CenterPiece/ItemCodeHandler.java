@@ -2,6 +2,7 @@ package com.CenterPiece.CenterPiece;
 
 import com.CenterPiece.CenterPiece.APICalls.AgilityCalls;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -62,7 +63,9 @@ public class ItemCodeHandler {
 
         JSONObject innerRequestBody = new JSONObject();
 
-        DateTime dt = new DateTime();
+        DateTime dtus = new DateTime();
+        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+        DateTime dt = dtus.withZone(dtZone);
         String currentHour;
         if(dt.getHourOfDay()<10)
             currentHour = "0" + dt.getHourOfDay();
@@ -108,7 +111,9 @@ public class ItemCodeHandler {
 
         JSONObject innerRequestBody = new JSONObject();
 
-        DateTime dt = new DateTime();
+        DateTime dtus = new DateTime();
+        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+        DateTime dt = dtus.withZone(dtZone);
 
         int minHold = dt.getMinuteOfHour()-4;
         int hourHold = dt.getHourOfDay();

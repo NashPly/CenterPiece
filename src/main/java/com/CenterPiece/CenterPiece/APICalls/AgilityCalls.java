@@ -26,6 +26,8 @@ public class AgilityCalls {
     public JSONObject postAgilityAPICall() throws IOException, InterruptedException {
 
         String url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
+        System.out.println("\n - + -- " + urlEndpoint + " ---");
+        System.out.println("\n - + -- " + this.requestBody + " ---");
         var request = HttpRequest.newBuilder(
                 URI.create(url + urlEndpoint))
                 .header("accept", "application/json")
