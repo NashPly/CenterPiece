@@ -20,15 +20,16 @@ public class ItemCodeHandler {
     private String linkedTranID;
     private JSONObject agilityItemSearchResult;
 
-    public ItemCodeHandler(HttpClient cl, String context) throws IOException, InterruptedException {
-        client = cl;
-        contextId = context;
+    public ItemCodeHandler(HttpClient cl, String context){
+        this.client = cl;
+        this.contextId = context;
     }
 
-    public ItemCodeHandler(HttpClient cl, String context, String sO){
-        client = cl;
-        contextId = context;
-        salesOrderNumber = sO;
+    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder){
+        this.client = cl;
+        this.contextId = context;
+        this.salesOrderNumber = salesOrderNum;
+        this.salesOrder = salesOrder;
     }
 
     public JSONObject itemParseProcess() throws IOException, InterruptedException {
@@ -51,6 +52,7 @@ public class ItemCodeHandler {
             this.linkedTranType = item.getString("LinkedTranType");
             this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
 
+            System.out.println("\n-- agilityItemSearchResult --");
             this.agilityItemSearchResult = agilityItemSearch();
 
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
@@ -85,8 +87,8 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+currentHour+":59:59-6:00");
+        innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+"01:00:00-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+"23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
@@ -219,47 +221,47 @@ public class ItemCodeHandler {
 
 
         switch (this.itemGroup) {
-            case "3300" -> {
-                //kk cabinets
-
-                //idList = "62869b5c1351de037ffd2cc4";
-                idList = orderStatusLogic("Cabinets");
-                idLabel = "62869b5c1351de037ffd2d26";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
-                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-            }
-            case "3350" -> {
-                //cnc cabinets
-
-                //idList = "62869b5c1351de037ffd2cc4";
-                idList = orderStatusLogic("Cabinets");
-                idLabel = "62869e47dcae4f52e15c90e1";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-
-            }
-            case "3455" -> {
-                //tru cabinets
-
-                //idList = "62869b5c1351de037ffd2cc4";
-                idList = orderStatusLogic("Cabinets");
-                idLabel = "62869db3e04b83468347996b";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-
-            }
-            case "3450" -> {
-                //choice cabinets
-
-                //idList = "62869b5c1351de037ffd2cc4";
-                idList = orderStatusLogic("Cabinets");
-                idLabel = "62869b5c1351de037ffd2d32";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
-                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-                linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
-
-            }
+//            case "3300" -> {
+//                //kk cabinets
+//
+//                //idList = "62869b5c1351de037ffd2cc4";
+//                idList = orderStatusLogic("Cabinets");
+//                idLabel = "62869b5c1351de037ffd2d26";
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                rmCustomField = "62869b5c1351de037ffd2dab";
+//                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+//            }
+//            case "3350" -> {
+//                //cnc cabinets
+//
+//                //idList = "62869b5c1351de037ffd2cc4";
+//                idList = orderStatusLogic("Cabinets");
+//                idLabel = "62869e47dcae4f52e15c90e1";
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//
+//            }
+//            case "3455" -> {
+//                //tru cabinets
+//
+//                //idList = "62869b5c1351de037ffd2cc4";
+//                idList = orderStatusLogic("Cabinets");
+//                idLabel = "62869db3e04b83468347996b";
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//
+//            }
+//            case "3450" -> {
+//                //choice cabinets
+//
+//                //idList = "62869b5c1351de037ffd2cc4";
+//                idList = orderStatusLogic("Cabinets");
+//                idLabel = "62869b5c1351de037ffd2d32";
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                rmCustomField = "62869b5c1351de037ffd2dab";
+//                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+//                linkedType = this.linkedTranType;
+//                linkedID = this.linkedTranID;
+//
+//            }
             case "3500" -> {
 
                 //TODO add in dynamic locations

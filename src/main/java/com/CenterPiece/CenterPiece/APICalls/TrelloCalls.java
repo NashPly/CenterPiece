@@ -31,7 +31,10 @@ public class TrelloCalls {
     //TODO under construction
     public JSONObject getTrelloAPICall() throws IOException, InterruptedException {
 
+        System.out.println("- GET Call to Trello -");
         String uri = String.format("%s%s?%s&key=%s&token=%s", this.baseUrl, this.urlEndpoint, this.parameters, this.key, this.token);
+
+        System.out.println("URL -- "+ uri);
 
         var request = HttpRequest.newBuilder(
                 URI.create(uri))
@@ -41,7 +44,6 @@ public class TrelloCalls {
 
         var response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("- GET Call to Trello -");
         System.out.println(response);
         System.out.println(response.body());
 
@@ -50,8 +52,9 @@ public class TrelloCalls {
 
     public JSONObject postTrelloAPICall() throws IOException, InterruptedException {
 
+        System.out.println("- POST Call to Trello -");
         String uri = String.format("%s%s?%s&key=%s&token=%s", this.baseUrl, this.urlEndpoint, this.parameters, this.key, this.token);
-
+        System.out.println("URL -- "+ uri);
         var request = HttpRequest.newBuilder(
                 URI.create(uri))
                 .header("accept", "application/json")
@@ -61,7 +64,6 @@ public class TrelloCalls {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("- POST Call to Trello -");
         System.out.println(response);
         System.out.println(response.body());
         return new JSONObject(response.body());
@@ -69,8 +71,12 @@ public class TrelloCalls {
 
     public JSONObject putTrelloAPICall(JSONObject innerRequestBody) throws IOException, InterruptedException {
 
+        System.out.println("- PUT Call to Trello -");
         String uri = String.format("%s%s?%s&key=%s&token=%s",
                 this.baseUrl, this.urlEndpoint, this.parameters, this.key, this.token);
+
+        System.out.println("URL -- "+ uri);
+        System.out.println("Body -- "+ innerRequestBody);
 
         var request = HttpRequest.newBuilder(
                 URI.create(uri))
@@ -81,7 +87,6 @@ public class TrelloCalls {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("- PUT Call to Trello -");
         System.out.println(response);
         System.out.println(response.body());
 
@@ -90,10 +95,11 @@ public class TrelloCalls {
 
     public JSONObject deleteTrelloAPICall(String cardId) throws IOException, InterruptedException {
 
+        System.out.println("- Delete Call to Trello -");
         String uri = String.format("%s%s%s?&key=%s&token=%s",
                 this.baseUrl, this.urlEndpoint, cardId, this.key, this.token);
 
-        System.out.println(uri);
+        System.out.println("URL -- "+ uri);
 
         var request = HttpRequest.newBuilder(
                 URI.create(uri))
