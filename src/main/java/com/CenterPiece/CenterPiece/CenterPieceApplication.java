@@ -35,11 +35,14 @@ public class CenterPieceApplication {
 
 			Calendar.getInstance();
 
+			TrelloCardFunctions trelloCardFunctions = null;
+
 			String contextId = null;
 			try {
 
 				contextId = login(client);
 				System.out.println("\n-- Login --");
+				trelloCardFunctions = new TrelloCardFunctions(client, contextId);
 
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
@@ -62,7 +65,7 @@ public class CenterPieceApplication {
 
 			try {
 
-				toBeCreatedSOs = tallySOsToBeCreated(client, currentSalesOrderNumbers.size(), currentSalesOrderNumbers);
+				toBeCreatedSOs = trelloCardFunctions.tallySOsToBeCreated(currentSalesOrderNumbers.size(), currentSalesOrderNumbers);
 
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
@@ -71,7 +74,8 @@ public class CenterPieceApplication {
 			//Test using the first to be created
 			for (Integer toBeCreatedSO : toBeCreatedSOs) {
 				try {
-					createTrelloCard(client, contextId, currentSalesOrders.getJSONObject(toBeCreatedSO));
+
+					trelloCardFunctions.createTrelloCard(currentSalesOrders.getJSONObject(toBeCreatedSO));
 				} catch (IOException | InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -80,7 +84,7 @@ public class CenterPieceApplication {
 			//Update info
 
 			try {
-				updateTrelloCards(client,contextId);
+				trelloCardFunctions.updateTrelloCards();
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -153,6 +157,25 @@ public class CenterPieceApplication {
 		return soList;
 	}
 
+
+
+	//Remove
+	public static List<Integer> tallySOsToBeCreated(TrelloCardFunctions trelloCardFunctions,int size, List<String> currentList) throws IOException, InterruptedException {
+
+		List<Integer> tally = new ArrayList<>();
+
+		for (int i = 0; i< size; i++){
+			var checkHold = trelloCardFunctions.checkTrelloForSO(currentList.get(i));
+			if(!(checkHold == null) && checkHold.has("id")){
+				if (checkHold.getString("id").equals("Empty")) {
+					System.out.println("Tally: " + tally);
+					tally.add(i);
+				}
+			}
+		}
+		return tally;
+	}
+	//Remove
 	public static JSONObject checkTrelloForSO(HttpClient client, String soNum) throws IOException, InterruptedException {
 
 		String modelTypes = "cards";
@@ -214,22 +237,7 @@ public class CenterPieceApplication {
 		return json;
 	}
 
-	public static List<Integer> tallySOsToBeCreated(HttpClient client, int size, List<String> currentList) throws IOException, InterruptedException {
-
-		List<Integer> tally = new ArrayList<>();
-
-		for (int i = 0; i< size; i++){
-			var checkHold = checkTrelloForSO(client, currentList.get(i));
-			if(!(checkHold == null) && checkHold.has("id")){
-				if (checkHold.getString("id").equals("Empty")) {
-					System.out.println("Tally: " + tally);
-					tally.add(i);
-				}
-			}
-		}
-		return tally;
-	}
-
+	//Remove
 	public static void createTrelloCard(HttpClient client, String contextId, JSONObject jsonSO) throws IOException, InterruptedException {
 
 		System.out.println("\n-- Create Trello Card SO --");
@@ -252,6 +260,7 @@ public class CenterPieceApplication {
 		checkTrelloCardForEmptyCustomFields(client, response.getString("id"), itemInformation);
 	}
 
+	//Remove
 	public static void updateTrelloCards(HttpClient client, String contextId) throws IOException, InterruptedException {
 
 		ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, contextId);
@@ -339,6 +348,7 @@ public class CenterPieceApplication {
 		}
 	}
 
+	//Remove
 	public static void checkTrelloCardForEmptyCustomFields(HttpClient client, String cardId, JSONObject itemInformation) throws IOException, InterruptedException {
 
 		if(!(itemInformation == null) && itemInformation.has("colorCode")){
@@ -357,6 +367,7 @@ public class CenterPieceApplication {
 
 	}
 
+	//Remove
 	public static void updateCustomFieldTrello(HttpClient client, String cardId, String customFieldID, String value) throws IOException, InterruptedException {
 
 		String urlEndpoint = String.format("cards/%s/customField/%s/item", cardId, customFieldID );
@@ -369,6 +380,7 @@ public class CenterPieceApplication {
 
 	}
 
+	//Remove
 	public static String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation){
 
 		String idList = itemInformation.getString("idList");
