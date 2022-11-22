@@ -87,7 +87,6 @@ public class SalesOrder {
         this.jobName = this.salesOrder.getString("TransactionJob");
         this.customerName = this.salesOrder.getString("BillToName");
 
-
         //this.branch = this.salesOrder.getString("asdf");
         this.purchaseOrderNumber = this.salesOrder.getString("asdf");
         this.remanNumber = this.salesOrder.getString("asdf");

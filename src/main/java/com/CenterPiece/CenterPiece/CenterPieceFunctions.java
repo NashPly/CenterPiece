@@ -160,6 +160,7 @@ public class CenterPieceFunctions {
                         if(result.has("idList") &&
                                 !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
                                         itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))){
+
                             if(!liveTrelloBuckets.contains(result.getString("idList"))) {
                                 itemInformation.remove("idList");
                                 itemInformation.put("idList", result.getString("idList"));

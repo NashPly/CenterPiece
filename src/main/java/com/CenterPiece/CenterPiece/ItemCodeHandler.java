@@ -315,7 +315,7 @@ public class ItemCodeHandler {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
             System.out.println(" - " + board + " Inbox - ");
-            return whichBoard("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f", board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP").getListID(), board);
         }
 
         String orderStatus = this.salesOrder.getString("OrderStatus");
@@ -329,22 +329,20 @@ public class ItemCodeHandler {
                     if(saleType.equals("WHSE")) {
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), board);
                     } else if (saleType.equals("WILLCALL")){
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
-
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), board);
                     }
                 }
                 case "Staged" -> {
                     if(saleType.equals("WHSE")) {
                         System.out.println(" - " + board + " Staged - ");
-                        return whichBoard("62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", board);
-                    }
-                    if(saleType.equals("WILLCALL")) {
+                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP").getListID(), board);
+                    }else if(saleType.equals("WILLCALL")) {
                         System.out.println(" - " + board + " Willcall - ");
-                        return whichBoard("62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9", board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP").getListID(), board);
                     }
                 }
                 case "" -> {
@@ -358,12 +356,12 @@ public class ItemCodeHandler {
 
                         if (itemDetails.has("LinkedTranType")) {
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
                         } else {
 
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
 
                         }
                     }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
@@ -373,21 +371,23 @@ public class ItemCodeHandler {
 
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP").getListID(), board);
                     }
                 }
             }
 
         }else if(orderStatus.equals("Invoiced")) {
             System.out.println(" - " + board + " Invoiced - ");
-                return whichBoard("62869b5c1351de037ffd2cd4", "61b360e35ab37c0d9037c19f", board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP").getListID(), board);
 
         }else{
             System.out.println(" - " + board + " Processing || Batching - ");
-            return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
         }
         System.out.println(" - " + board + " Processing || Batching - ");
-        return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+
+
+        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
     }
 
     public String whichBoard(String cabList, String topList, String boardName){
