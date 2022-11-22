@@ -14,16 +14,18 @@ public class AgilityCalls {
     private final String contextId;
     private final JSONObject requestBody;
     private final String urlEndpoint;
+    private String branch;
 
 
-    public AgilityCalls(HttpClient cl, String cId, String ue, JSONObject bod){
+    public AgilityCalls(HttpClient cl, String cId, String ue, JSONObject bod, String branch){
         client = cl;
         contextId = cId;
         requestBody = bod;
         urlEndpoint = ue;
+        this.branch = branch;
     }
 
-    public JSONObject postAgilityAPICall() throws IOException, InterruptedException {
+    public JSONObject postAgilityAPICall() {
 
         System.out.println("- POST Call to Agility -");
         String url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
@@ -35,12 +37,18 @@ public class AgilityCalls {
                 URI.create(url + urlEndpoint))
                 .header("accept", "application/json")
                 .header("ContextId", this.contextId)
-                .header("Branch", "FABRICATION")
+                .header("Branch", this.branch)
                 .POST(buildRequest())
                 .build();
 
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         System.out.println(response);
         System.out.println(response.body());

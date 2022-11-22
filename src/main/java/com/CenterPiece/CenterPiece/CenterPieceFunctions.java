@@ -3,37 +3,37 @@ package com.CenterPiece.CenterPiece;
 import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
 
-import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TrelloCardFunctions {
+public class CenterPieceFunctions {
 
     private TrelloCard trelloCard;
-    private HttpClient client;
-    private String contextID;
+    private final HttpClient client;
+    private final String contextID;
     private List<SalesOrder> salesOrderList;
     private JSONObject itemInformation;
+    private final String branch;
 
-    public TrelloCardFunctions(HttpClient client, String contextID) {
+    public CenterPieceFunctions(HttpClient client, String contextID, String branch) {
         this.client = client;
         this.contextID = contextID;
-
+        this.branch = branch;
     }
 
-    public TrelloCard getTrelloCard() {
-        return trelloCard;
+    public List<String> salesOrderParser(JSONArray jsonArray){
+
+        List<String> soList = new ArrayList<>();
+        for(int i = 0; i <  jsonArray.length(); i++){
+            soList.add(jsonArray.getJSONObject(i).get("OrderID").toString());
+        }
+        return soList;
     }
 
-    public void setTrelloCard(TrelloCard trelloCard) {
-        this.trelloCard = trelloCard;
-    }
-
-    public List<Integer> tallySOsToBeCreated(int size, List<String> currentList) throws IOException, InterruptedException {
+    public List<Integer> tallySOsToBeCreated(int size, List<String> currentList) {
 
         List<Integer> tally = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class TrelloCardFunctions {
         return tally;
     }
 
-    public  JSONObject checkTrelloForSO(String soNum) throws IOException, InterruptedException {
+    public  JSONObject checkTrelloForSO(String soNum) {
 
         String modelTypes = "cards";
         String card_fields = "name,closed,desc,idList,labels";
@@ -92,12 +92,16 @@ public class TrelloCardFunctions {
 
                     for(JSONObject json: openTrelloCards){
                         System.out.println("\n - Deleted Duplicate TrelloCard -\n" + json + "\n");
-                        var deleteResponse = trelloCalls.deleteTrelloAPICall(json.getString("id"));
+                        trelloCalls.deleteTrelloAPICall(json.getString("id"));
                     }
 
                     return desiredCard;
-                }else{
+                }else if(openTrelloCards.size() == 1){
                     return openTrelloCards.get(0);
+                }else{
+                    JSONObject json = new JSONObject();
+                    json.put("id","Empty");
+                    return json;
                 }
             }
         }
@@ -107,12 +111,12 @@ public class TrelloCardFunctions {
         return json;
     }
 
-    public void createTrelloCard(JSONObject jsonSO) throws IOException, InterruptedException {
+    public void createTrelloCard(JSONObject jsonSO) {
 
         System.out.println("\n-- Create Trello Card SO --");
         System.out.println(jsonSO);
 
-        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, jsonSO.getNumber("OrderID").toString(), jsonSO);
+        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, jsonSO.getNumber("OrderID").toString(), jsonSO, this.branch);
         JSONObject itemInformation = itemCodeHandler.itemParseProcess();
 
         String parameters = agilityDataForTrelloGather(jsonSO, itemInformation);
@@ -124,12 +128,11 @@ public class TrelloCardFunctions {
         checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
     }
 
-    public void updateTrelloCards() throws IOException, InterruptedException {
+    public void updateTrelloCards() {
 
-        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID);
+        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch);
 
-        List<String> liveTrelloBuckets = new ArrayList<>();
-        liveTrelloBuckets.addAll(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
+        List<String> liveTrelloBuckets = new ArrayList<>(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
                 "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
                 "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
                 "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
@@ -146,7 +149,7 @@ public class TrelloCardFunctions {
 
                 JSONObject result = checkTrelloForSO(String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID")));
 
-                ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderDataArray.getJSONObject(i).getNumber("OrderID").toString(), salesOrderDataArray.getJSONObject(i));
+                ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderDataArray.getJSONObject(i).getNumber("OrderID").toString(), salesOrderDataArray.getJSONObject(i), this.branch);
 
                 if (!(result == null) && result.has("id")){
                     if (!result.getString("id").equals("Empty")) {
@@ -201,7 +204,7 @@ public class TrelloCardFunctions {
         }
     }
 
-    public void checkTrelloCardForEmptyCustomFields(String cardId, JSONObject itemInformation) throws IOException, InterruptedException {
+    public void checkTrelloCardForEmptyCustomFields(String cardId, JSONObject itemInformation) {
 
         if(!(itemInformation == null) && itemInformation.has("colorCode")){
             if (itemInformation.getString("colorCode") != null)
@@ -219,20 +222,15 @@ public class TrelloCardFunctions {
 
     }
 
-    //Remove
-    public void updateCustomFieldTrello(String cardId, String customFieldID, String value) throws IOException, InterruptedException {
-
+    public void updateCustomFieldTrello(String cardId, String customFieldID, String value) {
         String urlEndpoint = String.format("cards/%s/customField/%s/item", cardId, customFieldID );
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("text", value);
         System.out.println("\n-- Update Custom Field in Trello --");
         TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
-        var response = trelloCalls.putTrelloAPICall(jsonObject);
-//        System.out.println(response);
-
+        trelloCalls.putTrelloAPICall(jsonObject);
     }
 
-    //Remove
     public String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation){
 
         String idList = itemInformation.getString("idList");

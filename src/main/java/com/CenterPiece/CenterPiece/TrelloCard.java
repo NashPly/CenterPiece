@@ -21,7 +21,6 @@ public class TrelloCard {
         this.idList = idList;
     }
 
-
     public String getCardTitle() {
         return cardTitle;
     }

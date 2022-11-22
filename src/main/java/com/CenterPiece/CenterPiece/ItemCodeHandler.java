@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.io.IOException;
+
 import java.net.http.HttpClient;
 
 public class ItemCodeHandler {
@@ -19,20 +19,23 @@ public class ItemCodeHandler {
     private String linkedTranType;
     private String linkedTranID;
     private JSONObject agilityItemSearchResult;
+    private final String branch;
 
-    public ItemCodeHandler(HttpClient cl, String context){
+    public ItemCodeHandler(HttpClient cl, String context, String branch){
         this.client = cl;
         this.contextId = context;
+        this.branch = branch;
     }
 
-    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder){
+    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder, String branch){
         this.client = cl;
         this.contextId = context;
         this.salesOrderNumber = salesOrderNum;
         this.salesOrder = salesOrder;
+        this.branch = branch;
     }
 
-    public JSONObject itemParseProcess() throws IOException, InterruptedException {
+    public JSONObject itemParseProcess() {
 
         JSONArray salesOrderArray = agilitySalesOrderListLookup();
 
@@ -61,7 +64,7 @@ public class ItemCodeHandler {
         return this.getCardDestinationFromItemCodeResult();
     }
 
-    public JSONArray agilitySalesOrderListLookup() throws IOException, InterruptedException {
+    public JSONArray agilitySalesOrderListLookup() {
 
         JSONObject innerRequestBody = new JSONObject();
 
@@ -91,7 +94,7 @@ public class ItemCodeHandler {
         innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+"23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
-        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
+        AgilityCalls agilityAPICall = new AgilityCalls(this.client, this.contextId, "Orders/SalesOrderList", innerRequestBody, this.branch);
 
         var response = agilityAPICall.postAgilityAPICall();
 
@@ -109,7 +112,7 @@ public class ItemCodeHandler {
         return new JSONArray();
     }
 
-    public JSONObject agilityChangedSalesOrderListLookup() throws IOException, InterruptedException {
+    public JSONObject agilityChangedSalesOrderListLookup() {
 
         JSONObject innerRequestBody = new JSONObject();
 
@@ -166,7 +169,7 @@ public class ItemCodeHandler {
         innerRequestBody.put("FetchOnlyChangedSince", currentYear+"-"+currentMonth+"-"+currentDay+"T"+searchHour+":"+searchMinute+":00-6:00");
 
         System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
-        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
+        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody, branch);
         var response = agilityAPICall.postAgilityAPICall();
 
         return response.getJSONObject("response")
@@ -174,7 +177,7 @@ public class ItemCodeHandler {
                 .getJSONObject("dsOrdersResponse");
     }
 
-    public JSONObject agilityItemSearch() throws IOException, InterruptedException {
+    public JSONObject agilityItemSearch() {
 
         JSONObject dsItemsListRequest = new JSONObject();
         JSONObject innerDtItemsListRequest = new JSONObject();
@@ -193,7 +196,7 @@ public class ItemCodeHandler {
         dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
 
         System.out.println("- AgilityItemSearch Response -");
-        AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
+        AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest, branch);
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
         return response.getJSONObject("response")
@@ -206,7 +209,7 @@ public class ItemCodeHandler {
 
     public JSONObject getCardDestinationFromItemCodeResult(){
 
-        String idList = null;
+        String idList;
         String idLabel;
         String colorCode = null;
         String linkedType = null;
@@ -214,54 +217,53 @@ public class ItemCodeHandler {
         String colorCustomFieldID = null;
         String rmCustomField = null;
         //TODO Could to enum for status
-        String status = null;
 
         //TODO figure out order status in IF statement
         // Set status variable to go into the various cases
 
 
         switch (this.itemGroup) {
-//            case "3300" -> {
-//                //kk cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869b5c1351de037ffd2d26";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                rmCustomField = "62869b5c1351de037ffd2dab";
-//                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-//            }
-//            case "3350" -> {
-//                //cnc cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869e47dcae4f52e15c90e1";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//
-//            }
-//            case "3455" -> {
-//                //tru cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869db3e04b83468347996b";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//
-//            }
-//            case "3450" -> {
-//                //choice cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869b5c1351de037ffd2d32";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                rmCustomField = "62869b5c1351de037ffd2dab";
-//                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-//                linkedType = this.linkedTranType;
-//                linkedID = this.linkedTranID;
-//
-//            }
+            case "3300" -> {
+                //kk cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869b5c1351de037ffd2d26";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
+                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+            }
+            case "3350" -> {
+                //cnc cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869e47dcae4f52e15c90e1";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
+            }
+            case "3455" -> {
+                //tru cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869db3e04b83468347996b";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
+            }
+            case "3450" -> {
+                //choice cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869b5c1351de037ffd2d32";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
+                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+
+            }
             case "3500" -> {
 
                 //TODO add in dynamic locations
@@ -307,7 +309,7 @@ public class ItemCodeHandler {
 
     public String orderStatusLogic(String board){
 
-        JSONObject itemDetails = new JSONObject();
+        JSONObject itemDetails;
 
         if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
@@ -355,22 +357,8 @@ public class ItemCodeHandler {
                             itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
 
                         if (itemDetails.has("LinkedTranType")) {
-                            if (itemDetails.getString("LinkedTranType").equals("RM") || (itemDetails.getString("LinkedTranType").equals("PO"))) {
-
-
-                                //TODO Review
-                                //In Production
-                                //System.out.println(" - " + board + " In Production - ");
-                                System.out.println(" - " + board + " Processing || Batching - ");
-                                return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
-                                //return whichBoard("62869b5c1351de037ffd2ccb", "60c26dfb44555566d32ae64c", board);
-                            }else {
-
-                                //In Processing
-                                System.out.println(" - " + board + " Processing || Batching - ");
-                                return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
-
-                            }
+                            System.out.println(" - " + board + " Processing || Batching - ");
+                            return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
                         } else {
 
                             //In Processing
@@ -405,14 +393,8 @@ public class ItemCodeHandler {
     public String whichBoard(String cabList, String topList, String boardName){
         String destination = "";
         switch(boardName){
-            case "Tops" -> {
-                destination = topList;
-                break;
-            }
-            case "Cabinets" -> {
-                destination = cabList;
-                break;
-            }
+            case "Tops" -> destination = topList;
+            case "Cabinets" -> destination = cabList;
             
         }
         return destination;
