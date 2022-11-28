@@ -261,7 +261,7 @@ public class CenterPieceApplication {
 				"62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
 				"60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
 				"62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
-				"61b360e35ab37c0d9037c19f"));
+				"61b360e35ab37c0d9037c19f", "6384cfab789e5f01197094ec"));
 
 		JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 
