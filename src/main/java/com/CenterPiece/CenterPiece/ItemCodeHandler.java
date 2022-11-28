@@ -209,6 +209,7 @@ public class ItemCodeHandler {
 
     public JSONObject getCardDestinationFromItemCodeResult(){
 
+        String boardID = null;
         String idList;
         String idLabel;
         String colorCode = null;
@@ -216,6 +217,7 @@ public class ItemCodeHandler {
         String linkedID = null;
         String colorCustomFieldID = null;
         String rmCustomField = null;
+
         //TODO Could to enum for status
 
         //TODO figure out order status in IF statement
@@ -227,6 +229,7 @@ public class ItemCodeHandler {
                 //kk cabinets
 
                 //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869b5c1351de037ffd2d26";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
@@ -237,6 +240,7 @@ public class ItemCodeHandler {
                 //cnc cabinets
 
                 //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869e47dcae4f52e15c90e1";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
@@ -246,6 +250,7 @@ public class ItemCodeHandler {
                 //tru cabinets
 
                 //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869db3e04b83468347996b";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
@@ -255,6 +260,7 @@ public class ItemCodeHandler {
                 //choice cabinets
 
                 //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869b5c1351de037ffd2d32";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
@@ -275,7 +281,7 @@ public class ItemCodeHandler {
 
                 //idList = "60c26dfb44555566d32ae651";
                 //System.out.println(orderStatusLogic("Tops"));
-
+                boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
                 idLabel = "60c26dfc44555566d32ae700";
                 colorCustomFieldID = "6197b500bbb79658801189ce";
@@ -296,6 +302,7 @@ public class ItemCodeHandler {
         }
 
         JSONObject json = new JSONObject();
+        json.put("boardID", boardID);
         json.put("idList", idList);
         json.put("idLabel", idLabel);
         json.put("colorCustomField", colorCustomFieldID);

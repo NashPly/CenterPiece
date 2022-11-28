@@ -55,7 +55,7 @@ public class CenterPieceFunctions {
         String card_fields = "name,closed,desc,idList,labels";
         //String card_fields = "closed,idList,labels";
 
-        TrelloCalls trelloAPICall = new TrelloCalls(this.client, "search", String.format("query=%s&modelTypes=%s&card_fields=%s&card_attachments=true",
+        TrelloCalls trelloAPICall = new TrelloCalls(this.client, "search", String.format("query=%s&card_board=true&modelTypes=%s&card_fields=%s&card_attachments=true",
                 soNum, modelTypes, card_fields));
 
         System.out.println("\n-- Check Trello For SO --");
@@ -143,6 +143,7 @@ public class CenterPieceFunctions {
         //TODO adapt this for Sales orders
 
         if(!(fetchedSalesOrderData == null) && fetchedSalesOrderData.has("dtOrderResponse")) {
+
             JSONArray salesOrderDataArray = fetchedSalesOrderData.getJSONArray("dtOrderResponse");
 
             for(int i = 0; i < salesOrderDataArray.length(); i++) {
@@ -156,11 +157,14 @@ public class CenterPieceFunctions {
 
                         JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
 
+                        boolean sameBoard = itemInformation.getString("boardID").equals(result.getJSONObject("board").getString("id"));
+
                         System.out.println(itemInformation.getString("idList"));
                         if(result.has("idList") &&
                                 !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
-                                        itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))){
-
+                                        itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
+                        sameBoard){
+                            //TODO above checks if current board is destination board
                             if(!liveTrelloBuckets.contains(result.getString("idList"))) {
                                 itemInformation.remove("idList");
                                 itemInformation.put("idList", result.getString("idList"));
@@ -168,7 +172,7 @@ public class CenterPieceFunctions {
                         }
 
                         ArrayList<String> labelIds = new ArrayList<>();
-                        if(result.has("labels")) {
+                        if(result.has("labels") && sameBoard) {
                             for(int x = 0; x < result.getJSONArray("labels").length(); x++){
 
                                 labelIds.add(result.getJSONArray("labels")
@@ -234,6 +238,7 @@ public class CenterPieceFunctions {
 
     public String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation){
 
+        String boardID = itemInformation.getString("boardID");
         String idList = itemInformation.getString("idList");
         String idLabels = itemInformation.getString("idLabel");
 
@@ -278,7 +283,7 @@ public class CenterPieceFunctions {
         description = description.replace("*", "%2A");
         description = description.replace("'", "%27");
 
-        String parameters = String.format("idList=%s&name=%s&idLabels=%s&due=%s", idList, name, idLabels, dueDate);
+        String parameters = String.format("idBoard=%s&idList=%s&name=%s&idLabels=%s&due=%s", boardID, idList, name, idLabels, dueDate);
 
         if(!description.isEmpty()){
             parameters += String.format("&desc=%s", description);
@@ -286,6 +291,4 @@ public class CenterPieceFunctions {
 
         return parameters;
     }
-
-
 }
