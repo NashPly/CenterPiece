@@ -41,19 +41,10 @@ public class AgilityCalls {
                 .POST(buildRequest())
                 .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        APICaller apiCaller = new APICaller(client, request);
 
-        System.out.println(response);
-        System.out.println(response.body());
+        return new JSONObject(apiCaller.makeAPICall().body());
 
-        return new JSONObject(response.body());
     }
 
     public HttpRequest.BodyPublisher buildRequest(){

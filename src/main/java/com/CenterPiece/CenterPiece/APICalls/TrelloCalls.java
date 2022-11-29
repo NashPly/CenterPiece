@@ -43,19 +43,9 @@ public class TrelloCalls {
                 .GET()
                 .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        APICaller apiCaller = new APICaller(client, request);
 
-        System.out.println(response);
-        System.out.println(response.body());
-
-        return new JSONObject(response.body());
+        return new JSONObject(apiCaller.makeAPICall().body());
     }
 
     public JSONObject postTrelloAPICall() {
@@ -70,18 +60,9 @@ public class TrelloCalls {
                 .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        APICaller apiCaller = new APICaller(client, request);
 
-        System.out.println(response);
-        System.out.println(response.body());
-        return new JSONObject(response.body());
+        return new JSONObject(apiCaller.makeAPICall().body());
     }
 
     public JSONObject putTrelloAPICall(JSONObject innerRequestBody) {
@@ -100,19 +81,9 @@ public class TrelloCalls {
                 .PUT(buildRequest(innerRequestBody))
                 .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        APICaller apiCaller = new APICaller(client, request);
 
-        System.out.println(response);
-        System.out.println(response.body());
-
-        return new JSONObject(response.body());
+        return new JSONObject(apiCaller.makeAPICall().body());
     }
 
     public JSONObject deleteTrelloAPICall(String cardId) {
@@ -130,20 +101,9 @@ public class TrelloCalls {
                 .DELETE()
                 .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        APICaller apiCaller = new APICaller(client, request);
 
-        System.out.println("- Delete Call to Trello -");
-        System.out.println(response);
-        System.out.println(response.body());
-
-        return new JSONObject(response.body());
+        return new JSONObject(apiCaller.makeAPICall().body());
     }
 
     public HttpRequest.BodyPublisher buildRequest(JSONObject innerRequest){

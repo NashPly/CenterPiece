@@ -1,5 +1,6 @@
 package com.CenterPiece.CenterPiece;
 
+import com.CenterPiece.CenterPiece.APICalls.TomTomCalls;
 import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,7 +12,6 @@ import java.util.List;
 
 public class CenterPieceFunctions {
 
-    private TrelloCard trelloCard;
     private final HttpClient client;
     private final String contextID;
     private List<SalesOrder> salesOrderList;
@@ -265,25 +265,49 @@ public class CenterPieceFunctions {
                         jsonSO.getString("TransactionJob")
         );
 
+        String address;
+
+        name = urlify(name);
+        description = urlify(description);
+
+        if(!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())){
+            address = jsonSO.getString("ShipToAddress1");
+        }else{
+            address = jsonSO.getString("ShipToAddress2");
+        }
+
+        ShipToAddress shipToAddress = new ShipToAddress(
+                address,
+                jsonSO.getString("ShipToCity"),
+                jsonSO.getString("ShipToState"),
+                jsonSO.getString("ShipToZip"));
 
 
-        name = name.replace(" ", "%20");
-        name = name.replace("&", "%26");
-        name = name.replace(",", "%2C");
-        name = name.replace("#", "%23");
-        name = name.replace("@", "%40");
-        name = name.replace("*", "%2A");
-        name = name.replace("'", "%27");
+        TomTomCalls tomTomCalls = new TomTomCalls(shipToAddress, client);
 
-        description = description.replace(" ", "%20");
-        description = description.replace("&", "%26");
-        description = description.replace(",", "%2C");
-        description = description.replace("#", "%23");
-        description = description.replace("@", "%40");
-        description = description.replace("*", "%2A");
-        description = description.replace("'", "%27");
+//        name = name.replace(" ", "%20");
+//        name = name.replace("&", "%26");
+//        name = name.replace(",", "%2C");
+//        name = name.replace("#", "%23");
+//        name = name.replace("@", "%40");
+//        name = name.replace("*", "%2A");
+//        name = name.replace("'", "%27");
+//
+//        description = description.replace(" ", "%20");
+//        description = description.replace("&", "%26");
+//        description = description.replace(",", "%2C");
+//        description = description.replace("#", "%23");
+//        description = description.replace("@", "%40");
+//        description = description.replace("*", "%2A");
+//        description = description.replace("'", "%27");
 
-        String parameters = String.format("idBoard=%s&idList=%s&name=%s&idLabels=%s&due=%s", boardID, idList, name, idLabels, dueDate);
+        String parameters = String.format(
+                "idBoard=%s&idList=%s&name=%s" +
+                "&idLabels=%s&due=%s&coordinates=%s" +
+                "&locationName=%s",
+                boardID, idList, name, idLabels, dueDate,
+                urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
+                urlify(tomTomCalls.getResponseAddress()));
 
         if(!description.isEmpty()){
             parameters += String.format("&desc=%s", description);
@@ -291,4 +315,19 @@ public class CenterPieceFunctions {
 
         return parameters;
     }
+
+    //Clean for URL
+    private String urlify(String string){
+
+        string = string.replace(" ", "%20");
+        string = string.replace("&", "%26");
+        string = string.replace(",", "%2C");
+        string = string.replace("#", "%23");
+        string = string.replace("@", "%40");
+        string = string.replace("*", "%2A");
+        string = string.replace("'", "%27");
+
+        return string;
+    }
+
 }
