@@ -8,6 +8,7 @@ import java.time.YearMonth;
 public class TimeHandler {
 
     private int searchSplit = 2; //Mins
+
     private DateTime dt;
     private String currentYear;
     private String currentMonth;
@@ -27,8 +28,7 @@ public class TimeHandler {
         DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
         this.dt = dtus.withZone(dtZone);
 
-        int searchMinHold = dt.getMinuteOfHour()-2;
-        //int minHold = dt.getMinuteOfHour()-2;
+        int searchMinHold = dt.getMinuteOfHour()-searchSplit;
         int searchHourHold = dt.getHourOfDay();
         int searchDayHold = dt.getDayOfMonth();
         int searchMonthHold = dt.getMonthOfYear();

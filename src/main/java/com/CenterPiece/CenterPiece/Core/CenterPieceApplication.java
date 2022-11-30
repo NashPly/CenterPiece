@@ -1,5 +1,6 @@
 package com.CenterPiece.CenterPiece.Core;
 
+import com.CenterPiece.CenterPiece.TimeHandler;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -21,24 +22,26 @@ public class CenterPieceApplication {
 
 		session.scheduleAtFixedRate(() -> {
 
-			DateTime dtoo = new DateTime();
-			DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-			DateTime dt = dtoo.withZone(dtZone);
+//			DateTime dtoo = new DateTime();
+//			DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+//			DateTime dt = dtoo.withZone(dtZone);
+//
+//			String currentHour;
+//			if(dt.getHourOfDay()<10)
+//				currentHour = "0" + dt.getHourOfDay();
+//			else
+//				currentHour = "" + dt.getHourOfDay();
+//
+//			String currentMinute;
+//			if(dt.getMinuteOfHour()<10)
+//				currentMinute = "0" + dt.getMinuteOfHour();
+//			else
+//				currentMinute = "" + dt.getMinuteOfHour();
 
-			String currentHour;
-			if(dt.getHourOfDay()<10)
-				currentHour = "0" + dt.getHourOfDay();
-			else
-				currentHour = "" + dt.getHourOfDay();
-
-			String currentMinute;
-			if(dt.getMinuteOfHour()<10)
-				currentMinute = "0" + dt.getMinuteOfHour();
-			else
-				currentMinute = "" + dt.getMinuteOfHour();
+			TimeHandler timeHandler = new TimeHandler();
 
 
-			System.out.println(currentHour + ":" + currentMinute);
+			System.out.println(timeHandler.getCurrentHour() + ":" + timeHandler.getCurrentMinuteOfHour());
 
 			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client);
 			centerPieceSessionCabinets.mainProcess();

@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.http.HttpClient;
+import java.sql.Time;
 
 public class ItemCodeHandler {
 
@@ -68,30 +69,34 @@ public class ItemCodeHandler {
 
         JSONObject innerRequestBody = new JSONObject();
 
-        DateTime dtus = new DateTime();
-        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-        DateTime dt = dtus.withZone(dtZone);
-        String currentHour;
-        if(dt.getHourOfDay()<10)
-            currentHour = "0" + dt.getHourOfDay();
-        else
-            currentHour = "" + dt.getHourOfDay();
-        String currentDay;
-        if(dt.getDayOfMonth()<10)
-            currentDay = "0" + dt.getDayOfMonth();
-        else
-            currentDay = "" + dt.getDayOfMonth();
-        String currentMonth;
-        if(dt.getMonthOfYear()<10)
-            currentMonth = "0" + dt.getMonthOfYear();
-        else
-            currentMonth = "" + dt.getMonthOfYear();
+//        DateTime dtus = new DateTime();
+//        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+//        DateTime dt = dtus.withZone(dtZone);
+//        String currentHour;
+//        if(dt.getHourOfDay()<10)
+//            currentHour = "0" + dt.getHourOfDay();
+//        else
+//            currentHour = "" + dt.getHourOfDay();
+//        String currentDay;
+//        if(dt.getDayOfMonth()<10)
+//            currentDay = "0" + dt.getDayOfMonth();
+//        else
+//            currentDay = "" + dt.getDayOfMonth();
+//        String currentMonth;
+//        if(dt.getMonthOfYear()<10)
+//            currentMonth = "0" + dt.getMonthOfYear();
+//        else
+//            currentMonth = "" + dt.getMonthOfYear();
+
+        TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+"01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+"23:59:59-6:00");
+        innerRequestBody.put("OrderDateRangeStart", "2022-" + timeHandler.getCurrentMonth() + "-" +
+                timeHandler.getCurrentDayOfMonth() + "T"+"00:00:01-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", "2022-" + timeHandler.getCurrentMonth() + "-" +
+                timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(this.client, this.contextId, "Orders/SalesOrderList", innerRequestBody, this.branch);
@@ -116,57 +121,62 @@ public class ItemCodeHandler {
 
         JSONObject innerRequestBody = new JSONObject();
 
-        DateTime dtus = new DateTime();
-        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-        DateTime dt = dtus.withZone(dtZone);
+//        DateTime dtus = new DateTime();
+//        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+//        DateTime dt = dtus.withZone(dtZone);
+//
+//        int minHold = dt.getMinuteOfHour()-2;
+//        int hourHold = dt.getHourOfDay();
+//        int dayHold = dt.getDayOfMonth();
+//        int monthHold = dt.getMonthOfYear();
+//        int yearHold = dt.getYear();
+//
+//        if(minHold<0){
+//            minHold = dt.getMinuteOfHour()+56;
+//            hourHold--;
+//            if(hourHold<0)
+//                hourHold += 24;
+//        }
+//
+//        String searchHour;
+//        if(hourHold<10)
+//            searchHour = "0" + hourHold;
+//        else
+//            searchHour = "" + hourHold;
+//
+//        String searchMinute;
+//        if(minHold<10)
+//            searchMinute = "0" + minHold;
+//        else
+//            searchMinute = "" + minHold;
+//
+//        String currentDay;
+//
+//        if(dayHold<10)
+//            currentDay = "0" + dayHold;
+//        else
+//            currentDay = "" + dayHold;
+//
+//        String currentMonth;
+//
+//        if(monthHold<10)
+//            currentMonth = "0" + monthHold;
+//        else
+//            currentMonth = "" + monthHold;
+//
+//        String currentYear = String.valueOf(yearHold);
 
-        int minHold = dt.getMinuteOfHour()-2;
-        int hourHold = dt.getHourOfDay();
-        int dayHold = dt.getDayOfMonth();
-        int monthHold = dt.getMonthOfYear();
-        int yearHold = dt.getYear();
-
-        if(minHold<0){
-            minHold = dt.getMinuteOfHour()+56;
-            hourHold--;
-            if(hourHold<0)
-                hourHold += 24;
-        }
-
-        String searchHour;
-        if(hourHold<10)
-            searchHour = "0" + hourHold;
-        else
-            searchHour = "" + hourHold;
-
-        String searchMinute;
-        if(minHold<10)
-            searchMinute = "0" + minHold;
-        else
-            searchMinute = "" + minHold;
-
-        String currentDay;
-
-        if(dayHold<10)
-            currentDay = "0" + dayHold;
-        else
-            currentDay = "" + dayHold;
-
-        String currentMonth;
-
-        if(monthHold<10)
-            currentMonth = "0" + monthHold;
-        else
-            currentMonth = "" + monthHold;
-
-        String currentYear = String.valueOf(yearHold);
+        TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", true);
         innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", currentYear+"-"+currentMonth+"-"+currentDay+"T23:59:59-6:00");
-        innerRequestBody.put("FetchOnlyChangedSince", currentYear+"-"+currentMonth+"-"+currentDay+"T"+searchHour+":"+searchMinute+":00-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" +
+                timeHandler.getCurrentMonth() + "-" + timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+        innerRequestBody.put("FetchOnlyChangedSince", timeHandler.getSearchYear() + "-" +
+                timeHandler.getSearchMonth() + "-" + timeHandler.getSearchDayOfMonth() +
+                "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
 
         System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody, branch);
