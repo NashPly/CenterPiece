@@ -44,7 +44,6 @@ public class AgilityCalls {
         APICaller apiCaller = new APICaller(client, request);
 
         return new JSONObject(apiCaller.makeAPICall().body());
-
     }
 
     public HttpRequest.BodyPublisher buildRequest(){

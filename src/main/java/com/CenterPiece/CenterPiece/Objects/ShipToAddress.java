@@ -1,4 +1,4 @@
-package com.CenterPiece.CenterPiece;
+package com.CenterPiece.CenterPiece.Objects;
 
 public class ShipToAddress {
 

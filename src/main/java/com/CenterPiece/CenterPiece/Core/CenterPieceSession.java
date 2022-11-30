@@ -1,5 +1,7 @@
-package com.CenterPiece.CenterPiece;
+package com.CenterPiece.CenterPiece.Core;
 
+import com.CenterPiece.CenterPiece.Core.CenterPieceFunctions;
+import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -52,7 +54,7 @@ public class CenterPieceSession {
             centerPieceFunctions.updateTrelloCards();
 
             this.logout();
-            System.out.println("\n-- Logout "+ this.branch+" --");
+            System.out.println("\n-- Logout - "+ this.branch+" --");
 
     }
 

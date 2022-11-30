@@ -1,7 +1,10 @@
-package com.CenterPiece.CenterPiece;
+package com.CenterPiece.CenterPiece.Core;
 
 import com.CenterPiece.CenterPiece.APICalls.TomTomCalls;
 import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
+import com.CenterPiece.CenterPiece.ItemCodeHandler;
+import com.CenterPiece.CenterPiece.Objects.SalesOrder;
+import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -158,40 +161,47 @@ public class CenterPieceFunctions {
                         JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
 
                         boolean sameBoard = itemInformation.getString("boardID").equals(result.getJSONObject("board").getString("id"));
+                        //boolean foundBoard = !itemInformation.getString("boardID").equals("None Found");
 
-                        System.out.println(itemInformation.getString("idList"));
-                        if(result.has("idList") &&
-                                !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
-                                        itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
-                        sameBoard){
-                            //TODO above checks if current board is destination board
-                            if(!liveTrelloBuckets.contains(result.getString("idList"))) {
-                                itemInformation.remove("idList");
-                                itemInformation.put("idList", result.getString("idList"));
-                            }
-                        }
+                        if(!itemInformation.getString("boardID").equals("None Found")){
 
-                        ArrayList<String> labelIds = new ArrayList<>();
-                        if(result.has("labels") && sameBoard) {
-                            for(int x = 0; x < result.getJSONArray("labels").length(); x++){
-
-                                labelIds.add(result.getJSONArray("labels")
-                                        .getJSONObject(x).getString("id"));
+                            System.out.println(itemInformation.getString("idList"));
+                            if(result.has("idList") &&
+                                    !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                            itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
+                            sameBoard){
+                                //TODO above checks if current board is destination board
+                                if(!liveTrelloBuckets.contains(result.getString("idList"))) {
+                                    itemInformation.remove("idList");
+                                    itemInformation.put("idList", result.getString("idList"));
+                                }
                             }
 
-                            itemInformation.remove("idLabel");
-                            itemInformation.put("idLabel", String.join(",", labelIds));
+                            ArrayList<String> labelIds = new ArrayList<>();
+                            if(result.has("labels") && sameBoard) {
+                                for(int x = 0; x < result.getJSONArray("labels").length(); x++){
+
+                                    labelIds.add(result.getJSONArray("labels")
+                                            .getJSONObject(x).getString("id"));
+                                }
+
+                                itemInformation.remove("idLabel");
+                                itemInformation.put("idLabel", String.join(",", labelIds));
+                            }
+
+                            String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
+
+                            System.out.println("\n--- Updated a Trello Card ---");
+                            TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + result.getString("id")), parameters);
+                            var response = trelloCalls.putTrelloAPICall(new JSONObject());
+
+                            checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
+
+                            System.out.println("\nUpdates Applied");
+
+                        }else{
+                           System.out.println("\n-- No Applicable Boards Found --");
                         }
-
-                        String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
-
-                        System.out.println("\n--- Updated a Trello Card ---");
-                        TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + result.getString("id")), parameters);
-                        var response = trelloCalls.putTrelloAPICall(new JSONObject());
-
-                        checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
-
-                        System.out.println("\nUpdates Applied");
                     }else{
                         System.out.println("\n- Trello Hasn't Updated Yet -");
                         //TODO Work out some way to create a card if there isn't one on Trello yet
@@ -265,25 +275,36 @@ public class CenterPieceFunctions {
                         jsonSO.getString("TransactionJob")
         );
 
-        String address;
+        String address = "";
+        String city = "";
+        String state = "";
+        String zip = "";
 
         name = urlify(name);
         description = urlify(description);
 
         if(!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())){
             address = jsonSO.getString("ShipToAddress1");
-        }else{
+        }else if(!jsonSO.getString("ShipToAddress2").isBlank()){
             address = jsonSO.getString("ShipToAddress2");
         }
 
-        ShipToAddress shipToAddress = new ShipToAddress(
-                address,
-                jsonSO.getString("ShipToCity"),
-                jsonSO.getString("ShipToState"),
-                jsonSO.getString("ShipToZip"));
+        boolean addressBlank = false;
 
+        if(address.isBlank() || jsonSO.getString("ShipToCity").isBlank() ||
+                jsonSO.getString("ShipToState").isBlank() || jsonSO.getString("ShipToZip").isBlank())
+            addressBlank = true;
 
-        TomTomCalls tomTomCalls = new TomTomCalls(shipToAddress, client);
+        String parameters;
+        if(!addressBlank) {
+
+            ShipToAddress shipToAddress = new ShipToAddress(
+                    address,
+                    jsonSO.getString("ShipToCity"),
+                    jsonSO.getString("ShipToState"),
+                    jsonSO.getString("ShipToZip"));
+
+            TomTomCalls tomTomCalls = new TomTomCalls(shipToAddress, client);
 
 //        name = name.replace(" ", "%20");
 //        name = name.replace("&", "%26");
@@ -301,13 +322,19 @@ public class CenterPieceFunctions {
 //        description = description.replace("*", "%2A");
 //        description = description.replace("'", "%27");
 
-        String parameters = String.format(
-                "idBoard=%s&idList=%s&name=%s" +
-                "&idLabels=%s&due=%s&coordinates=%s" +
-                "&locationName=%s",
-                boardID, idList, name, idLabels, dueDate,
-                urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
-                urlify(tomTomCalls.getResponseAddress()));
+            parameters = String.format(
+                    "idBoard=%s&idList=%s&name=%s" +
+                            "&idLabels=%s&due=%s&coordinates=%s" +
+                            "&locationName=%s",
+                    boardID, idList, name, idLabels, dueDate,
+                    urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
+                    urlify(tomTomCalls.getResponseAddress()));
+        }else{
+            parameters = String.format(
+                    "idBoard=%s&idList=%s&name=%s" +
+                            "&idLabels=%s&due=%s",
+                    boardID, idList, name, idLabels, dueDate);
+        }
 
         if(!description.isEmpty()){
             parameters += String.format("&desc=%s", description);

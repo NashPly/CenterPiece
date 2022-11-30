@@ -1,4 +1,7 @@
-package com.CenterPiece.CenterPiece;
+package com.CenterPiece.CenterPiece.Core;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.net.http.HttpClient;
 import java.util.Calendar;
@@ -18,13 +21,32 @@ public class CenterPieceApplication {
 
 		session.scheduleAtFixedRate(() -> {
 
-		CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client);
-		centerPieceSessionCabinets.mainProcess();
+			DateTime dtoo = new DateTime();
+			DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+			DateTime dt = dtoo.withZone(dtZone);
 
-		CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client);
-		centerPieceSessionFabrication.mainProcess();
+			String currentHour;
+			if(dt.getHourOfDay()<10)
+				currentHour = "0" + dt.getHourOfDay();
+			else
+				currentHour = "" + dt.getHourOfDay();
 
-		}, 0, 3, TimeUnit.MINUTES);
+			String currentMinute;
+			if(dt.getMinuteOfHour()<10)
+				currentMinute = "0" + dt.getMinuteOfHour();
+			else
+				currentMinute = "" + dt.getMinuteOfHour();
+
+
+			System.out.println(currentHour + ":" + currentMinute);
+
+			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client);
+			centerPieceSessionCabinets.mainProcess();
+
+			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client);
+			centerPieceSessionFabrication.mainProcess();
+
+		}, 0, 120, TimeUnit.SECONDS);
 	}
 
 //	private static void mainProcess(HttpClient client, ScheduledExecutorService session){

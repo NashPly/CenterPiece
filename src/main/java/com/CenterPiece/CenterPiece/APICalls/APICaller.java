@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Thread.sleep;
 
 public class APICaller {
 
@@ -17,12 +20,36 @@ public class APICaller {
 
     public HttpResponse<String> makeAPICall(){
         HttpResponse<String> response = null;
-        try {
-            response = this.client.send(this.request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        int i = 0;
+        while (response == null) {
+
+            if(i!=0){
+
+                try {
+                    System.out.println("Waiting for 30 seconds...");
+                    TimeUnit.SECONDS.sleep(30);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                response = this.client.send(this.request, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException e) {
+                //e.printStackTrace();
+                System.out.println("IO Exception created while making this call: \n" + this.request);
+                System.out.println(e + "\n");
+                System.out.println("Trying again");
+                response = null;
+
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
+                System.out.println("Interrupted Exception created while making this call: \n" + this.request);
+                System.out.println(e + "\n");
+                System.out.println("Trying again");
+                response = null;
+            }
+
         }
 
         System.out.println(response);

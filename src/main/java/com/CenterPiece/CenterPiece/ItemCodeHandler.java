@@ -120,7 +120,7 @@ public class ItemCodeHandler {
         DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
         DateTime dt = dtus.withZone(dtZone);
 
-        int minHold = dt.getMinuteOfHour()-4;
+        int minHold = dt.getMinuteOfHour()-2;
         int hourHold = dt.getHourOfDay();
         int dayHold = dt.getDayOfMonth();
         int monthHold = dt.getMonthOfYear();
@@ -209,9 +209,9 @@ public class ItemCodeHandler {
 
     public JSONObject getCardDestinationFromItemCodeResult(){
 
-        String boardID = null;
-        String idList;
-        String idLabel;
+        String boardID;
+        String idList = null;
+        String idLabel = null;
         String colorCode = null;
         String linkedType = null;
         String linkedID = null;
@@ -296,8 +296,7 @@ public class ItemCodeHandler {
                 linkedID = this.linkedTranID;
             }
             default -> {
-                idList = "61f2d5c461ac134ef274ae5f";
-                idLabel = "62f6a75f8db34f1e9ac4467e";
+                boardID = "None Found";
             }
         }
 

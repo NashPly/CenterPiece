@@ -1,13 +1,11 @@
 package com.CenterPiece.CenterPiece.APICalls;
 
-import com.CenterPiece.CenterPiece.ShipToAddress;
+import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 public class TomTomCalls {
 
@@ -70,20 +68,23 @@ public class TomTomCalls {
         APICaller apiCaller = new APICaller(client, request);
 
         return new JSONObject(apiCaller.makeAPICall().body());
-
     }
 
     private void parseTomTomResponse(JSONObject jsonObject){
 
         if(jsonObject.has("results")) {
-
             //var hold = jsonObject.getJSONArray("results").getJSONObject(0);
-            this.responseAddress = jsonObject.getJSONArray("results").getJSONObject(0).getJSONObject("address").getString("freeformAddress");
+            this.responseAddress = jsonObject.getJSONArray("results")
+                    .getJSONObject(0).getJSONObject("address")
+                    .getString("freeformAddress");
 
             System.out.println();
-            this.latitude = jsonObject.getJSONArray("results").getJSONObject(0).getJSONObject("position").getNumber("lat").toString();
-            this.longitude = jsonObject.getJSONArray("results").getJSONObject(0).getJSONObject("position").getNumber("lon").toString();
-
+            this.latitude = jsonObject.getJSONArray("results")
+                    .getJSONObject(0).getJSONObject("position")
+                    .getNumber("lat").toString();
+            this.longitude = jsonObject.getJSONArray("results")
+                    .getJSONObject(0).getJSONObject("position")
+                    .getNumber("lon").toString();
         }
     }
 
