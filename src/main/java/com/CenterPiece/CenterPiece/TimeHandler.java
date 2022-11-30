@@ -34,14 +34,8 @@ public class TimeHandler {
         int searchMonthHold = dt.getMonthOfYear();
         int searchYearHold = dt.getYear();
 
-        this.currentYear = addZeroIfLessThanTen(dt.getMinuteOfHour());
-        this.currentMonth = addZeroIfLessThanTen(dt.getMinuteOfHour());
-        this.currentDayOfMonth = addZeroIfLessThanTen(dt.getMinuteOfHour());
-        this.currentHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
-        this.currentMinuteOfHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
-
         if(searchMinHold<0){
-            searchMinHold = dt.getMinuteOfHour()+56;
+            searchMinHold = dt.getMinuteOfHour()+58;
             searchHourHold--;
             if(searchHourHold<0) {
                 searchHourHold += 24;
@@ -66,19 +60,11 @@ public class TimeHandler {
         this.searchHour = addZeroIfLessThanTen(searchHourHold);
         this.searchMinuteOfHour = addZeroIfLessThanTen(searchMinHold);
 
-    }
-
-    public TimeHandler(String currentYear, String currentMonth, String currentDayOfMonth, String currentHour, String currentMinuteOfHour, String searchYear, String searchMonth, String searchDayOfMonth, String searchHour, String searchMinuteOfHour) {
-        this.currentYear = currentYear;
-        this.currentMonth = currentMonth;
-        this.currentDayOfMonth = currentDayOfMonth;
-        this.currentHour = currentHour;
-        this.currentMinuteOfHour = currentMinuteOfHour;
-        this.searchYear = searchYear;
-        this.searchMonth = searchMonth;
-        this.searchDayOfMonth = searchDayOfMonth;
-        this.searchHour = searchHour;
-        this.searchMinuteOfHour = searchMinuteOfHour;
+        this.currentYear = addZeroIfLessThanTen(dt.getYear());
+        this.currentMonth = addZeroIfLessThanTen(dt.getMonthOfYear());
+        this.currentDayOfMonth = addZeroIfLessThanTen(dt.getDayOfMonth());
+        this.currentHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
+        this.currentMinuteOfHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
     }
 
     public String getCurrentYear() {
@@ -130,14 +116,4 @@ public class TimeHandler {
 
     }
 
-//    private String getSearchTime(int initMin, int initHour, String unitOfTime){
-//
-//        if(initMin<0){
-//            initMin = dt.getMinuteOfHour()+56;
-//            initHour--;
-//            if(initHour<0)
-//                initHour += 24;
-//        }
-//
-//    }
 }
