@@ -321,6 +321,8 @@ public class ItemCodeHandler {
 
         JSONObject itemDetails;
 
+        System.out.println();
+
         if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {

@@ -165,7 +165,8 @@ public class CenterPieceFunctions {
 
                         if(!itemInformation.getString("boardID").equals("None Found")){
 
-                            System.out.println(itemInformation.getString("idList"));
+                            System.out.println(itemInformation.getString("idList")+"\n");
+
                             if(result.has("idList") &&
                                     !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
                                             itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
