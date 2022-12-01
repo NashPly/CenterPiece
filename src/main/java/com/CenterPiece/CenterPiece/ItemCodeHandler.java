@@ -1,11 +1,9 @@
 package com.CenterPiece.CenterPiece;
 
 import com.CenterPiece.CenterPiece.APICalls.AgilityCalls;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.io.IOException;
+
 import java.net.http.HttpClient;
 
 public class ItemCodeHandler {
@@ -19,20 +17,23 @@ public class ItemCodeHandler {
     private String linkedTranType;
     private String linkedTranID;
     private JSONObject agilityItemSearchResult;
+    private final String branch;
 
-    public ItemCodeHandler(HttpClient cl, String context){
+    public ItemCodeHandler(HttpClient cl, String context, String branch){
         this.client = cl;
         this.contextId = context;
+        this.branch = branch;
     }
 
-    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder){
+    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder, String branch){
         this.client = cl;
         this.contextId = context;
         this.salesOrderNumber = salesOrderNum;
         this.salesOrder = salesOrder;
+        this.branch = branch;
     }
 
-    public JSONObject itemParseProcess() throws IOException, InterruptedException {
+    public JSONObject itemParseProcess() {
 
         JSONArray salesOrderArray = agilitySalesOrderListLookup();
 
@@ -61,42 +62,43 @@ public class ItemCodeHandler {
         return this.getCardDestinationFromItemCodeResult();
     }
 
-    public JSONArray agilitySalesOrderListLookup() throws IOException, InterruptedException {
+    public JSONArray agilitySalesOrderListLookup() {
 
         JSONObject innerRequestBody = new JSONObject();
 
-        DateTime dtus = new DateTime();
-        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-        DateTime dt = dtus.withZone(dtZone);
-        String currentHour;
-        if(dt.getHourOfDay()<10)
-            currentHour = "0" + dt.getHourOfDay();
-        else
-            currentHour = "" + dt.getHourOfDay();
-        String currentDay;
-        if(dt.getDayOfMonth()<10)
-            currentDay = "0" + dt.getDayOfMonth();
-        else
-            currentDay = "" + dt.getDayOfMonth();
-        String currentMonth;
-        if(dt.getMonthOfYear()<10)
-            currentMonth = "0" + dt.getMonthOfYear();
-        else
-            currentMonth = "" + dt.getMonthOfYear();
+//        DateTime dtus = new DateTime();
+//        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+//        DateTime dt = dtus.withZone(dtZone);
+//        String currentHour;
+//        if(dt.getHourOfDay()<10)
+//            currentHour = "0" + dt.getHourOfDay();
+//        else
+//            currentHour = "" + dt.getHourOfDay();
+//        String currentDay;
+//        if(dt.getDayOfMonth()<10)
+//            currentDay = "0" + dt.getDayOfMonth();
+//        else
+//            currentDay = "" + dt.getDayOfMonth();
+//        String currentMonth;
+//        if(dt.getMonthOfYear()<10)
+//            currentMonth = "0" + dt.getMonthOfYear();
+//        else
+//            currentMonth = "" + dt.getMonthOfYear();
+
+        TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", "2022-"+currentMonth+"-"+currentDay+"T"+"01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", "2022-"+currentMonth+"-"+currentDay+"T"+"23:59:59-6:00");
+        innerRequestBody.put("OrderDateRangeStart", "2022-" + timeHandler.getCurrentMonth() + "-" +
+                timeHandler.getCurrentDayOfMonth() + "T"+"00:00:01-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", "2022-" + timeHandler.getCurrentMonth() + "-" +
+                timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
-        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
+        AgilityCalls agilityAPICall = new AgilityCalls(this.client, this.contextId, "Orders/SalesOrderList", innerRequestBody, this.branch);
 
         var response = agilityAPICall.postAgilityAPICall();
-
-
-//        System.out.println(response);
 
         JSONObject json = response.getJSONObject("response")
                 .getJSONObject("OrdersResponse")
@@ -109,64 +111,69 @@ public class ItemCodeHandler {
         return new JSONArray();
     }
 
-    public JSONObject agilityChangedSalesOrderListLookup() throws IOException, InterruptedException {
+    public JSONObject agilityChangedSalesOrderListLookup() {
 
         JSONObject innerRequestBody = new JSONObject();
 
-        DateTime dtus = new DateTime();
-        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-        DateTime dt = dtus.withZone(dtZone);
+//        DateTime dtus = new DateTime();
+//        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
+//        DateTime dt = dtus.withZone(dtZone);
+//
+//        int minHold = dt.getMinuteOfHour()-2;
+//        int hourHold = dt.getHourOfDay();
+//        int dayHold = dt.getDayOfMonth();
+//        int monthHold = dt.getMonthOfYear();
+//        int yearHold = dt.getYear();
+//
+//        if(minHold<0){
+//            minHold = dt.getMinuteOfHour()+56;
+//            hourHold--;
+//            if(hourHold<0)
+//                hourHold += 24;
+//        }
+//
+//        String searchHour;
+//        if(hourHold<10)
+//            searchHour = "0" + hourHold;
+//        else
+//            searchHour = "" + hourHold;
+//
+//        String searchMinute;
+//        if(minHold<10)
+//            searchMinute = "0" + minHold;
+//        else
+//            searchMinute = "" + minHold;
+//
+//        String currentDay;
+//
+//        if(dayHold<10)
+//            currentDay = "0" + dayHold;
+//        else
+//            currentDay = "" + dayHold;
+//
+//        String currentMonth;
+//
+//        if(monthHold<10)
+//            currentMonth = "0" + monthHold;
+//        else
+//            currentMonth = "" + monthHold;
+//
+//        String currentYear = String.valueOf(yearHold);
 
-        int minHold = dt.getMinuteOfHour()-4;
-        int hourHold = dt.getHourOfDay();
-        int dayHold = dt.getDayOfMonth();
-        int monthHold = dt.getMonthOfYear();
-        int yearHold = dt.getYear();
-
-        if(minHold<0){
-            minHold = dt.getMinuteOfHour()+56;
-            hourHold--;
-            if(hourHold<0)
-                hourHold += 24;
-        }
-
-        String searchHour;
-        if(hourHold<10)
-            searchHour = "0" + hourHold;
-        else
-            searchHour = "" + hourHold;
-
-        String searchMinute;
-        if(minHold<10)
-            searchMinute = "0" + minHold;
-        else
-            searchMinute = "" + minHold;
-
-        String currentDay;
-
-        if(dayHold<10)
-            currentDay = "0" + dayHold;
-        else
-            currentDay = "" + dayHold;
-
-        String currentMonth;
-
-        if(monthHold<10)
-            currentMonth = "0" + monthHold;
-        else
-            currentMonth = "" + monthHold;
-
-        String currentYear = String.valueOf(yearHold);
+        TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", true);
         innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", currentYear+"-"+currentMonth+"-"+currentDay+"T23:59:59-6:00");
-        innerRequestBody.put("FetchOnlyChangedSince", currentYear+"-"+currentMonth+"-"+currentDay+"T"+searchHour+":"+searchMinute+":00-6:00");
+        innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" +
+                timeHandler.getCurrentMonth() + "-" + timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+        innerRequestBody.put("FetchOnlyChangedSince", timeHandler.getSearchYear() + "-" +
+                timeHandler.getSearchMonth() + "-" + timeHandler.getSearchDayOfMonth() +
+                "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
 
         System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
-        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody);
+        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody, branch);
         var response = agilityAPICall.postAgilityAPICall();
 
         return response.getJSONObject("response")
@@ -174,7 +181,7 @@ public class ItemCodeHandler {
                 .getJSONObject("dsOrdersResponse");
     }
 
-    public JSONObject agilityItemSearch() throws IOException, InterruptedException {
+    public JSONObject agilityItemSearch() {
 
         JSONObject dsItemsListRequest = new JSONObject();
         JSONObject innerDtItemsListRequest = new JSONObject();
@@ -193,7 +200,7 @@ public class ItemCodeHandler {
         dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
 
         System.out.println("- AgilityItemSearch Response -");
-        AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest);
+        AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest, branch);
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
         return response.getJSONObject("response")
@@ -206,62 +213,67 @@ public class ItemCodeHandler {
 
     public JSONObject getCardDestinationFromItemCodeResult(){
 
+        String boardID;
         String idList = null;
-        String idLabel;
+        String idLabel = null;
         String colorCode = null;
         String linkedType = null;
         String linkedID = null;
         String colorCustomFieldID = null;
         String rmCustomField = null;
+
         //TODO Could to enum for status
-        String status = null;
 
         //TODO figure out order status in IF statement
         // Set status variable to go into the various cases
 
 
         switch (this.itemGroup) {
-//            case "3300" -> {
-//                //kk cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869b5c1351de037ffd2d26";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                rmCustomField = "62869b5c1351de037ffd2dab";
-//                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-//            }
-//            case "3350" -> {
-//                //cnc cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869e47dcae4f52e15c90e1";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//
-//            }
-//            case "3455" -> {
-//                //tru cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869db3e04b83468347996b";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//
-//            }
-//            case "3450" -> {
-//                //choice cabinets
-//
-//                //idList = "62869b5c1351de037ffd2cc4";
-//                idList = orderStatusLogic("Cabinets");
-//                idLabel = "62869b5c1351de037ffd2d32";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                rmCustomField = "62869b5c1351de037ffd2dab";
-//                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
-//                linkedType = this.linkedTranType;
-//                linkedID = this.linkedTranID;
-//
-//            }
+            case "3300" -> {
+                //kk cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869b5c1351de037ffd2d26";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
+                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+            }
+            case "3350" -> {
+                //cnc cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869e47dcae4f52e15c90e1";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
+            }
+            case "3455" -> {
+                //tru cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869db3e04b83468347996b";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
+            }
+            case "3450" -> {
+                //choice cabinets
+
+                //idList = "62869b5c1351de037ffd2cc4";
+                boardID = "62869b5c1351de037ffd2cbb";
+                idList = orderStatusLogic("Cabinets");
+                idLabel = "62869b5c1351de037ffd2d32";
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
+                colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+
+            }
             case "3500" -> {
 
                 //TODO add in dynamic locations
@@ -273,7 +285,7 @@ public class ItemCodeHandler {
 
                 //idList = "60c26dfb44555566d32ae651";
                 //System.out.println(orderStatusLogic("Tops"));
-
+                boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
                 idLabel = "60c26dfc44555566d32ae700";
                 colorCustomFieldID = "6197b500bbb79658801189ce";
@@ -288,12 +300,12 @@ public class ItemCodeHandler {
                 linkedID = this.linkedTranID;
             }
             default -> {
-                idList = "61f2d5c461ac134ef274ae5f";
-                idLabel = "62f6a75f8db34f1e9ac4467e";
+                boardID = "None Found";
             }
         }
 
         JSONObject json = new JSONObject();
+        json.put("boardID", boardID);
         json.put("idList", idList);
         json.put("idLabel", idLabel);
         json.put("colorCustomField", colorCustomFieldID);
@@ -307,13 +319,15 @@ public class ItemCodeHandler {
 
     public String orderStatusLogic(String board){
 
-        JSONObject itemDetails = new JSONObject();
+        JSONObject itemDetails;
+
+        System.out.println();
 
         if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
             System.out.println(" - " + board + " Inbox - ");
-            return whichBoard("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f", board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP").getListID(), board);
         }
 
         String orderStatus = this.salesOrder.getString("OrderStatus");
@@ -327,22 +341,20 @@ public class ItemCodeHandler {
                     if(saleType.equals("WHSE")) {
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), board);
                     } else if (saleType.equals("WILLCALL")){
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2cce", "60c26dfb44555566d32ae64d", board);
-
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), board);
                     }
                 }
                 case "Staged" -> {
                     if(saleType.equals("WHSE")) {
                         System.out.println(" - " + board + " Staged - ");
-                        return whichBoard("62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", board);
-                    }
-                    if(saleType.equals("WILLCALL")) {
+                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP").getListID(), board);
+                    }else if(saleType.equals("WILLCALL")) {
                         System.out.println(" - " + board + " Willcall - ");
-                        return whichBoard("62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9", board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP").getListID(), board);
                     }
                 }
                 case "" -> {
@@ -355,27 +367,13 @@ public class ItemCodeHandler {
                             itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
 
                         if (itemDetails.has("LinkedTranType")) {
-                            if (itemDetails.getString("LinkedTranType").equals("RM") || (itemDetails.getString("LinkedTranType").equals("PO"))) {
-
-
-                                //TODO Review
-                                //In Production
-                                //System.out.println(" - " + board + " In Production - ");
-                                System.out.println(" - " + board + " Processing || Batching - ");
-                                return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
-                                //return whichBoard("62869b5c1351de037ffd2ccb", "60c26dfb44555566d32ae64c", board);
-                            }else {
-
-                                //In Processing
-                                System.out.println(" - " + board + " Processing || Batching - ");
-                                return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
-
-                            }
+                            System.out.println(" - " + board + " Processing || Batching - ");
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
                         } else {
 
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
 
                         }
                     }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
@@ -385,34 +383,30 @@ public class ItemCodeHandler {
 
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
-                        return whichBoard("62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP").getListID(), board);
                     }
                 }
             }
 
         }else if(orderStatus.equals("Invoiced")) {
             System.out.println(" - " + board + " Invoiced - ");
-                return whichBoard("62869b5c1351de037ffd2cd4", "61b360e35ab37c0d9037c19f", board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP").getListID(), board);
 
         }else{
             System.out.println(" - " + board + " Processing || Batching - ");
-            return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
         }
         System.out.println(" - " + board + " Processing || Batching - ");
-        return whichBoard("62869b5c1351de037ffd2cc4", "60c26dfb44555566d32ae651", board);
+
+
+        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), board);
     }
 
     public String whichBoard(String cabList, String topList, String boardName){
         String destination = "";
         switch(boardName){
-            case "Tops" -> {
-                destination = topList;
-                break;
-            }
-            case "Cabinets" -> {
-                destination = cabList;
-                break;
-            }
+            case "Tops" -> destination = topList;
+            case "Cabinets" -> destination = cabList;
             
         }
         return destination;
