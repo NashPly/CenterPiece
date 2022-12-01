@@ -354,6 +354,7 @@ public class CenterPieceFunctions {
         string = string.replace("@", "%40");
         string = string.replace("*", "%2A");
         string = string.replace("'", "%27");
+        string = string.replace("\"", "%22");
 
         return string;
     }
