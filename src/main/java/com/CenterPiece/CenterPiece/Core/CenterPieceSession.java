@@ -58,7 +58,6 @@ public class CenterPieceSession {
 
     }
 
-
     public String login(){
         JSONObject innerRequestBody = new JSONObject();
         innerRequestBody.put("LoginID","tbeals");

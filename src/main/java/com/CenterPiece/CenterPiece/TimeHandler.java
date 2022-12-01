@@ -7,7 +7,7 @@ import java.time.YearMonth;
 
 public class TimeHandler {
 
-    private int searchSplit = 2; //Mins
+    private int searchSplit = 3; //Mins
 
     private DateTime dt;
     private String currentYear;
@@ -35,7 +35,7 @@ public class TimeHandler {
         int searchYearHold = dt.getYear();
 
         if(searchMinHold<0){
-            searchMinHold = dt.getMinuteOfHour()+58;
+            searchMinHold = dt.getMinuteOfHour()+(60-(searchSplit+1));
             searchHourHold--;
             if(searchHourHold<0) {
                 searchHourHold += 24;
@@ -60,10 +60,10 @@ public class TimeHandler {
         this.searchHour = addZeroIfLessThanTen(searchHourHold);
         this.searchMinuteOfHour = addZeroIfLessThanTen(searchMinHold);
 
-        this.currentYear = addZeroIfLessThanTen(dt.getYear());
+        this.currentYear = String.valueOf(dt.getYear());
         this.currentMonth = addZeroIfLessThanTen(dt.getMonthOfYear());
         this.currentDayOfMonth = addZeroIfLessThanTen(dt.getDayOfMonth());
-        this.currentHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
+        this.currentHour = addZeroIfLessThanTen(dt.getHourOfDay());
         this.currentMinuteOfHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
     }
 

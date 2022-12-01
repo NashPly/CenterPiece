@@ -21,13 +21,13 @@ public class APICaller {
     public HttpResponse<String> makeAPICall(){
         HttpResponse<String> response = null;
         int i = 0;
-        while (response == null) {
+        while (response == null && i < 10) {
 
             if(i!=0){
 
                 try {
-                    System.out.println("Waiting for 30 seconds...");
-                    TimeUnit.SECONDS.sleep(30);
+                    System.out.println("\nCall failed. Trying again in 10 seconds...");
+                    TimeUnit.SECONDS.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -50,14 +50,23 @@ public class APICaller {
                 response = null;
             }
 
+            System.out.println(response);
+            System.out.println(response.body());
+
+            if(response.statusCode() != 200){
+                //System.exit(-1);
+                response = null;
+
+            }
+
+            i++;
         }
 
-        System.out.println(response);
-        System.out.println(response.body());
-
-        if(response.statusCode() != 200){
+        if (response == null){
             System.exit(-1);
         }
+
+
         return response;
     }
 }

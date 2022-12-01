@@ -1,13 +1,10 @@
 package com.CenterPiece.CenterPiece;
 
 import com.CenterPiece.CenterPiece.APICalls.AgilityCalls;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.http.HttpClient;
-import java.sql.Time;
 
 public class ItemCodeHandler {
 
@@ -102,9 +99,6 @@ public class ItemCodeHandler {
         AgilityCalls agilityAPICall = new AgilityCalls(this.client, this.contextId, "Orders/SalesOrderList", innerRequestBody, this.branch);
 
         var response = agilityAPICall.postAgilityAPICall();
-
-
-//        System.out.println(response);
 
         JSONObject json = response.getJSONObject("response")
                 .getJSONObject("OrdersResponse")

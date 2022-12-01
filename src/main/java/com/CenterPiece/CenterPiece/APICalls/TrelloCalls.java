@@ -101,6 +101,7 @@ public class TrelloCalls {
                 .DELETE()
                 .build();
 
+        System.out.println("- Delete Call to Trello -");
         APICaller apiCaller = new APICaller(client, request);
 
         return new JSONObject(apiCaller.makeAPICall().body());
