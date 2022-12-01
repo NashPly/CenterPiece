@@ -63,6 +63,7 @@ public class APICaller {
         }
 
         if (response == null){
+            System.out.println("CenterPiece tried 10 times to make this call unsuccessfully. Something is wrong");
             System.exit(-1);
         }
 
