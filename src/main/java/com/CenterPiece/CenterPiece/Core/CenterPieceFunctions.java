@@ -5,6 +5,7 @@ import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import com.CenterPiece.CenterPiece.Objects.SalesOrder;
 import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
+import com.CenterPiece.CenterPiece.TrelloListIDs;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -168,12 +169,6 @@ public class CenterPieceFunctions {
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch);
 
-        List<String> liveTrelloBuckets = new ArrayList<>(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
-                "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
-                "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
-                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
-                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec"));
-
         JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 
         //TODO adapt this for Sales orders
@@ -202,6 +197,19 @@ public class CenterPieceFunctions {
 
                             System.out.println(itemInformation.getString("idList")+"\n");
 
+
+                            if(result.has("idList") &&
+                                    !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                            itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
+                            sameBoard){
+                                //TODO above checks if current board is destination board
+
+                                TrelloListIDs trelloListIDs = new TrelloListIDs(result.getString("idList"));
+
+                                if(trelloListIDs.offLimits()){
+                                    itemInformation.remove("idList");
+                                    itemInformation.put("idList", result.getString("idList"));
+
                             for(int p = 0; p < resultArray.length(); p++) {
 
                                 if(resultArray.getJSONObject(p).has("idList") &&
@@ -213,6 +221,7 @@ public class CenterPieceFunctions {
                                         itemInformation.remove("idList");
                                         itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
                                     }
+
                                 }
 
                                 ArrayList<String> labelIds = new ArrayList<>();
