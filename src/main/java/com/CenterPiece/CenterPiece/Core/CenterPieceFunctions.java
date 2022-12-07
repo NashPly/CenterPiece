@@ -9,6 +9,7 @@ import com.CenterPiece.CenterPiece.TrelloListIDs;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
 import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class CenterPieceFunctions {
         List<Integer> tally = new ArrayList<>();
 
         for (int i = 0; i< size; i++){
-            var checkHold = checkTrelloForSO(currentList.get(i));
+            var checkHold = checkTrelloForSO(currentList.get(i)).getJSONObject(0);
             if(!(checkHold == null) && checkHold.has("id")){
                 if (checkHold.getString("id").equals("Empty")) {
                     System.out.println("Tally: " + tally);
@@ -53,7 +54,7 @@ public class CenterPieceFunctions {
         return tally;
     }
 
-    public  JSONObject checkTrelloForSO(String soNum) {
+    public  JSONArray checkTrelloForSO(String soNum) {
 
         String modelTypes = "cards";
         String card_fields = "name,closed,desc,idList,labels";
@@ -63,7 +64,7 @@ public class CenterPieceFunctions {
                 soNum, modelTypes, card_fields));
 
         System.out.println("\n-- Check Trello For SO --");
-        var response = trelloAPICall.getTrelloAPICall();
+        var response = trelloAPICall.getTrelloAPICallObject();
         System.out.println(response);
 
         if(!(response == null) && response.has("cards")){
@@ -80,18 +81,44 @@ public class CenterPieceFunctions {
                 if(openTrelloCards.size() > 1){
 
                     JSONObject desiredCard = new JSONObject();
+                    JSONArray partialCards = new JSONArray();
 
                     TrelloCalls trelloCalls = new TrelloCalls(client,"cards/");
                     for(int i = 0; i < openTrelloCards.size(); i++){
                         //TODO Handle Multiple cards with attachments
-                        if(desiredCard.isEmpty() && openTrelloCards.get(i).getJSONArray("attachments").length() > 0){
+                        if(openTrelloCards.get(i).getJSONArray("labels").length()>0){
+
+                            for(int q = 0; q < openTrelloCards.get(i).getJSONArray("labels").length(); q++){
+                                if(openTrelloCards.size()>0){
+                                    if (openTrelloCards.get(i).getJSONArray("labels").getJSONObject(q).get("name").equals("Partial")) {
+                                        //Check the partial box
+
+                                        String partialCustomFieldID = "";
+                                        switch (openTrelloCards.get(i).getJSONObject("board").getString("id")) {
+                                            case "60c26dfb44555566d32ae643" -> partialCustomFieldID = "638e63205f249b03ac9edd81"; //Top Shop
+//                                        case "asdf" -> partialCustomFieldID = "asdf"; //Cabinets
+//                                        case "asdf" -> partialCustomFieldID = "asdf"; // Components
+                                        }
+
+                                        updateCustomFieldTrello(openTrelloCards.get(i).getString("id"), partialCustomFieldID, "true");
+
+                                        partialCards.put(partialCards.length(),openTrelloCards.get(i));
+                                        q = openTrelloCards.get(i).getJSONArray("labels").length();
+                                        openTrelloCards.remove(i);
+                                        i--;
+                                    }
+                                }
+                            }
+                        } else if(desiredCard.isEmpty() && openTrelloCards.get(i).getJSONArray("attachments").length() > 0){
                             desiredCard = openTrelloCards.get(i);
                             openTrelloCards.remove(i);
+//                        }else if(partialCard.isEmpty() && openTrelloCards.get(i).getJSONArray("labels").length()>0){
+                            //Account for multiple partials
                         }
                     }
                     if(desiredCard.isEmpty()){
-                        desiredCard = openTrelloCards.get(0);
-                        openTrelloCards.remove(0);
+                        desiredCard = openTrelloCards.get(openTrelloCards.size()-1);
+                        openTrelloCards.remove(openTrelloCards.size()-1);
                     }
 
                     for(JSONObject json: openTrelloCards){
@@ -99,20 +126,26 @@ public class CenterPieceFunctions {
                         trelloCalls.deleteTrelloAPICall(json.getString("id"));
                     }
 
-                    return desiredCard;
+                    JSONArray jsonArray = new JSONArray().put(0, desiredCard);
+
+                    for(int v = 0; v < partialCards.length(); v++) {
+                        jsonArray.put(jsonArray.length(),partialCards.getJSONObject(v));
+                    }
+
+                    return jsonArray;
                 }else if(openTrelloCards.size() == 1){
-                    return openTrelloCards.get(0);
+                    return new JSONArray().put(0,openTrelloCards.get(0));
                 }else{
                     JSONObject json = new JSONObject();
                     json.put("id","Empty");
-                    return json;
+                    return new JSONArray().put(0,json);
                 }
             }
         }
 
         JSONObject json = new JSONObject();
         json.put("id","Empty");
-        return json;
+        return new JSONArray().put(0,json);
     }
 
     public void createTrelloCard(JSONObject jsonSO) {
@@ -146,21 +179,24 @@ public class CenterPieceFunctions {
 
             for(int i = 0; i < salesOrderDataArray.length(); i++) {
 
-                JSONObject result = checkTrelloForSO(String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID")));
+                JSONArray resultArray = (checkTrelloForSO(String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID"))));
+
+                JSONObject firstResult = resultArray.getJSONObject(0);
 
                 ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderDataArray.getJSONObject(i).getNumber("OrderID").toString(), salesOrderDataArray.getJSONObject(i), this.branch);
 
-                if (!(result == null) && result.has("id")){
-                    if (!result.getString("id").equals("Empty")) {
+                if (!(firstResult == null) && firstResult.has("id")){
+                    if (!firstResult.getString("id").equals("Empty")) {
 
                         JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
 
-                        boolean sameBoard = itemInformation.getString("boardID").equals(result.getJSONObject("board").getString("id"));
+                        boolean sameBoard = itemInformation.getString("boardID").equals(firstResult.getJSONObject("board").getString("id"));
                         //boolean foundBoard = !itemInformation.getString("boardID").equals("None Found");
 
                         if(!itemInformation.getString("boardID").equals("None Found")){
 
                             System.out.println(itemInformation.getString("idList")+"\n");
+
 
                             if(result.has("idList") &&
                                     !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
@@ -173,30 +209,45 @@ public class CenterPieceFunctions {
                                 if(trelloListIDs.offLimits()){
                                     itemInformation.remove("idList");
                                     itemInformation.put("idList", result.getString("idList"));
+
+                            for(int p = 0; p < resultArray.length(); p++) {
+
+                                if(resultArray.getJSONObject(p).has("idList") &&
+                                        !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                                itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
+                                sameBoard){
+                                    //TODO above checks if current board is destination board
+                                    if(!liveTrelloBuckets.contains(resultArray.getJSONObject(p).getString("idList"))) {
+                                        itemInformation.remove("idList");
+                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+                                    }
+
                                 }
-                            }
 
-                            ArrayList<String> labelIds = new ArrayList<>();
-                            if(result.has("labels") && sameBoard) {
-                                for(int x = 0; x < result.getJSONArray("labels").length(); x++){
+                                ArrayList<String> labelIds = new ArrayList<>();
 
-                                    labelIds.add(result.getJSONArray("labels")
-                                            .getJSONObject(x).getString("id"));
+
+                                if(resultArray.getJSONObject(p).has("labels") && sameBoard) {
+                                    for(int x = 0; x < resultArray.getJSONObject(p).getJSONArray("labels").length(); x++){
+
+                                        labelIds.add(resultArray.getJSONObject(p).getJSONArray("labels")
+                                                .getJSONObject(x).getString("id"));
+                                    }
+
+                                    itemInformation.remove("idLabel");
+                                    itemInformation.put("idLabel", String.join(",", labelIds));
                                 }
 
-                                itemInformation.remove("idLabel");
-                                itemInformation.put("idLabel", String.join(",", labelIds));
+                                String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
+
+                                System.out.println("\n--- Updated a Trello Card ---");
+                                TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + resultArray.getJSONObject(p).getString("id")), parameters);
+                                var response = trelloCalls.putTrelloAPICall(new JSONObject());
+
+                                checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
+
+                                System.out.println("\nUpdates Applied");
                             }
-
-                            String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
-
-                            System.out.println("\n--- Updated a Trello Card ---");
-                            TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + result.getString("id")), parameters);
-                            var response = trelloCalls.putTrelloAPICall(new JSONObject());
-
-                            checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
-
-                            System.out.println("\nUpdates Applied");
 
                         }else{
                            System.out.println("\n-- No Applicable Boards Found --");
@@ -205,8 +256,8 @@ public class CenterPieceFunctions {
                         System.out.println("\n- Trello Hasn't Updated Yet -");
                         //TODO Work out some way to create a card if there isn't one on Trello yet
                     }
-                }else if (!(result == null) && result.has("error")) {
-                    System.out.println(result);
+                }else if (!(firstResult == null) && firstResult.has("error")) {
+                    System.out.println(firstResult);
                 } else{
                     System.out.println("\n- Trello Hasn't Updated Yet 2 -");
 
@@ -236,10 +287,25 @@ public class CenterPieceFunctions {
 
     }
 
+    public JSONArray getCardCustomFieldTrello(String cardID){
+
+        TrelloCalls trelloAPICall = new TrelloCalls(this.client, String.format("cards/%s/customFieldItems", cardID));
+
+        System.out.println("\n-- Check Trello Card For CustomField --");
+        var response = trelloAPICall.getTrelloAPICallArray();
+        System.out.println(response);
+
+        return response;
+    }
+
     public void updateCustomFieldTrello(String cardId, String customFieldID, String value) {
         String urlEndpoint = String.format("cards/%s/customField/%s/item", cardId, customFieldID );
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("text", value);
+
+        if(value.equals("true") || value.equals("false"))
+            jsonObject.put("checked", value);
+        else jsonObject.put("text", value);
+
         System.out.println("\n-- Update Custom Field in Trello --");
         TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
         trelloCalls.putTrelloAPICall(jsonObject);

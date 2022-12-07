@@ -7,7 +7,7 @@ import java.time.YearMonth;
 
 public class TimeHandler {
 
-    private int searchSplit = 4; //Mins
+    private int searchSplit = 5; //Mins
 
     private DateTime dt;
     private String currentYear;
