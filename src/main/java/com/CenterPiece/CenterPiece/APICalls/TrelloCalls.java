@@ -1,5 +1,6 @@
 package com.CenterPiece.CenterPiece.APICalls;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ public class TrelloCalls {
     private final String baseUrl = "https://api.trello.com/1/";
     private final HttpClient client;
     private final String urlEndpoint;
-    private String parameters;
+    private String parameters="";
     private final String key = "90fb4c3f6615067b94535f130c0d7b4f";
     private final String token = "c95f8154db55a4f2297c9ab6d431b1d3d5dfcac19bc3bafb3bce4b35ab9fcf31";
 
@@ -30,7 +31,7 @@ public class TrelloCalls {
     }
 
     //TODO under construction
-    public JSONObject getTrelloAPICall() {
+    public JSONObject getTrelloAPICallObject() {
 
         System.out.println("- GET Call to Trello -");
         String uri = String.format("%s%s?%s&key=%s&token=%s", this.baseUrl, this.urlEndpoint, this.parameters, this.key, this.token);
@@ -46,6 +47,24 @@ public class TrelloCalls {
         APICaller apiCaller = new APICaller(client, request);
 
         return new JSONObject(apiCaller.makeAPICall().body());
+    }
+
+    public JSONArray getTrelloAPICallArray() {
+
+        System.out.println("- GET Call to Trello -");
+        String uri = String.format("%s%s?%s&key=%s&token=%s", this.baseUrl, this.urlEndpoint, this.parameters, this.key, this.token);
+
+        System.out.println("URL -- "+ uri);
+
+        var request = HttpRequest.newBuilder(
+                URI.create(uri))
+                .header("accept", "application/json")
+                .GET()
+                .build();
+
+        APICaller apiCaller = new APICaller(client, request);
+
+        return new JSONArray(apiCaller.makeAPICall().body());
     }
 
     public JSONObject postTrelloAPICall() {

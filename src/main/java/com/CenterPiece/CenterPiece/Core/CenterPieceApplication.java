@@ -47,6 +47,6 @@ public class CenterPieceApplication {
 			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client);
 			centerPieceSessionFabrication.mainProcess();
 
-		}, 0, 180, TimeUnit.SECONDS);
+		}, 0, 300, TimeUnit.SECONDS);
 	}
 }
