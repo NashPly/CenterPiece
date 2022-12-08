@@ -50,14 +50,20 @@ public class APICaller {
                 response = null;
             }
 
-            System.out.println(response);
-            System.out.println(response.body());
 
-            if(response.statusCode() != 200){
-                //System.exit(-1);
-                response = null;
 
+            if(response != null){
+                System.out.println(response);
+                System.out.println(response.body());
+
+                if(response.statusCode() != 200){
+                    //System.exit(-1);
+                    response = null;
+
+                }
             }
+
+
 
             i++;
         }
