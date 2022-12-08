@@ -217,7 +217,6 @@ public class CenterPieceFunctions {
 
                                 ArrayList<String> labelIds = new ArrayList<>();
 
-
                                 if(resultArray.getJSONObject(p).has("labels") && sameBoard) {
                                     for(int x = 0; x < resultArray.getJSONObject(p).getJSONArray("labels").length(); x++){
 
@@ -239,7 +238,6 @@ public class CenterPieceFunctions {
 
                                 System.out.println("\nUpdates Applied");
                             }
-
                         }else{
                             System.out.println("\n-- No Applicable Boards Found --");
                         }
@@ -275,7 +273,6 @@ public class CenterPieceFunctions {
         //Probably applicable with Tru and CNC
 //        if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("PO"))
 //            customFieldTrello(client,cardId, poFieldId, itemInformation.getString("linkedID"));
-
     }
 
     public JSONArray getCardCustomFieldTrello(String cardID){
@@ -361,22 +358,6 @@ public class CenterPieceFunctions {
                     jsonSO.getString("ShipToZip"));
 
             TomTomCalls tomTomCalls = new TomTomCalls(shipToAddress, client);
-
-//        name = name.replace(" ", "%20");
-//        name = name.replace("&", "%26");
-//        name = name.replace(",", "%2C");
-//        name = name.replace("#", "%23");
-//        name = name.replace("@", "%40");
-//        name = name.replace("*", "%2A");
-//        name = name.replace("'", "%27");
-//
-//        description = description.replace(" ", "%20");
-//        description = description.replace("&", "%26");
-//        description = description.replace(",", "%2C");
-//        description = description.replace("#", "%23");
-//        description = description.replace("@", "%40");
-//        description = description.replace("*", "%2A");
-//        description = description.replace("'", "%27");
 
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
