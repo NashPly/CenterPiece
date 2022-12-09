@@ -229,6 +229,14 @@ public class ItemCodeHandler {
 
 
         switch (this.itemGroup) {
+            case "1900" -> {
+
+                boardID = "636bc3a95da9340015e47b84";
+                idList = "636bc3a95da9340015e47b8b";
+                colorCustomFieldID="636bc3aa5da9340015e47ce4";
+                rmCustomField = "636bc3aa5da9340015e47ce8";
+
+            }
             case "3300" -> {
                 //kk cabinets
 
