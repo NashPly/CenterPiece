@@ -303,14 +303,16 @@ public class CenterPieceFunctions {
 
         String boardID = itemInformation.getString("boardID");
         String idList = itemInformation.getString("idList");
-        String idLabels = itemInformation.getString("idLabel");
+
+        String idLabels = "";
+        if(itemInformation.has("idLabel"))
+        idLabels = itemInformation.getString("idLabel");
 
         String description = jsonSO.getString("CustomerPO");
 
         String dueDate = jsonSO.getString("ExpectedDate");
 
         int dateHold = Integer.parseInt(dueDate.substring(8, 10));
-
 
         if(dateHold+1>31) {
             dueDate = dueDate.substring(0, 8) + (Integer.valueOf(dueDate.substring(8, 10)));
