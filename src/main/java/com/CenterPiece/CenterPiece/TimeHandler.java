@@ -62,7 +62,7 @@ public class TimeHandler {
 
         this.currentYear = String.valueOf(dt.getYear());
         this.currentMonth = addZeroIfLessThanTen(dt.getMonthOfYear());
-        this.currentDayOfMonth = addZeroIfLessThanTen(dt.getDayOfMonth()-1);
+        this.currentDayOfMonth = addZeroIfLessThanTen(dt.getDayOfMonth());
         this.currentHour = addZeroIfLessThanTen(dt.getHourOfDay());
         this.currentMinuteOfHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
     }
