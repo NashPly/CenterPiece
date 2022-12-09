@@ -63,8 +63,6 @@ public class APICaller {
                 }
             }
 
-
-
             i++;
         }
 
@@ -72,7 +70,6 @@ public class APICaller {
             System.out.println("CenterPiece tried 10 times to make this call unsuccessfully. Something is wrong");
             System.exit(-1);
         }
-
 
         return response;
     }
