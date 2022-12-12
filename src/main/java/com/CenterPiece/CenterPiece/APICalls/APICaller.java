@@ -13,7 +13,7 @@ public class APICaller {
     private HttpClient client;
     private HttpRequest request;
 
-    APICaller(HttpClient client, HttpRequest request){
+    public APICaller(HttpClient client, HttpRequest request){
         this.client = client;
         this.request = request;
     }

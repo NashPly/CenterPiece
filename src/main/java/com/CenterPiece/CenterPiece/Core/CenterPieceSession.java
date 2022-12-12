@@ -1,5 +1,6 @@
 package com.CenterPiece.CenterPiece.Core;
 
+import com.CenterPiece.CenterPiece.APICalls.APICaller;
 import com.CenterPiece.CenterPiece.Core.CenterPieceFunctions;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import org.json.JSONArray;
@@ -72,17 +73,22 @@ public class CenterPieceSession {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                 .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        assert response != null;
-        JSONObject json = new JSONObject(response.body());
+        APICaller apiCaller = new APICaller(client, request);
 
-        return json.getJSONObject("response").getString("SessionContextId");
+        return new JSONObject(apiCaller.makeAPICall().body()).getString("SessionContextId");
+
+//        HttpResponse<String> response = null;
+//        try {
+//            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        assert response != null;
+//        JSONObject json = new JSONObject(response.body());
+//
+//        return json.getJSONObject("response").getString("SessionContextId");
     }
 
     public void logout(){
@@ -102,11 +108,15 @@ public class CenterPieceSession {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                 .build();
 
-        try {
-            client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        APICaller apiCaller = new APICaller(client, request);
+
+        apiCaller.makeAPICall();
+
+//        try {
+//            client.send(request, HttpResponse.BodyHandlers.ofString());
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 }
 
