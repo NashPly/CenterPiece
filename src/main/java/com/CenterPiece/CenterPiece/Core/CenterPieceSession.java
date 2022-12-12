@@ -76,7 +76,11 @@ public class CenterPieceSession {
 
         APICaller apiCaller = new APICaller(client, request);
 
-        return new JSONObject(apiCaller.makeAPICall().body()).getString("SessionContextId");
+        //System.out.println(apiCaller.makeAPICall().body());
+
+        JSONObject json = new JSONObject(apiCaller.makeAPICall().body());
+
+        return json.getJSONObject("response").getString("SessionContextId");
 
 //        HttpResponse<String> response = null;
 //        try {
