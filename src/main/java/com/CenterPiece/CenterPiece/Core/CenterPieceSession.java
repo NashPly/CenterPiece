@@ -80,6 +80,8 @@ public class CenterPieceSession {
 
         JSONObject json = new JSONObject(apiCaller.makeAPICall().body());
 
+        System.out.println(json.getJSONObject("response"));
+        
         return json.getJSONObject("response").getString("SessionContextId");
 
 //        HttpResponse<String> response = null;
