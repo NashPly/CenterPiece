@@ -5,6 +5,8 @@ import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import com.CenterPiece.CenterPiece.Objects.SalesOrder;
 import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
+import com.CenterPiece.CenterPiece.TrelloListIDs;
+import com.CenterPiece.CenterPiece.TrelloLists;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -168,11 +170,17 @@ public class CenterPieceFunctions {
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch);
 
-        List<String> liveTrelloBuckets = new ArrayList<>(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
-                "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
-                "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
-                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
-                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec"));
+//        List<String> liveTrelloBuckets = new ArrayList<>(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
+//                "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
+//                "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
+//                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
+//                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec", "639871e0cb87d801a97ad7aa"));
+//
+//        List<TrelloLists> offLimitsTrelloLists = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING,TrelloLists.SO_SID_CHECK,
+//                TrelloLists.ON_HOLD, TrelloLists.PROCESSING,TrelloLists.TO_BE_ORDERED ,TrelloLists.ON_ORDER,
+//                TrelloLists.RECEIVING, TrelloLists.CREDIT_HOLD, TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE,
+//                TrelloLists.SS_And_RS, TrelloLists.IN_PRODUCTION, TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.ON_TRUCK_ON_DELIVERY));
+
 
         JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 
@@ -204,17 +212,6 @@ public class CenterPieceFunctions {
 
                             for(int p = 0; p < resultArray.length(); p++) {
 
-                                if(resultArray.getJSONObject(p).has("idList") &&
-                                        !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
-                                                itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
-                                        sameBoard){
-                                    //TODO above checks if current board is destination board
-                                    if(!liveTrelloBuckets.contains(resultArray.getJSONObject(p).getString("idList"))) {
-                                        itemInformation.remove("idList");
-                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
-                                    }
-                                }
-
                                 ArrayList<String> labelIds = new ArrayList<>();
 
                                 if(resultArray.getJSONObject(p).has("labels") && sameBoard) {
@@ -226,6 +223,24 @@ public class CenterPieceFunctions {
 
                                     itemInformation.remove("idLabel");
                                     itemInformation.put("idLabel", String.join(",", labelIds));
+                                }
+
+                                if(resultArray.getJSONObject(p).has("idList") &&
+                                        !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                                itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
+                                        sameBoard ){
+                                    //TODO above checks if current board is destination board
+                                    TrelloListIDs listIDs = new TrelloListIDs(resultArray.getJSONObject(p).getString("idList"));
+
+                                    if(listIDs.offLimits() || labelIds.contains("638e5d85e978f805fbcbf36f")) {
+                                        itemInformation.remove("idList");
+                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+                                    }
+//                                    if(!liveTrelloBuckets.contains(resultArray.getJSONObject(p).getString("idList")) ||
+//                                            labelIds.contains("638e5d85e978f805fbcbf36f")) {
+//                                        itemInformation.remove("idList");
+//                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+//                                    }
                                 }
 
                                 String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);

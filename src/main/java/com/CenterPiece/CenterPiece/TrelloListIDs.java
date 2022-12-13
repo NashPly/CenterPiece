@@ -60,6 +60,10 @@ public class TrelloListIDs {
                 this.list = TrelloLists.RECEIVING;
                 this.branch = "TOPSHOP";
             }
+            case "639871e0cb87d801a97ad7aa" -> {
+                this.list = TrelloLists.CREDIT_HOLD;
+                this.branch = "TOPSHOP";
+            }
             case "60c26dfb44555566d32ae64b" -> {
                 this.list = TrelloLists.SCHEDULING_POOL;
                 this.branch = "TOPSHOP";
@@ -232,6 +236,9 @@ public class TrelloListIDs {
                 case RECEIVING -> {
                     return "60c26dfb44555566d32ae649";
                 }
+                case CREDIT_HOLD -> {
+                    return "639871e0cb87d801a97ad7aa";
+                }
                 case SCHEDULING_POOL -> {
                     return "60c26dfb44555566d32ae64b";
                 }
@@ -349,10 +356,11 @@ public class TrelloListIDs {
 //                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
 //                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec"));
 
-        List<TrelloLists> liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.SO_SID_CHECK,
+        List<TrelloLists> liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.SO_SID_CHECK,
                 TrelloLists.ON_HOLD, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED, TrelloLists.ON_ORDER,
                 TrelloLists.RECEIVING, TrelloLists.TRANSFERRED_TO_NASHVILLE,TrelloLists.COD_TO_BE_PAID));
 
+        var hold = liveTrelloBuckets.contains(this.list);
 
         return liveTrelloBuckets.contains(this.list);
     }
