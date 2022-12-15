@@ -199,12 +199,88 @@ public class TrelloListIDs {
                 this.list = TrelloLists.INBOX;
                 this.branch = "CABINETS";
             }
+
+            case "636bc3a95da9340015e47b8f" -> {
+                this.list = TrelloLists.QUOTED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b90" -> {
+                this.list = TrelloLists.PROCESSING;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b91" -> {
+                this.list = TrelloLists.TO_BE_ORDERED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b92" -> {
+                this.list = TrelloLists.ON_ORDER;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b93" -> {
+                this.list = TrelloLists.RECEIVING;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b94" -> {
+                this.list = TrelloLists.ON_HOLD;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b95" -> {
+                this.list = TrelloLists.PRODUCTION_QUEUE;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b96" -> {
+                this.list = TrelloLists.IN_PRODUCTION;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b98" -> {
+                this.list = TrelloLists.TO_BE_PICKED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b99" -> {
+                this.list = TrelloLists.PICKED_AND_STAGED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b9a" -> {
+                this.list = TrelloLists.TO_BE_LOADED_ROUTED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b9b" -> {
+                this.list = TrelloLists.WILL_CALL;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b9c" -> {
+                this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b9f" -> {
+                this.list = TrelloLists.COD_TO_BE_PAID;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b9d" -> {
+                this.list = TrelloLists.DELIVERED_PICKED_UP;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b9e" -> {
+                this.list = TrelloLists.INVOICED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47ba0" -> {
+                this.list = TrelloLists.RECEIVED;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b84" -> {
+                this.list = TrelloLists.BRANCH_ID;
+                this.branch = "COMPONENTS";
+            }
+            case "636bc3a95da9340015e47b8b" -> {
+                this.list = TrelloLists.INBOX;
+                this.branch = "COMPONENTS";
+            }
+
             default -> {
                 this.list = TrelloLists.INBOX;
                 this.branch = "CABINETS";
             }
-
-
         }
     }
 
@@ -283,7 +359,6 @@ public class TrelloListIDs {
                 }
             }
         }
-
         else if(this.branch.equals("CABINETS")) {
             switch (list) {
                 case QUOTED -> {
@@ -344,6 +419,67 @@ public class TrelloListIDs {
                     return "62869b5c1351de037ffd2cbc";
                 }
             }
+        }
+        else if(this.branch.equals("COMPONENTS")) {
+            switch (list) {
+                case QUOTED -> {
+                    return "636bc3a95da9340015e47b8f";
+                }
+                case PROCESSING -> {
+                    return "636bc3a95da9340015e47b90";
+                }
+                case TO_BE_ORDERED -> {
+                    return "636bc3a95da9340015e47b91";
+                }
+                case ON_ORDER -> {
+                    return "636bc3a95da9340015e47b92";
+                }
+                case RECEIVING -> {
+                    return "636bc3a95da9340015e47b93";
+                }
+                case ON_HOLD -> {
+                    return "636bc3a95da9340015e47b94";
+                }
+                case PRODUCTION_QUEUE -> {
+                    return "636bc3a95da9340015e47b95";
+                }
+                case IN_PRODUCTION -> {
+                    return "636bc3a95da9340015e47b96";
+                }
+                case TO_BE_PICKED -> {
+                    return "636bc3a95da9340015e47b98";
+                }
+                case PICKED_AND_STAGED -> {
+                    return "636bc3a95da9340015e47b99";
+                }
+                case TO_BE_LOADED_ROUTED -> {
+                    return "636bc3a95da9340015e47b9a";
+                }
+                case WILL_CALL -> {
+                    return "636bc3a95da9340015e47b9b";
+                }
+                case ON_TRUCK_ON_DELIVERY -> {
+                    return "636bc3a95da9340015e47b9c";
+                }
+                case DELIVERED_PICKED_UP -> {
+                    return "636bc3a95da9340015e47b9d";
+                }
+                case INVOICED -> {
+                    return "636bc3a95da9340015e47b9e";
+                }
+                case RECEIVED -> {
+                    return "636bc3a95da9340015e47ba0";
+                }
+                case BRANCH_ID -> {
+                    return "636bc3a95da9340015e47b84";
+                }
+                case INBOX -> {
+                    return "636bc3a95da9340015e47b8b";
+                }
+                default -> {
+                    return "636bc3a95da9340015e47b8b";
+                }
+            }
         }else{
             return "61f2d5c461ac134ef274ae5f";
         }
@@ -360,7 +496,7 @@ public class TrelloListIDs {
                 TrelloLists.ON_HOLD, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED, TrelloLists.ON_ORDER,
                 TrelloLists.RECEIVING, TrelloLists.TRANSFERRED_TO_NASHVILLE,TrelloLists.COD_TO_BE_PAID));
 
-        var hold = liveTrelloBuckets.contains(this.list);
+        //var hold = liveTrelloBuckets.contains(this.list);
 
         return liveTrelloBuckets.contains(this.list);
     }
