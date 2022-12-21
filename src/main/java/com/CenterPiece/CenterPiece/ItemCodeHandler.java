@@ -91,7 +91,8 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart", "2022-" + timeHandler.getCurrentMonth() + "-" +
-                timeHandler.getCurrentDayOfMonth() + "T"+"00:00:01-6:00");
+                19 + "T"+"00:00:01-6:00");
+                //(timeHandler.getCurrentDayOfMonth()) + "T"+"00:00:01-6:00");
         innerRequestBody.put("OrderDateRangeEnd", "2022-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
@@ -330,8 +331,6 @@ public class ItemCodeHandler {
 
         JSONObject itemDetails;
 
-        System.out.println();
-
         if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
@@ -416,6 +415,7 @@ public class ItemCodeHandler {
         switch(boardName){
             case "Tops" -> destination = topList;
             case "Cabinets" -> destination = cabList;
+            case "Components" -> destination = compList;
 
         }
         return destination;
