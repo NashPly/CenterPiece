@@ -495,7 +495,8 @@ public class TrelloListIDs {
         List<TrelloLists> liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.SO_SID_CHECK,
                 TrelloLists.ON_HOLD, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED, TrelloLists.ON_ORDER,
                 TrelloLists.RECEIVING, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.TO_BE_LOADED_ROUTED,
-                TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.COD_TO_BE_PAID));
+                TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.DELIVERED_PICKED_UP,
+                TrelloLists.COD_TO_BE_PAID));
 
         //var hold = liveTrelloBuckets.contains(this.list);
 
