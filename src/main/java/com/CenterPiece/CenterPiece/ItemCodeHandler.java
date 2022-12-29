@@ -56,7 +56,17 @@ public class ItemCodeHandler {
             System.out.println("\n-- agilityItemSearchResult --");
             this.agilityItemSearchResult = agilityItemSearch();
 
+            if(this.agilityItemSearchResult != null)
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
+            else if(this.itemCode != null){
+                System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
+            }
+            else if(item != null){
+                System.out.println("\n--- There was no item code in here: \n" + item +"---");
+            }
+            else{
+                System.out.println("Something isn'T alright here or there are no line items");
+            }
 
         }
         return this.getCardDestinationFromItemCodeResult();
@@ -66,25 +76,6 @@ public class ItemCodeHandler {
 
         JSONObject innerRequestBody = new JSONObject();
 
-//        DateTime dtus = new DateTime();
-//        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-//        DateTime dt = dtus.withZone(dtZone);
-//        String currentHour;
-//        if(dt.getHourOfDay()<10)
-//            currentHour = "0" + dt.getHourOfDay();
-//        else
-//            currentHour = "" + dt.getHourOfDay();
-//        String currentDay;
-//        if(dt.getDayOfMonth()<10)
-//            currentDay = "0" + dt.getDayOfMonth();
-//        else
-//            currentDay = "" + dt.getDayOfMonth();
-//        String currentMonth;
-//        if(dt.getMonthOfYear()<10)
-//            currentMonth = "0" + dt.getMonthOfYear();
-//        else
-//            currentMonth = "" + dt.getMonthOfYear();
-
         TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
@@ -92,6 +83,7 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart", "2022-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"00:00:01-6:00");
+                //"26T"+"00:00:01-6:00");
         innerRequestBody.put("OrderDateRangeEnd", "2022-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
