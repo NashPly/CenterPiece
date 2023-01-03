@@ -37,6 +37,8 @@ public class ItemCodeHandler {
 
         JSONArray salesOrderArray = agilitySalesOrderListLookup();
 
+        System.out.println("Returned Sales Orders");
+
         for(int i = 0; i < salesOrderArray.length(); i++){
             if(!this.salesOrderNumber.equals("0")){
                 if (this.salesOrderNumber.equals(salesOrderArray.getJSONObject(i).getNumber("OrderID").toString())) {
@@ -44,6 +46,8 @@ public class ItemCodeHandler {
                 }
             }
         }
+
+        System.out.println("Populated salesOrder: " + this.salesOrder);
 
         if (!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
             JSONArray salesOrderItemsArray = this.salesOrder
