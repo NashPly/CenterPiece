@@ -85,10 +85,10 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", "2022-" + timeHandler.getCurrentMonth() + "-" +
+        innerRequestBody.put("OrderDateRangeStart", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"00:00:01-6:00");
                 //"26T"+"00:00:01-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", "2022-" + timeHandler.getCurrentMonth() + "-" +
+        innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
