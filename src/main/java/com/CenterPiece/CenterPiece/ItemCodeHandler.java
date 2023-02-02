@@ -49,16 +49,23 @@ public class ItemCodeHandler {
 
         System.out.println("Populated salesOrder: " + this.salesOrder);
 
-        if (!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
-            JSONArray salesOrderItemsArray = this.salesOrder
+        if (!(this.salesOrder == null)) {
+            JSONArray salesOrderItemsArray = new JSONArray();
+            if(this.salesOrder.has("dtOrderDetailResponse")){
+                salesOrderItemsArray = this.salesOrder
                     .getJSONArray("dtOrderDetailResponse");
-            var item = salesOrderItemsArray.getJSONObject(0);
-            this.itemCode = item.getString("ItemCode");
-            this.linkedTranType = item.getString("LinkedTranType");
-            this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
+            }
+            JSONObject item = null;
+            if(salesOrderItemsArray.length()<0) {
+                item = salesOrderItemsArray.getJSONObject(0);
+                this.itemCode = item.getString("ItemCode");
+                this.linkedTranType = item.getString("LinkedTranType");
+                this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
+                System.out.println("\n-- agilityItemSearchResult --");
+                this.agilityItemSearchResult = agilityItemSearch();
+            }
 
-            System.out.println("\n-- agilityItemSearchResult --");
-            this.agilityItemSearchResult = agilityItemSearch();
+
 
             if(this.agilityItemSearchResult != null)
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
@@ -69,7 +76,7 @@ public class ItemCodeHandler {
                 System.out.println("\n--- There was no item code in here: \n" + item +"---");
             }
             else{
-                System.out.println("Something isn'T alright here or there are no line items");
+                System.out.println("Something isn't alright here or there are no line items");
             }
 
         }
@@ -86,8 +93,8 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
-                timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
-                //"05T00:00:01-6:00");
+                //timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
+                "01T00:00:01-6:00");
         innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
@@ -305,7 +312,9 @@ public class ItemCodeHandler {
                 linkedID = this.linkedTranID;
             }
             default -> {
-                boardID = "None Found";
+                System.out.println("No item shared. Placing it in Top Shop Inbox List");
+                boardID = "60c26dfb44555566d32ae643";
+                idList = "61f2d5c461ac134ef274ae5f";
             }
         }
 

@@ -117,13 +117,20 @@ public class CenterPieceSession {
         APICaller apiCaller = new APICaller(client, request);
 
         apiCaller.makeAPICall();
-
-//        try {
-//            client.send(request, HttpResponse.BodyHandlers.ofString());
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public String getContextID(){
+        return contextID;
+    }
+
+    public void setContextID(String cID){
+        this.contextID = cID;
+    }
+
 }
 
 
