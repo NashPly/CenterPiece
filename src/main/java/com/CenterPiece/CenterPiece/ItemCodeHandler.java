@@ -50,13 +50,13 @@ public class ItemCodeHandler {
         System.out.println("Populated salesOrder: " + this.salesOrder);
 
         if (!(this.salesOrder == null)) {
-            JSONArray salesOrderItemsArray = new JSONArray();
+            JSONArray salesOrderItemsArray = null;
             if(this.salesOrder.has("dtOrderDetailResponse")){
-                salesOrderItemsArray = this.salesOrder
-                    .getJSONArray("dtOrderDetailResponse");
+                salesOrderItemsArray = new JSONArray(this.salesOrder
+                    .getJSONArray("dtOrderDetailResponse"));
             }
             JSONObject item = null;
-            if(salesOrderItemsArray.length()<0) {
+            if(salesOrderItemsArray.length()>0){
                 item = salesOrderItemsArray.getJSONObject(0);
                 this.itemCode = item.getString("ItemCode");
                 this.linkedTranType = item.getString("LinkedTranType");
@@ -67,7 +67,7 @@ public class ItemCodeHandler {
 
 
 
-            if(this.agilityItemSearchResult != null)
+            if(this.agilityItemSearchResult != null && !this.agilityItemSearchResult.has("Empty"))
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
             else if(this.itemCode != null){
                 System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
@@ -206,12 +206,17 @@ public class ItemCodeHandler {
         AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest, branch);
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
-        return response.getJSONObject("response")
+        if(response.getJSONObject("response")
                 .getJSONObject("ItemsListResponse")
-                .getJSONObject("dsItemsListResponse")
-                .getJSONArray("dtItemsListResponse")
-                .getJSONObject(0);
-
+                .getJSONObject("dsItemsListResponse").length() > 0) {
+            return response.getJSONObject("response")
+                    .getJSONObject("ItemsListResponse")
+                    .getJSONObject("dsItemsListResponse")
+                    .getJSONArray("dtItemsListResponse")
+                    .getJSONObject(0);
+        } else {
+            return new JSONObject().put("Empty", true);
+        }
     }
 
     public JSONObject getCardDestinationFromItemCodeResult(){
