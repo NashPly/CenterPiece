@@ -353,9 +353,15 @@ public class CenterPieceFunctions {
         name = urlify(name);
         description = urlify(description);
 
-        if(!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())){
+
+        boolean address1ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress1"));
+
+        boolean address2ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress2"));
+
+
+        if((!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())) && address1ContainsNumbers == true){
             address = jsonSO.getString("ShipToAddress1");
-        }else if(!jsonSO.getString("ShipToAddress2").isBlank()){
+        }else if(!jsonSO.getString("ShipToAddress2").isBlank() && address2ContainsNumbers == true){
             address = jsonSO.getString("ShipToAddress2");
         }
 
@@ -410,5 +416,20 @@ public class CenterPieceFunctions {
         string = string.replace("\"", "%22");
 
         return string;
+    }
+
+
+    private boolean checkIfAddressHasStreetNumbers(String address){
+
+        Boolean containsNumbers = false;
+
+        char[] chars2 = address.toCharArray();
+
+        for(int i = 0; i < chars2.length; i++){
+            if(Character.isDigit(chars2[i])){
+                containsNumbers = true;
+            }
+        }
+        return containsNumbers;
     }
 }
