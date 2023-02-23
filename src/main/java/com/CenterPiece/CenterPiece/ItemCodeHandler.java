@@ -49,14 +49,18 @@ public class ItemCodeHandler {
 
         System.out.println("Populated salesOrder: " + this.salesOrder);
 
+
         if (!(this.salesOrder == null)) {
+            System.out.println("\n -- This sales order isn't null --");
             JSONArray salesOrderItemsArray = null;
             if(this.salesOrder.has("dtOrderDetailResponse")){
+                System.out.println("\n -- This item has detail response --");
                 salesOrderItemsArray = new JSONArray(this.salesOrder
                     .getJSONArray("dtOrderDetailResponse"));
             }
             JSONObject item = null;
-            if(salesOrderItemsArray.length()>0){
+            if(salesOrderItemsArray != null && salesOrderItemsArray.length()>0){
+                System.out.println("\n -- This sales order has an item --");
                 item = salesOrderItemsArray.getJSONObject(0);
                 this.itemCode = item.getString("ItemCode");
                 this.linkedTranType = item.getString("LinkedTranType");
@@ -64,6 +68,7 @@ public class ItemCodeHandler {
                 System.out.println("\n-- agilityItemSearchResult --");
                 this.agilityItemSearchResult = agilityItemSearch();
             }
+            System.out.println("\n -- Item defined and searched in Agility --");
 
 
 
@@ -79,6 +84,8 @@ public class ItemCodeHandler {
                 System.out.println("Something isn't alright here or there are no line items");
             }
 
+            System.out.println("\n -- Item checked if valid --");
+
         }
         return this.getCardDestinationFromItemCodeResult();
     }
@@ -93,8 +100,8 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
-                timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
-                //"01T00:00:01-6:00");
+                //timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
+                "22T00:00:01-6:00");
         innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
