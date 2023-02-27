@@ -26,8 +26,8 @@ public class APICaller {
             if(i!=0){
 
                 try {
-                    System.out.println("\nCall failed. Trying again in 10 seconds...");
-                    TimeUnit.SECONDS.sleep(10);
+                    System.out.println("\nCall failed attempt" + i+1 + " of 10. Trying again in 60 seconds...");
+                    TimeUnit.SECONDS.sleep(60);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
