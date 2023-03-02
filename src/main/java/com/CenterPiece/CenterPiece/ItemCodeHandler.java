@@ -99,9 +99,12 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
-                //timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
-                "22T00:00:01-6:00");
+        innerRequestBody.put("OrderDateRangeStart", timeHandler.getCurrentYear() + "-" +
+                timeHandler.getCurrentMonth() + "-" +
+                //"02-" +
+                timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
+                //"25T00:00:01-6:00");
+
         innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
 
