@@ -128,51 +128,6 @@ public class ItemCodeHandler {
 
         JSONObject innerRequestBody = new JSONObject();
 
-//        DateTime dtus = new DateTime();
-//        DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-//        DateTime dt = dtus.withZone(dtZone);
-//
-//        int minHold = dt.getMinuteOfHour()-2;
-//        int hourHold = dt.getHourOfDay();
-//        int dayHold = dt.getDayOfMonth();
-//        int monthHold = dt.getMonthOfYear();
-//        int yearHold = dt.getYear();
-//
-//        if(minHold<0){
-//            minHold = dt.getMinuteOfHour()+56;
-//            hourHold--;
-//            if(hourHold<0)
-//                hourHold += 24;
-//        }
-//
-//        String searchHour;
-//        if(hourHold<10)
-//            searchHour = "0" + hourHold;
-//        else
-//            searchHour = "" + hourHold;
-//
-//        String searchMinute;
-//        if(minHold<10)
-//            searchMinute = "0" + minHold;
-//        else
-//            searchMinute = "" + minHold;
-//
-//        String currentDay;
-//
-//        if(dayHold<10)
-//            currentDay = "0" + dayHold;
-//        else
-//            currentDay = "" + dayHold;
-//
-//        String currentMonth;
-//
-//        if(monthHold<10)
-//            currentMonth = "0" + monthHold;
-//        else
-//            currentMonth = "" + monthHold;
-//
-//        String currentYear = String.valueOf(yearHold);
-
         TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
@@ -183,6 +138,8 @@ public class ItemCodeHandler {
                 timeHandler.getCurrentMonth() + "-" + timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
         innerRequestBody.put("FetchOnlyChangedSince", timeHandler.getSearchYear() + "-" +
                 timeHandler.getSearchMonth() + "-" + timeHandler.getSearchDayOfMonth() +
+                //timeHandler.getSearchMonth() + "-07" +
+                //"T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
                 "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
 
         System.out.println("\n-- AgilityChangedSalesOrderListLookup --");

@@ -225,22 +225,23 @@ public class CenterPieceFunctions {
                                     itemInformation.put("idLabel", String.join(",", labelIds));
                                 }
 
-                                if(resultArray.getJSONObject(p).has("idList") &&
-                                        !(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                if(resultArray.getJSONObject(p).has("idList")){
+                                        if(!(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
                                                 itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
                                         sameBoard ){
-                                    //TODO above checks if current board is destination board
-                                    TrelloListIDs listIDs = new TrelloListIDs(resultArray.getJSONObject(p).getString("idList"));
+                                        //TODO above checks if current board is destination board
+                                        TrelloListIDs listIDs = new TrelloListIDs(resultArray.getJSONObject(p).getString("idList"));
 
-                                    if(listIDs.offLimits() || labelIds.contains("638e5d85e978f805fbcbf36f")) {
-                                        itemInformation.remove("idList");
-                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+                                        if(listIDs.offLimits() || labelIds.contains("638e5d85e978f805fbcbf36f")) {
+                                            itemInformation.remove("idList");
+                                            itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+                                        }
+    //                                    if(!liveTrelloBuckets.contains(resultArray.getJSONObject(p).getString("idList")) ||
+    //                                            labelIds.contains("638e5d85e978f805fbcbf36f")) {
+    //                                        itemInformation.remove("idList");
+    //                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+    //                                    }
                                     }
-//                                    if(!liveTrelloBuckets.contains(resultArray.getJSONObject(p).getString("idList")) ||
-//                                            labelIds.contains("638e5d85e978f805fbcbf36f")) {
-//                                        itemInformation.remove("idList");
-//                                        itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
-//                                    }
                                 }
 
                                 String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
