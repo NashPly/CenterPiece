@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.http.HttpClient;
+import java.util.Locale;
 
 public class ItemCodeHandler {
 
@@ -43,6 +44,7 @@ public class ItemCodeHandler {
             if(!this.salesOrderNumber.equals("0")){
                 if (this.salesOrderNumber.equals(salesOrderArray.getJSONObject(i).getNumber("OrderID").toString())) {
                     this.salesOrder = salesOrderArray.getJSONObject(i);
+
                 }
             }
         }
@@ -52,6 +54,7 @@ public class ItemCodeHandler {
 
         if (!(this.salesOrder == null)) {
             System.out.println("\n -- This sales order isn't null --");
+            this.salesOrderNumber = String.valueOf(this.salesOrder.getNumber("OrderID"));
             JSONArray salesOrderItemsArray = null;
             if(this.salesOrder.has("dtOrderDetailResponse")){
                 System.out.println("\n -- This item has detail response --");
@@ -72,16 +75,20 @@ public class ItemCodeHandler {
 
 
 
-            if(this.agilityItemSearchResult != null && !this.agilityItemSearchResult.has("Empty"))
+            if(this.agilityItemSearchResult != null && !this.agilityItemSearchResult.has("Empty")){
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-            else if(this.itemCode != null){
-                System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
+            if (!this.agilityItemSearchResult.getString("ExtendedDescription").contains(this.salesOrderNumber)) {
+                agilityItemUpdate(this.agilityItemSearchResult.getString("ExtendedDescription"));
             }
-            else if(item != null){
-                System.out.println("\n--- There was no item code in here: \n" + item +"---");
-            }
-            else{
-                System.out.println("Something isn't alright here or there are no line items");
+                else if(this.itemCode != null){
+                    System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
+                }
+                else if(item != null){
+                    System.out.println("\n--- There was no item code in here: \n" + item +"---");
+                }
+                else{
+                    System.out.println("Something isn't alright here or there are no line items");
+                }
             }
 
             System.out.println("\n -- Item checked if valid --");
@@ -184,6 +191,58 @@ public class ItemCodeHandler {
         } else {
             return new JSONObject().put("Empty", true);
         }
+    }
+
+    public void agilityItemUpdate(String extDesc){
+
+//        JSONObject innerRequestBody = new JSONObject({
+//                "request": {
+//            "Item": "NS0000021618",
+//                    "ItemUpdateJSON": {
+//                "dsItemUpdate": {
+//                    "dtItemUpdate": [
+//                    {"ExtDescription": "Testing 123  Sales Order: 213879"}
+//                ]
+//                }
+//            }
+//        }
+//});
+        //String innerRequestBody = "";
+        JSONObject innerRequestBody = new JSONObject();
+        JSONObject dsItemUpdate = new JSONObject();
+        JSONObject dtItemUpdate = new JSONObject();
+        JSONArray dtItemUpdateArray = new JSONArray();
+        JSONObject innerDtItemUpdate = new JSONObject();
+
+        if(extDesc.contains("Sales Orders:")) {
+
+            innerDtItemUpdate.put("ExtDescription", extDesc.split(" Sales Orders:")[0] + " Sales Orders:" + this.salesOrderNumber);
+        }else {
+            innerDtItemUpdate.put("ExtDescription", (extDesc + " Sales Orders:" + this.salesOrderNumber));
+            System.out.println(innerDtItemUpdate);
+        }
+        dtItemUpdateArray.put(innerDtItemUpdate);
+
+
+        dtItemUpdate.put("dtItemUpdate",dtItemUpdateArray);
+
+        dsItemUpdate.put("dsItemUpdate", dtItemUpdate);
+
+        innerRequestBody.put("Item", this.itemCode.toUpperCase(Locale.ROOT));
+        //innerRequestBody.put("Item", "PFTCT495422KSL");
+
+        innerRequestBody.put("ItemUpdateJSON", dsItemUpdate);
+        //innerRequestBody.put("ItemUpdateJSON", dsItemUpdate);
+
+        //innerRequestBody = "{\"Item\": \"NS0000021618\",\"ItemUpdateJSON\": {\"dsItemUpdate\": {\"dtItemUpdate\": [{\"ExtDescription\": \"Testing 1234 Sales Orders:213879\"}]}}}";
+
+        System.out.println(innerRequestBody.toString());
+
+        System.out.println("- AgilityItemUpdate -");
+        AgilityCalls agilityPostCall = new AgilityCalls(this.client, this.contextId, "Inventory/ItemUpdate", innerRequestBody, this.branch);
+        JSONObject response =  agilityPostCall.postAgilityAPICall();
+
+        System.out.println(response);
     }
 
     public JSONObject getCardDestinationFromItemCodeResult(){
