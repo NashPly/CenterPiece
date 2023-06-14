@@ -334,10 +334,12 @@ public class ItemCodeHandler {
                 colorCustomFieldID = "6197b500bbb79658801189ce";
                 rmCustomField = "621519b6944e3c4fc091a515";
 
-                if(this.agilityItemSearchResult.getString("ExtendedDescription").contains("FAB") || this.agilityItemSearchResult.getString("ExtendedDescription").contains("SLAB")){
+                if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("[F,f][A,a][B,b] - .*\\d{3,4}-\\d{2}.*") || this.agilityItemSearchResult.getString("ExtendedDescription").contains("[S,s][L,l][A,a][B,b] - .*\\d{3,4}-\\d{2}.*")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
                     //TODO Not a long term parsing solution
                     colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
+                } else {
+                    colorCode = "Invalid Color Code Format";
                 }
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;

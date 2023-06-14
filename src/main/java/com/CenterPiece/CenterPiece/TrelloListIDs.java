@@ -294,6 +294,9 @@ public class TrelloListIDs {
                 case BATCHING -> {
                     return "60c26dfb44555566d32ae651";
                 }
+                case DRAWING_RECHECK -> {
+                    return "64873f48560219742046283c";
+                }
                 case SO_SID_CHECK -> {
                     return "62c4430fcdfa097c5642436b";
                 }
@@ -492,7 +495,7 @@ public class TrelloListIDs {
 //                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
 //                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec"));
 
-        List<TrelloLists> liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.SO_SID_CHECK,
+        List<TrelloLists> liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK, TrelloLists.SO_SID_CHECK,
                 TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
                 TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.TO_BE_LOADED_ROUTED,
                 TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.WILL_CALL,TrelloLists.ON_TRUCK_ON_DELIVERY,
