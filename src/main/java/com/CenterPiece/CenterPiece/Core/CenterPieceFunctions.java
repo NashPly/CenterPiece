@@ -326,16 +326,12 @@ public class CenterPieceFunctions {
 
         String description = jsonSO.getString("CustomerPO");
 
+        String orderDate = jsonSO.getString("OrderDate");
         String dueDate = jsonSO.getString("ExpectedDate");
 
-        int dateHold = Integer.parseInt(dueDate.substring(8, 10));
+        orderDate = trelloDateAdjuster(orderDate);
 
-        if(dateHold+1>31) {
-            dueDate = dueDate.substring(0, 8) + (Integer.valueOf(dueDate.substring(8, 10)));
-        }else{
-            dateHold++;
-            dueDate = dueDate.substring(0, 8) + dateHold;
-        }
+        dueDate = trelloDateAdjuster(dueDate);
 
         String name = (
                 "SO "+
@@ -385,16 +381,16 @@ public class CenterPieceFunctions {
 
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s&due=%s&coordinates=%s" +
+                            "&idLabels=%s&start=%s&due=%s&coordinates=%s" +
                             "&locationName=%s",
-                    boardID, idList, name, idLabels, dueDate,
+                    boardID, idList, name, idLabels, orderDate,dueDate,
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
                     urlify(tomTomCalls.getResponseAddress()));
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s&due=%s",
-                    boardID, idList, name, idLabels, dueDate);
+                            "&idLabels=%s&start=%s&due=%s",
+                    boardID, idList, name, idLabels, orderDate, dueDate);
         }
 
         if(!description.isEmpty()){
@@ -432,5 +428,16 @@ public class CenterPieceFunctions {
             }
         }
         return containsNumbers;
+    }
+
+    private String trelloDateAdjuster(String date){
+        int dateHold = Integer.parseInt(date.substring(8, 10));
+
+        if(dateHold+1>31) {
+            return date.substring(0, 8) + (Integer.valueOf(date.substring(8, 10)));
+        }else{
+            dateHold++;
+            return date.substring(0, 8) + dateHold;
+        }
     }
 }
