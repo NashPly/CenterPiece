@@ -44,11 +44,11 @@ public class AgilityCalls {
 
         var request = HttpRequest.newBuilder(
                 URI.create(url + urlEndpoint))
-                .header("accept", "application/json")
+                .header("accept", "*/*")
+                .header("Content-Type","application/json")
                 .header("ContextId", this.contextId)
                 .header("Branch", this.branch)
                 .header("Accept", "*/*")
-                .header("Accept-Encoding", "gzip, deflate, br")
                 .POST(buildRequest())
                 .build();
 
@@ -81,7 +81,6 @@ public class AgilityCalls {
                 .header("ContextId", this.contextId)
                 .header("Branch", this.branch)
                 .header("Accept", "*/*")
-                .header("Accept-Encoding", "gzip, deflate, br")
                 .POST(buildRequestStringBody())
                 .build();
 
