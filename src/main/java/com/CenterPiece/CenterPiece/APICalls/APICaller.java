@@ -26,14 +26,16 @@ public class APICaller {
             if(i!=0){
 
                 try {
-                    System.out.println("\nCall failed attempt" + i + " of 10. Trying again in 60 seconds...");
+                    System.out.println("\nCall failed attempt " + i + " of 10. Trying again in 60 seconds...");
                     TimeUnit.SECONDS.sleep(60);
                 } catch (InterruptedException e) {
+                    System.out.println("Attempt Failed");
                     e.printStackTrace();
                 }
             }
 
             try {
+                System.out.println("Trying Again");
                 response = this.client.send(this.request, HttpResponse.BodyHandlers.ofString());
             } catch (IOException e) {
                 //e.printStackTrace();
