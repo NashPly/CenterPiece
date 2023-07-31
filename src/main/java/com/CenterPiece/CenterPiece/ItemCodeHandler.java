@@ -263,7 +263,7 @@ public class ItemCodeHandler {
 
 
         switch (this.itemGroup) {
-            case "1900", "3700", "2000" -> {
+            case "1900", "3700", "2000", "1000" -> {
 
                 boardID = "636bc3a95da9340015e47b84";
                 //idList = "636bc3a95da9340015e47b8b";
