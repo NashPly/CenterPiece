@@ -35,7 +35,8 @@ public class APICaller {
             }
 
             try {
-                System.out.println("Trying Again");
+                if(i!=0)
+                    System.out.println("Trying Again");
                 response = this.client.send(this.request, HttpResponse.BodyHandlers.ofString());
             } catch (IOException e) {
                 //e.printStackTrace();
