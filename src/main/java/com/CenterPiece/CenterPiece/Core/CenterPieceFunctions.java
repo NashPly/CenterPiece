@@ -75,7 +75,7 @@ public class CenterPieceFunctions {
                 List<JSONObject> openTrelloCards = new ArrayList<>();
 
                 for (int i = 0; i < cards.length(); i++) {
-                    if (!cards.getJSONObject(i).getBoolean("closed")) {
+                    if (!cards.getJSONObject(i).getBoolean("closed") && (!cards.getJSONObject(i).getString("name").contains("Cullman PO#"))) {
                         openTrelloCards.add(cards.getJSONObject(i));
                     }
                 }
@@ -107,10 +107,12 @@ public class CenterPieceFunctions {
                                         q = openTrelloCards.get(i).getJSONArray("labels").length();
                                         openTrelloCards.remove(i);
                                         i--;
+                                        continue;
                                     }
                                 }
                             }
-                        } else if(desiredCard.isEmpty() && openTrelloCards.get(i).getJSONArray("attachments").length() > 0){
+                        }
+                        if(desiredCard.isEmpty() && openTrelloCards.get(i).getJSONArray("attachments").length() > 0) {
                             desiredCard = openTrelloCards.get(i);
                             openTrelloCards.remove(i);
 //                        }else if(partialCard.isEmpty() && openTrelloCards.get(i).getJSONArray("labels").length()>0){
@@ -124,6 +126,7 @@ public class CenterPieceFunctions {
 
                     for(JSONObject json: openTrelloCards){
                         System.out.println("\n - Deleted Duplicate TrelloCard -\n" + json + "\n");
+                        var stinker = "hello";
                         trelloCalls.deleteTrelloAPICall(json.getString("id"));
                     }
 
