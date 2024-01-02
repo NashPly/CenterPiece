@@ -17,6 +17,7 @@ public class ItemCodeHandler {
     private String itemGroup = "None";
     private String linkedTranType;
     private String linkedTranID;
+    private int countOfBuilds;
     private JSONObject agilityItemSearchResult;
     private final String branch;
 
@@ -63,6 +64,10 @@ public class ItemCodeHandler {
             }
             JSONObject item = null;
             if(salesOrderItemsArray != null && salesOrderItemsArray.length()>0){
+
+                this.countOfBuilds = checkForNumOfCabBuilds(salesOrderItemsArray, salesOrderItemsArray.length());
+                System.out.println("Count of CBUILDS " + countOfBuilds);
+
                 System.out.println("\n -- This sales order has an item --");
                 item = salesOrderItemsArray.getJSONObject(0);
                 this.itemCode = item.getString("ItemCode");
@@ -95,6 +100,19 @@ public class ItemCodeHandler {
 
         }
         return this.getCardDestinationFromItemCodeResult();
+    }
+
+    private int checkForNumOfCabBuilds(JSONArray salesOrderItemsArray, int length) {
+        JSONObject item = null;
+        String itemCode = "";
+        for(int i=0; i < length; i++){
+            item = salesOrderItemsArray.getJSONObject(i);
+            itemCode = item.getString("ItemCode");
+            if(itemCode.equals("CBUILD")){
+                return item.getInt("TotalOrderedQuantity");
+            }
+        }
+        return 0;
     }
 
     public JSONArray agilitySalesOrderListLookup() {
@@ -255,6 +273,9 @@ public class ItemCodeHandler {
         String linkedID = null;
         String colorCustomFieldID = null;
         String rmCustomField = null;
+        String agilityPoCustomField = null;
+        String customerPoCustomField = null;
+        String countOfBuildsCustomField = null;
 
         //TODO Could to enum for status
 
@@ -282,6 +303,10 @@ public class ItemCodeHandler {
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 rmCustomField = "62869b5c1351de037ffd2dab";
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+                customerPoCustomField = "65944fad870030dd5e8ca1f0";
             }
             case "3350" -> {
                 //cnc cabinets
@@ -291,6 +316,10 @@ public class ItemCodeHandler {
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869e47dcae4f52e15c90e1";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+                customerPoCustomField = "65944fad870030dd5e8ca1f0";
 
             }
             case "3455" -> {
@@ -301,6 +330,11 @@ public class ItemCodeHandler {
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869db3e04b83468347996b";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+                customerPoCustomField = "65944fad870030dd5e8ca1f0";
+                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
 
             }
             case "3450" -> {
@@ -315,24 +349,24 @@ public class ItemCodeHandler {
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+                customerPoCustomField = "65944fad870030dd5e8ca1f0";
+                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
 
             }
             case "3500" -> {
 
-                //TODO add in dynamic locations
-                // whether it be in side the CASE or determined globally within the function
-                // check to see OrderStatus to determine placement
-                // pass that in to determine respective location
-
                 //counter tops
 
-                //idList = "60c26dfb44555566d32ae651";
-                //System.out.println(orderStatusLogic("Tops"));
                 boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
                 idLabel = "60c26dfc44555566d32ae700";
                 colorCustomFieldID = "6197b500bbb79658801189ce";
+                linkedType = this.linkedTranType;
+                linkedID = this.linkedTranID;
+                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
                 rmCustomField = "621519b6944e3c4fc091a515";
+                customerPoCustomField = "65944bbce3ba00017427cb36";
 
                 if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("(([F,f])|([S,s][L,l]))[A,a][B,b][S,s]? - .*\\d{3,4}[K,k]?-\\d{2}|[A-z]{2}.*")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
@@ -341,8 +375,7 @@ public class ItemCodeHandler {
                 } else {
                     colorCode = "Invalid Color Code Format";
                 }
-                linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
+
             }
             default -> {
                 System.out.println("No item shared. Placing it in Top Shop Inbox List");
@@ -360,6 +393,10 @@ public class ItemCodeHandler {
         json.put("colorCode", colorCode);
         json.put("linkedType", linkedType);
         json.put("linkedID", linkedID);
+        json.put("agilityPoCustomField", agilityPoCustomField);
+        json.put("customerPoCustomField", customerPoCustomField);
+        json.put("countOfBuildsCustomField", countOfBuildsCustomField);
+        json.put("countOfBuilds", this.countOfBuilds);
 
         return json;
     }

@@ -166,7 +166,7 @@ public class CenterPieceFunctions {
         TrelloCalls trelloAPICall = new TrelloCalls(client, "cards", parameters);
         var response = trelloAPICall.postTrelloAPICall();
 
-        checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
+        checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation, jsonSO);
     }
 
     public void updateTrelloCards() {
@@ -253,7 +253,7 @@ public class CenterPieceFunctions {
                                 TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + resultArray.getJSONObject(p).getString("id")), parameters);
                                 var response = trelloCalls.putTrelloAPICall(new JSONObject());
 
-                                checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation);
+                                checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation, salesOrderDataArray.getJSONObject(i));
 
                                 System.out.println("\nUpdates Applied");
                             }
@@ -277,21 +277,34 @@ public class CenterPieceFunctions {
         }
     }
 
-    public void checkTrelloCardForEmptyCustomFields(String cardId, JSONObject itemInformation) {
+    public void checkTrelloCardForEmptyCustomFields(String cardId, JSONObject itemInformation, JSONObject jsonSO) {
 
-        if(!(itemInformation == null) && itemInformation.has("colorCode")){
-            if (itemInformation.getString("colorCode") != null)
-                updateCustomFieldTrello(cardId, itemInformation.getString("colorCustomField"), itemInformation.getString("colorCode"));
-        }
+        if(!(itemInformation == null)) {
+            //Customer PO in the description
 
-        if(!(itemInformation == null) && itemInformation.has("linkedID") && itemInformation.has("linkedType")){
-            if (itemInformation.getString("linkedID") != null && itemInformation.getString("linkedType").equals("RM"))
-                updateCustomFieldTrello(cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedID"));
+            if (itemInformation.has("linkedID") && itemInformation.has("linkedType")) {
+                if (itemInformation.getString("linkedID") != null && itemInformation.getString("linkedType").equals("RM")) {
+                    updateCustomFieldTrello(cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedID"));
+                } else if (itemInformation.getString("linkedID") != null && itemInformation.getString("linkedType").equals("PO")) {
+                    updateCustomFieldTrello(cardId, itemInformation.getString("agilityPoCustomField"), itemInformation.getString("linkedID"));
+                }
+            }
+
+            if (itemInformation.has("colorCode")) {
+                if (itemInformation.getString("colorCode") != null)
+                    updateCustomFieldTrello(cardId, itemInformation.getString("colorCustomField"), itemInformation.getString("colorCode"));
+            }
+
+            if (!(itemInformation.isNull("countOfBuildsCustomField")))
+                updateCustomFieldTrello(cardId, itemInformation.getString("countOfBuildsCustomField"),
+                        itemInformation.getString("countOfBuilds"));
+
+
+            if (!(itemInformation.isNull("customerPoCustomField")))
+                updateCustomFieldTrello(cardId, itemInformation.getString("customerPoCustomField"),
+                        jsonSO.getString("CustomerPO"));
+
         }
-        //TODO Look into auto populating PO's
-        //Probably applicable with Tru and CNC
-//        if(!itemInformation.getString("linkedID").equals("") && itemInformation.getString("linkedType").equals("PO"))
-//            customFieldTrello(client,cardId, poFieldId, itemInformation.getString("linkedID"));
     }
 
     public JSONArray getCardCustomFieldTrello(String cardID){
@@ -324,10 +337,7 @@ public class CenterPieceFunctions {
         String idList = itemInformation.getString("idList");
 
         String idLabels = "";
-        if(itemInformation.has("idLabel"))
-        idLabels = itemInformation.getString("idLabel");
-
-        String description = jsonSO.getString("CustomerPO");
+        if(itemInformation.has("idLabel")) idLabels = itemInformation.getString("idLabel");
 
         String orderDate = jsonSO.getString("OrderDate");
         String dueDate = jsonSO.getString("ExpectedDate");
@@ -351,8 +361,6 @@ public class CenterPieceFunctions {
         String zip = "";
 
         name = urlify(name);
-        description = urlify(description);
-
 
         boolean address1ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress1"));
 
@@ -396,9 +404,9 @@ public class CenterPieceFunctions {
                     boardID, idList, name, idLabels, orderDate, dueDate);
         }
 
-        if(!description.isEmpty()){
-            parameters += String.format("&desc=%s", description);
-        }
+//        if(!description.isEmpty()){
+//            parameters += String.format("&desc=%s", description);
+//        }
 
         return parameters;
     }
