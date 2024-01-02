@@ -17,7 +17,7 @@ public class ItemCodeHandler {
     private String itemGroup = "None";
     private String linkedTranType;
     private String linkedTranID;
-    private int countOfBuilds;
+    private Integer countOfBuilds;
     private JSONObject agilityItemSearchResult;
     private final String branch;
 

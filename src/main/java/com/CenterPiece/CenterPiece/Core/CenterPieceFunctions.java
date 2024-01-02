@@ -296,8 +296,7 @@ public class CenterPieceFunctions {
             }
 
             if (!(itemInformation.isNull("countOfBuildsCustomField")))
-                updateCustomFieldTrello(cardId, itemInformation.getString("countOfBuildsCustomField"),
-                        itemInformation.getString("countOfBuilds"));
+                updateCustomFieldTrello(cardId, itemInformation.getString("countOfBuildsCustomField"), itemInformation.getInt("countOfBuilds"));
 
 
             if (!(itemInformation.isNull("customerPoCustomField")))
@@ -325,6 +324,17 @@ public class CenterPieceFunctions {
         if(value.equals("true") || value.equals("false"))
             jsonObject.put("checked", value);
         else jsonObject.put("text", value);
+
+        System.out.println("\n-- Update Custom Field in Trello --");
+        TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
+        trelloCalls.putTrelloAPICall(jsonObject);
+    }
+
+    public void updateCustomFieldTrello(String cardId, String customFieldID, Integer value) {
+        String urlEndpoint = String.format("cards/%s/customField/%s/item", cardId, customFieldID );
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("number", value.toString());
 
         System.out.println("\n-- Update Custom Field in Trello --");
         TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
