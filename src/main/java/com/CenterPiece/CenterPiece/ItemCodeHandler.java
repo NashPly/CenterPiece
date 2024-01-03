@@ -82,10 +82,11 @@ public class ItemCodeHandler {
 
             if(this.agilityItemSearchResult != null && !this.agilityItemSearchResult.has("Empty")){
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-            if (!this.agilityItemSearchResult.getString("ExtendedDescription").contains(this.salesOrderNumber)) {
-                agilityItemUpdate(this.agilityItemSearchResult.getString("ExtendedDescription"));
-            }
-                else if(this.itemCode != null){
+//            if (!this.agilityItemSearchResult.getString("ExtendedDescription").contains(this.salesOrderNumber)) {
+//                agilityItemUpdate(this.agilityItemSearchResult.getString("ExtendedDescription"));
+//            }
+//                else
+                if(this.itemCode != null){
                     System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
                 }
                 else if(item != null){
@@ -232,13 +233,13 @@ public class ItemCodeHandler {
         JSONArray dtItemUpdateArray = new JSONArray();
         JSONObject innerDtItemUpdate = new JSONObject();
 
-        if(extDesc.contains("Sales Orders:")) {
-
-            innerDtItemUpdate.put("ExtDescription", extDesc.split(" Sales Orders:")[0] + " Sales Orders:" + this.salesOrderNumber);
-        }else {
-            innerDtItemUpdate.put("ExtDescription", (extDesc + " Sales Orders:" + this.salesOrderNumber));
-            System.out.println(innerDtItemUpdate);
-        }
+//        if(extDesc.contains("Sales Orders:")) {
+//
+//            innerDtItemUpdate.put("ExtDescription", extDesc.split(" Sales Orders:")[0] + " Sales Orders:" + this.salesOrderNumber);
+//        }else {
+//            innerDtItemUpdate.put("ExtDescription", (extDesc + " Sales Orders:" + this.salesOrderNumber));
+//            System.out.println(innerDtItemUpdate);
+//        }
         dtItemUpdateArray.put(innerDtItemUpdate);
 
 
@@ -368,7 +369,7 @@ public class ItemCodeHandler {
                 rmCustomField = "621519b6944e3c4fc091a515";
                 customerPoCustomField = "65944bbce3ba00017427cb36";
 
-                if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("(([F,f])|([S,s][L,l]))[A,a][B,b][S,s]? - .*\\d{3,4}[K,k]?-\\d{2}|[A-z]{2}.*")){
+                if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("((F|f)|(S|sL|l))(A|a)(B|b)(S|s)? - [A-z ]{2,40}\\d{3,4}(K|k)?-(\\d{2}|[A-z]{2}) (\\d\"? )?[A-z]{2,20}")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
                     //TODO Not a long term parsing solution
                     colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
