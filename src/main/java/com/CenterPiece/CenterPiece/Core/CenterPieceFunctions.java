@@ -350,6 +350,7 @@ public class CenterPieceFunctions {
         if(itemInformation.has("idLabel")) idLabels = itemInformation.getString("idLabel");
 
         String orderDate = jsonSO.getString("OrderDate");
+
         String dueDate = jsonSO.getString("ExpectedDate");
 
         orderDate = trelloDateAdjuster(orderDate);
@@ -402,16 +403,16 @@ public class CenterPieceFunctions {
 
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s&start=%s&due=%s&coordinates=%s" +
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&coordinates=%s" +
                             "&locationName=%s",
-                    boardID, idList, name, idLabels, orderDate,dueDate,
+                    boardID, idList, name, idLabels,dueDate,
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
                     urlify(tomTomCalls.getResponseAddress()));
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s&start=%s&due=%s",
-                    boardID, idList, name, idLabels, orderDate, dueDate);
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s",
+                    boardID, idList, name, idLabels, dueDate);
         }
 
 //        if(!description.isEmpty()){
@@ -419,6 +420,11 @@ public class CenterPieceFunctions {
 //        }
 
         return parameters;
+    }
+
+    private String addOrRemoveOrderDate(String orderDate){
+        if(this.branch.equals("CABINETS")) return "";
+        else return "&start=" + orderDate;
     }
 
     //Clean for URL
