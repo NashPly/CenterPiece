@@ -11,6 +11,7 @@ public class ItemCodeHandler {
 
     private final HttpClient client;
     private final String contextId;
+    private final String environment;
     private JSONObject salesOrder = new JSONObject();
     private String salesOrderNumber = "0";
     private String itemCode;
@@ -21,18 +22,20 @@ public class ItemCodeHandler {
     private JSONObject agilityItemSearchResult;
     private final String branch;
 
-    public ItemCodeHandler(HttpClient cl, String context, String branch){
+    public ItemCodeHandler(HttpClient cl, String context, String branch, String environment){
         this.client = cl;
         this.contextId = context;
         this.branch = branch;
+        this.environment = environment;
     }
 
-    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder, String branch){
+    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder, String branch, String environment){
         this.client = cl;
         this.contextId = context;
         this.salesOrderNumber = salesOrderNum;
         this.salesOrder = salesOrder;
         this.branch = branch;
+        this.environment = environment;
     }
 
     public JSONObject itemParseProcess() {
@@ -410,7 +413,7 @@ public class ItemCodeHandler {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
             System.out.println(" - " + board + " Inbox - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.INBOX, "COMPONENTS").getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "COMPONENTS", this.environment).getListID(), board);
         }
 
         String orderStatus = this.salesOrder.getString("OrderStatus");
@@ -424,20 +427,20 @@ public class ItemCodeHandler {
                     if(saleType.equals("WHSE")) {
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS", this.environment).getListID(), board);
                     } else if (saleType.equals("WILLCALL")){
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
                 case "Staged" -> {
                     if(saleType.equals("WHSE")) {
                         System.out.println(" - " + board + " Staged - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "COMPONENTS", this.environment).getListID(), board);
                     }else if(saleType.equals("WILLCALL")) {
                         System.out.println(" - " + board + " Willcall - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
                 case "" -> {
@@ -451,12 +454,12 @@ public class ItemCodeHandler {
 
                         if (itemDetails.has("LinkedTranType")) {
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
                         } else {
 
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
 
                         }
                     }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
@@ -466,23 +469,23 @@ public class ItemCodeHandler {
 
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
             }
 
         }else if(orderStatus.equals("Invoiced")) {
             System.out.println(" - " + board + " Invoiced - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.INVOICED, "COMPONENTS").getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.INVOICED, "COMPONENTS", this.environment).getListID(), board);
 
         }else{
             System.out.println(" - " + board + " Processing || Batching - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
         }
         System.out.println(" - " + board + " Processing || Batching - ");
 
 
-        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
     }
 
     public String whichBoard(String cabList, String topList, String compList, String boardName){

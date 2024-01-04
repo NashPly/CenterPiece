@@ -31,13 +31,13 @@ class CenterPieceFunctionsTest {
     void setup(){
         this.client = HttpClient.newBuilder().build();
 
-        this.session = new CenterPieceSession("CABINETS", client);
+        this.session = new CenterPieceSession("CABINETS", client, "Production");
 
         session.setContextID(session.login());
 
-        this.functions = new CenterPieceFunctions(client, session.getContextID(), session.getBranch());
+        this.functions = new CenterPieceFunctions(client, session.getContextID(), session.getBranch(), session.getEnvironment());
 
-        this.itemCodeHandler = new ItemCodeHandler(client, session.getContextID(), session.getBranch());
+        this.itemCodeHandler = new ItemCodeHandler(client, session.getContextID(), session.getBranch(), session.getEnvironment());
 
         this.currentSalesOrders = itemCodeHandler.agilitySalesOrderListLookup();
     }

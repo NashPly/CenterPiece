@@ -21,31 +21,21 @@ public class CenterPieceApplication {
 
 		session.scheduleAtFixedRate(() -> {
 
-//			DateTime dtoo = new DateTime();
-//			DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-//			DateTime dt = dtoo.withZone(dtZone);
-//
-//			String currentHour;
-//			if(dt.getHourOfDay()<10)
-//				currentHour = "0" + dt.getHourOfDay();
-//			else
-//				currentHour = "" + dt.getHourOfDay();
-//
-//			String currentMinute;
-//			if(dt.getMinuteOfHour()<10)
-//				currentMinute = "0" + dt.getMinuteOfHour();
-//			else
-//				currentMinute = "" + dt.getMinuteOfHour();
-
 			TimeHandler timeHandler = new TimeHandler();
 
 			System.out.println("\n--- Ran at: " + timeHandler.getCurrentHour() + ":" + timeHandler.getCurrentMinuteOfHour() + " ---\n");
 
-			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client);
-			centerPieceSessionCabinets.mainProcess();
+//			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, "Production");
+//			centerPieceSessionCabinets.mainProcess();
+//
+//			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, "Production");
+//			centerPieceSessionFabrication.mainProcess();
 
-			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client);
-			centerPieceSessionFabrication.mainProcess();
+			CenterPieceSession centerPieceSessionTestCabinets = new CenterPieceSession("CABINETS", client, "Test");
+			centerPieceSessionTestCabinets.mainProcess();
+
+			CenterPieceSession centerPieceSessionTestFabrication = new CenterPieceSession("FABRICATION", client, "Test");
+			centerPieceSessionTestFabrication.mainProcess();
 
 		}, 0, 300, TimeUnit.SECONDS);
 	}
