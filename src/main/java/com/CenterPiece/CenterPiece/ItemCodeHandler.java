@@ -294,6 +294,8 @@ public class ItemCodeHandler {
                 //idList = "636bc3a95da9340015e47b8b";
                 idList = orderStatusLogic("Components");
                 colorCustomFieldID="636bc3aa5da9340015e47ce4";
+
+
                 rmCustomField = "636bc3aa5da9340015e47ce8";
 
             }
@@ -303,14 +305,22 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869b5c1351de037ffd2d26";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
+                idLabel = "6596e948627ec8be307b2c36";
+
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
             }
             case "3350" -> {
                 //cnc cabinets
@@ -322,8 +332,16 @@ public class ItemCodeHandler {
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
 
             }
             case "3455" -> {
@@ -333,12 +351,20 @@ public class ItemCodeHandler {
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869db3e04b83468347996b";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
                 countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
 
             }
             case "3450" -> {
@@ -348,14 +374,22 @@ public class ItemCodeHandler {
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 idLabel = "62869b5c1351de037ffd2d32";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
+
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
                 countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
 
             }
             case "3500" -> {
@@ -365,12 +399,9 @@ public class ItemCodeHandler {
                 boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
                 idLabel = "60c26dfc44555566d32ae700";
-                colorCustomFieldID = "6197b500bbb79658801189ce";
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
-                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
-                rmCustomField = "621519b6944e3c4fc091a515";
-                customerPoCustomField = "65944bbce3ba00017427cb36";
+
 
                 if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("((F|f)|(S|sL|l))(A|a)(B|b)(S|s)? - [A-z ]{2,40}\\d{3,4}(K|k)?-(\\d{2}|[A-z]{2}) (\\d\"? )?[A-z]{2,20}")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
@@ -378,6 +409,17 @@ public class ItemCodeHandler {
                     colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
                 } else {
                     colorCode = "Invalid Color Code Format";
+                }
+
+                colorCustomFieldID = "6197b500bbb79658801189ce";
+                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
+                rmCustomField = "621519b6944e3c4fc091a515";
+                customerPoCustomField = "65944bbce3ba00017427cb36";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
                 }
 
             }
