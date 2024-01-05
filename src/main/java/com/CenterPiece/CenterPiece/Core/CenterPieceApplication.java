@@ -25,17 +25,17 @@ public class CenterPieceApplication {
 
 			System.out.println("\n--- Ran at: " + timeHandler.getCurrentHour() + ":" + timeHandler.getCurrentMinuteOfHour() + " ---\n");
 
-//			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, "Production");
-//			centerPieceSessionCabinets.mainProcess();
+			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, "Production");
+			centerPieceSessionCabinets.mainProcess();
+
+			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, "Production");
+			centerPieceSessionFabrication.mainProcess();
+
+//			CenterPieceSession centerPieceSessionTestCabinets = new CenterPieceSession("CABINETS", client, "Test");
+//			centerPieceSessionTestCabinets.mainProcess();
 //
-//			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, "Production");
-//			centerPieceSessionFabrication.mainProcess();
-
-			CenterPieceSession centerPieceSessionTestCabinets = new CenterPieceSession("CABINETS", client, "Test");
-			centerPieceSessionTestCabinets.mainProcess();
-
-			CenterPieceSession centerPieceSessionTestFabrication = new CenterPieceSession("FABRICATION", client, "Test");
-			centerPieceSessionTestFabrication.mainProcess();
+//			CenterPieceSession centerPieceSessionTestFabrication = new CenterPieceSession("FABRICATION", client, "Test");
+//			centerPieceSessionTestFabrication.mainProcess();
 
 		}, 0, 300, TimeUnit.SECONDS);
 	}

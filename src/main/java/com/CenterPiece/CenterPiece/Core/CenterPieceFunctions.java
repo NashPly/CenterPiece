@@ -177,7 +177,7 @@ public class CenterPieceFunctions {
 
     public void updateTrelloCards() {
 
-        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch);
+        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch, this.environment);
 
 //        List<String> liveTrelloBuckets = new ArrayList<>(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
 //                "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
@@ -205,7 +205,7 @@ public class CenterPieceFunctions {
 
                 JSONObject firstResult = resultArray.getJSONObject(0);
 
-                ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderDataArray.getJSONObject(i).getNumber("OrderID").toString(), salesOrderDataArray.getJSONObject(i), this.branch);
+                ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderDataArray.getJSONObject(i).getNumber("OrderID").toString(), salesOrderDataArray.getJSONObject(i), this.branch, this.environment);
 
                 if (!(firstResult == null) && firstResult.has("id")){
                     if (!firstResult.getString("id").equals("Empty")) {
