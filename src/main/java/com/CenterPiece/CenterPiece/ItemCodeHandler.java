@@ -444,7 +444,7 @@ public class ItemCodeHandler {
                     //Fresh order
 
                     //In Production
-                    if(itemDetails.getDouble("TotalBackorderedQuantity") == 1.0 &&
+                    if(itemDetails.getDouble("TotalBackorderedQuantity") >= 1.0 &&
                             itemDetails.getDouble("TotalUnstagedQuantity") == 0.0  &&
                             itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
                             itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
@@ -460,7 +460,7 @@ public class ItemCodeHandler {
 
                         }
                     }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
-                            itemDetails.getDouble("TotalUnstagedQuantity") == 1.0  &&
+                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
                             itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
                             itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
 

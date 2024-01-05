@@ -160,7 +160,7 @@ public class CenterPieceFunctions {
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, jsonSO.getNumber("OrderID").toString(), jsonSO, this.branch);
         JSONObject itemInformation = itemCodeHandler.itemParseProcess();
 
-        String parameters = agilityDataForTrelloGather(jsonSO, itemInformation);
+        String parameters = agilityDataForTrelloGather(jsonSO, itemInformation, true);
 
         System.out.println("\n-- Created Card --");
         TrelloCalls trelloAPICall = new TrelloCalls(client, "cards", parameters);
@@ -207,6 +207,7 @@ public class CenterPieceFunctions {
                         JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
 
                         boolean sameBoard = itemInformation.getString("boardID").equals(firstResult.getJSONObject("board").getString("id"));
+
                         //boolean foundBoard = !itemInformation.getString("boardID").equals("None Found");
 
                         if(!itemInformation.getString("boardID").equals("None Found")){
@@ -233,7 +234,7 @@ public class CenterPieceFunctions {
                                                 itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
                                         sameBoard ){
                                         //TODO above checks if current board is destination board
-                                        TrelloListIDs listIDs = new TrelloListIDs(resultArray.getJSONObject(p).getString("idList"));
+                                        TrelloListIDs listIDs = new TrelloListIDs(itemInformation.getString("idList"));
 
                                         if(listIDs.offLimits() || labelIds.contains("638e5d85e978f805fbcbf36f")) {
                                             itemInformation.remove("idList");
@@ -242,7 +243,9 @@ public class CenterPieceFunctions {
                                     }
                                 }
 
-                                String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation);
+                                boolean sameList = itemInformation.getString("idList").equals(firstResult.getString("idList"));
+
+                                String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation, sameList);
 
                                 System.out.println("\n--- Updated a Trello Card ---");
                                 TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + resultArray.getJSONObject(p).getString("id")), parameters);
@@ -336,7 +339,7 @@ public class CenterPieceFunctions {
         trelloCalls.putTrelloAPICall(jsonObject);
     }
 
-    public String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation){
+    public String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation, boolean sameList){
 
         String boardID = itemInformation.getString("boardID");
         String idList = itemInformation.getString("idList");
@@ -352,6 +355,11 @@ public class CenterPieceFunctions {
 
         dueDate = trelloDateAdjuster(dueDate);
 
+        String address = "";
+        String city = "";
+        String state = "";
+        String zip = "";
+
         String name = (
                 "SO "+
                         jsonSO.getNumber("OrderID") +
@@ -361,17 +369,11 @@ public class CenterPieceFunctions {
                         jsonSO.getString("TransactionJob")
         );
 
-        String address = "";
-        String city = "";
-        String state = "";
-        String zip = "";
-
         name = urlify(name);
 
         boolean address1ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress1"));
 
         boolean address2ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress2"));
-
 
         if((!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())) && address1ContainsNumbers == true){
             address = jsonSO.getString("ShipToAddress1");
@@ -399,20 +401,16 @@ public class CenterPieceFunctions {
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
                             "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&coordinates=%s" +
-                            "&locationName=%s",
+                            "&locationName=%s" + moveToTopIfCabinetsAndMoved(sameList),
                     boardID, idList, name, idLabels,dueDate,
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
                     urlify(tomTomCalls.getResponseAddress()));
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s",
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s" + moveToTopIfCabinetsAndMoved(sameList),
                     boardID, idList, name, idLabels, dueDate);
         }
-
-//        if(!description.isEmpty()){
-//            parameters += String.format("&desc=%s", description);
-//        }
 
         return parameters;
     }
@@ -420,6 +418,13 @@ public class CenterPieceFunctions {
     private String addOrRemoveOrderDate(String orderDate){
         if(this.branch.equals("CABINETS")) return "";
         else return "&start=" + orderDate;
+    }
+
+    private String moveToTopIfCabinetsAndMoved(boolean sameList){
+        if(this.branch.equals("CABINETS")){
+            if(sameList) return "";
+            else return "&pos=top";
+        }else return "";
     }
 
     //Clean for URL
