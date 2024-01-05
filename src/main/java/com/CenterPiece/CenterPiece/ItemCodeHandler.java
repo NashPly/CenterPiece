@@ -11,6 +11,7 @@ public class ItemCodeHandler {
 
     private final HttpClient client;
     private final String contextId;
+    private final String environment;
     private JSONObject salesOrder = new JSONObject();
     private String salesOrderNumber = "0";
     private String itemCode;
@@ -21,18 +22,20 @@ public class ItemCodeHandler {
     private JSONObject agilityItemSearchResult;
     private final String branch;
 
-    public ItemCodeHandler(HttpClient cl, String context, String branch){
+    public ItemCodeHandler(HttpClient cl, String context, String branch, String environment){
         this.client = cl;
         this.contextId = context;
         this.branch = branch;
+        this.environment = environment;
     }
 
-    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder, String branch){
+    public ItemCodeHandler(HttpClient cl, String context, String salesOrderNum, JSONObject salesOrder, String branch, String environment){
         this.client = cl;
         this.contextId = context;
         this.salesOrderNumber = salesOrderNum;
         this.salesOrder = salesOrder;
         this.branch = branch;
+        this.environment = environment;
     }
 
     public JSONObject itemParseProcess() {
@@ -291,6 +294,8 @@ public class ItemCodeHandler {
                 //idList = "636bc3a95da9340015e47b8b";
                 idList = orderStatusLogic("Components");
                 colorCustomFieldID="636bc3aa5da9340015e47ce4";
+
+
                 rmCustomField = "636bc3aa5da9340015e47ce8";
 
             }
@@ -300,14 +305,23 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869b5c1351de037ffd2d26";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
+                if(this.environment.equals("Production"))
+                    idLabel = "6596e948627ec8be307b2c36";
+
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
             }
             case "3350" -> {
                 //cnc cabinets
@@ -315,12 +329,21 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869e47dcae4f52e15c90e1";
+                if(this.environment.equals("Production"))
+                    idLabel = "62869e47dcae4f52e15c90e1";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
 
             }
             case "3455" -> {
@@ -329,13 +352,22 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869db3e04b83468347996b";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                if(this.environment.equals("Production"))
+                    idLabel = "62869db3e04b83468347996b";
+
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
                 countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
 
             }
             case "3450" -> {
@@ -344,15 +376,25 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869b5c1351de037ffd2d32";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
+
+                if(this.environment.equals("Production"))
+                    idLabel = "62869b5c1351de037ffd2d32";
+
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
+
+                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+                rmCustomField = "62869b5c1351de037ffd2dab";
                 agilityPoCustomField = "62869b5c1351de037ffd2da9";
                 customerPoCustomField = "65944fad870030dd5e8ca1f0";
                 countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
+                }
 
             }
             case "3500" -> {
@@ -361,13 +403,11 @@ public class ItemCodeHandler {
 
                 boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
-                idLabel = "60c26dfc44555566d32ae700";
-                colorCustomFieldID = "6197b500bbb79658801189ce";
+                if(this.environment.equals("Production"))
+                    idLabel = "60c26dfc44555566d32ae700";
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
-                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
-                rmCustomField = "621519b6944e3c4fc091a515";
-                customerPoCustomField = "65944bbce3ba00017427cb36";
+
 
                 if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("((F|f)|(S|sL|l))(A|a)(B|b)(S|s)? - [A-z ]{2,40}\\d{3,4}(K|k)?-(\\d{2}|[A-z]{2}) (\\d\"? )?[A-z]{2,20}")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
@@ -375,6 +415,17 @@ public class ItemCodeHandler {
                     colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];
                 } else {
                     colorCode = "Invalid Color Code Format";
+                }
+
+                colorCustomFieldID = "6197b500bbb79658801189ce";
+                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
+                rmCustomField = "621519b6944e3c4fc091a515";
+                customerPoCustomField = "65944bbce3ba00017427cb36";
+
+                if(this.environment.equals("Production")) {
+
+                }else if(this.environment.equals("Test")){
+
                 }
 
             }
@@ -410,7 +461,7 @@ public class ItemCodeHandler {
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
             System.out.println(" - " + board + " Inbox - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.INBOX, "COMPONENTS").getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "COMPONENTS", this.environment).getListID(), board);
         }
 
         String orderStatus = this.salesOrder.getString("OrderStatus");
@@ -424,20 +475,20 @@ public class ItemCodeHandler {
                     if(saleType.equals("WHSE")) {
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS", this.environment).getListID(), board);
                     } else if (saleType.equals("WILLCALL")){
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
                 case "Staged" -> {
                     if(saleType.equals("WHSE")) {
                         System.out.println(" - " + board + " Staged - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "COMPONENTS", this.environment).getListID(), board);
                     }else if(saleType.equals("WILLCALL")) {
                         System.out.println(" - " + board + " Willcall - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
                 case "" -> {
@@ -451,12 +502,12 @@ public class ItemCodeHandler {
 
                         if (itemDetails.has("LinkedTranType")) {
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
                         } else {
 
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
 
                         }
                     }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
@@ -466,23 +517,23 @@ public class ItemCodeHandler {
 
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS").getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
             }
 
         }else if(orderStatus.equals("Invoiced")) {
             System.out.println(" - " + board + " Invoiced - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.INVOICED, "COMPONENTS").getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.INVOICED, "COMPONENTS", this.environment).getListID(), board);
 
         }else{
             System.out.println(" - " + board + " Processing || Batching - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
         }
         System.out.println(" - " + board + " Processing || Batching - ");
 
 
-        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS").getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP").getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS").getListID(), board);
+        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
     }
 
     public String whichBoard(String cabList, String topList, String compList, String boardName){

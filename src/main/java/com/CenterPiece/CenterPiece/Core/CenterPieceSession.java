@@ -17,12 +17,15 @@ import java.util.List;
 public class CenterPieceSession {
 
     private final String branch;
+    private final String environment;
     private String contextID;
     private final HttpClient client;
 
-    public CenterPieceSession(String branch, HttpClient client) {
+
+    public CenterPieceSession(String branch, HttpClient client, String environment) {
         this.branch = branch;
         this.client = client;
+        this.environment = environment;
     }
 
     public void mainProcess(){
@@ -33,9 +36,9 @@ public class CenterPieceSession {
 
         this.contextID = login();
         System.out.println("\n-- Login - "+ this.branch +" --");
-        centerPieceFunctions = new CenterPieceFunctions(this.client, this.contextID, this.branch);
+        centerPieceFunctions = new CenterPieceFunctions(this.client, this.contextID, this.branch, this.environment);
 
-        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, this.contextID, this.branch);
+        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, this.contextID, this.branch, this.environment);
 
         JSONArray currentSalesOrders = itemCodeHandler.agilitySalesOrderListLookup();
 
@@ -55,7 +58,7 @@ public class CenterPieceSession {
             centerPieceFunctions.updateTrelloCards();
 
             this.logout();
-            System.out.println("\n-- Logout - "+ this.branch+" --");
+            System.out.println("\n-- Logout - " + this.environment + " " + this.branch+" --");
 
     }
 
@@ -125,6 +128,10 @@ public class CenterPieceSession {
 
     public String getContextID(){
         return contextID;
+    }
+
+    public String getEnvironment(){
+        return environment;
     }
 
     public void setContextID(String cID){

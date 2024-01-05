@@ -20,14 +20,16 @@ public class CenterPieceFunctions {
 
     private final HttpClient client;
     private final String contextID;
+    private final String environment;
     private List<SalesOrder> salesOrderList;
     private JSONObject itemInformation;
     private final String branch;
 
-    public CenterPieceFunctions(HttpClient client, String contextID, String branch) {
+    public CenterPieceFunctions(HttpClient client, String contextID, String branch, String environment) {
         this.client = client;
         this.contextID = contextID;
         this.branch = branch;
+        this.environment = environment;
     }
 
     public List<String> salesOrderParser(JSONArray jsonArray){
@@ -59,10 +61,14 @@ public class CenterPieceFunctions {
 
         String modelTypes = "cards";
         String card_fields = "name,closed,desc,idList,labels";
+        String boardIds = "";
+
+        if(this.environment.equals("Production"))boardIds = "60c26dfb44555566d32ae643,62869b5c1351de037ffd2cbb,636bc3a95da9340015e47b84";
+        else if(this.environment.equals("Test")) boardIds = "6596e9210326360265ae3347,6596e945627ec8be307b1e0f,6596ece3760cfe2637c6f944";
         //String card_fields = "closed,idList,labels";
 
-        TrelloCalls trelloAPICall = new TrelloCalls(this.client, "search", String.format("query=%s&card_board=true&modelTypes=%s&card_fields=%s&card_attachments=true",
-                soNum, modelTypes, card_fields));
+        TrelloCalls trelloAPICall = new TrelloCalls(this.client, "search", String.format("query=%s&idBoards=%s&card_board=true&modelTypes=%s&card_fields=%s&card_attachments=true",
+                soNum, boardIds, modelTypes, card_fields));
 
         System.out.println("\n-- Check Trello For SO --");
         var response = trelloAPICall.getTrelloAPICallObject();
@@ -157,7 +163,7 @@ public class CenterPieceFunctions {
         System.out.println("\n-- Create Trello Card SO --");
         System.out.println(jsonSO);
 
-        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, jsonSO.getNumber("OrderID").toString(), jsonSO, this.branch);
+        ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, jsonSO.getNumber("OrderID").toString(), jsonSO, this.branch, this.environment);
         JSONObject itemInformation = itemCodeHandler.itemParseProcess();
 
         String parameters = agilityDataForTrelloGather(jsonSO, itemInformation, true);
