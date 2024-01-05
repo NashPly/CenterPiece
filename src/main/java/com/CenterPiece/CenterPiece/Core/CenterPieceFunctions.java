@@ -398,7 +398,7 @@ public class CenterPieceFunctions {
 
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDateAndPosition(orderDate) +"&due=%s&coordinates=%s" +
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&coordinates=%s" +
                             "&locationName=%s",
                     boardID, idList, name, idLabels,dueDate,
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
@@ -406,7 +406,7 @@ public class CenterPieceFunctions {
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDateAndPosition(orderDate) +"&due=%s",
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s",
                     boardID, idList, name, idLabels, dueDate);
         }
 
@@ -417,8 +417,8 @@ public class CenterPieceFunctions {
         return parameters;
     }
 
-    private String addOrRemoveOrderDateAndPosition(String orderDate){
-        if(this.branch.equals("CABINETS")) return "&pos=top";
+    private String addOrRemoveOrderDate(String orderDate){
+        if(this.branch.equals("CABINETS")) return "";
         else return "&start=" + orderDate;
     }
 
