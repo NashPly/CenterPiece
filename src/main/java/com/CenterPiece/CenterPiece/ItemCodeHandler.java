@@ -305,7 +305,8 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "6596e948627ec8be307b2c36";
+                if(this.environment.equals("Production"))
+                    idLabel = "6596e948627ec8be307b2c36";
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -328,7 +329,8 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869e47dcae4f52e15c90e1";
+                if(this.environment.equals("Production"))
+                    idLabel = "62869e47dcae4f52e15c90e1";
                 colorCustomFieldID = "62869b5c1351de037ffd2da7";
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
@@ -350,7 +352,8 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869db3e04b83468347996b";
+                if(this.environment.equals("Production"))
+                    idLabel = "62869db3e04b83468347996b";
 
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
@@ -373,7 +376,9 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                idLabel = "62869b5c1351de037ffd2d32";
+
+                if(this.environment.equals("Production"))
+                    idLabel = "62869b5c1351de037ffd2d32";
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -398,7 +403,8 @@ public class ItemCodeHandler {
 
                 boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
-                idLabel = "60c26dfc44555566d32ae700";
+                if(this.environment.equals("Production"))
+                    idLabel = "60c26dfc44555566d32ae700";
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
 
