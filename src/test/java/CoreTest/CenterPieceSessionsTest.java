@@ -11,8 +11,9 @@ class CenterPieceSessionsTest {
     @Test
     void loginReturnIsTheCorrectLength() {
         HttpClient client = HttpClient.newBuilder().build();
+        String environment = "Production";
 
-        CenterPieceSession session = new CenterPieceSession("FABRICATION", client);
+        CenterPieceSession session = new CenterPieceSession("FABRICATION", client, environment);
 
         String contextID = session.login();
         String sampleString = "3638678bc949309-7bd4-4abc-a614-4f38f88ce4ef";

@@ -79,25 +79,12 @@ public class CenterPieceSession {
 
         APICaller apiCaller = new APICaller(client, request);
 
-        //System.out.println(apiCaller.makeAPICall().body());
-
         JSONObject json = new JSONObject(apiCaller.makeAPICall().body());
 
         System.out.println(json.getJSONObject("response"));
         
         return json.getJSONObject("response").getString("SessionContextId");
 
-//        HttpResponse<String> response = null;
-//        try {
-//            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        assert response != null;
-//        JSONObject json = new JSONObject(response.body());
-//
-//        return json.getJSONObject("response").getString("SessionContextId");
     }
 
     public void logout(){

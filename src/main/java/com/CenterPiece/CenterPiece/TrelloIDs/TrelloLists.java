@@ -1,4 +1,4 @@
-package com.CenterPiece.CenterPiece;
+package com.CenterPiece.CenterPiece.TrelloIDs;
 
 public enum TrelloLists {
     QUOTED, BATCHING, DRAWING_RECHECK, PROCESSING, SO_SID_CHECK,

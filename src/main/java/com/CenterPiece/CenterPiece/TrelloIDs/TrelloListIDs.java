@@ -1,4 +1,4 @@
-package com.CenterPiece.CenterPiece;
+package com.CenterPiece.CenterPiece.TrelloIDs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,7 @@ import java.util.List;
 
 public class TrelloListIDs {
     TrelloLists list;
+    String listId;
     String branch;
     String environment;
 
@@ -20,11 +21,8 @@ public class TrelloListIDs {
     }
 
     public TrelloListIDs(String idList){
+        this.listId = idList;
         this.setList(idList);
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
     }
 
     public void setList(String list) {
@@ -33,98 +31,122 @@ public class TrelloListIDs {
             case "60c26dfb44555566d32ae647" -> {
                 this.list = TrelloLists.QUOTED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae651" -> {
                 this.list = TrelloLists.BATCHING;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "62c4430fcdfa097c5642436b" -> {
                 this.list = TrelloLists.SO_SID_CHECK;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61c1e06cdc22878b2e8c7ae7" -> {
                 this.list = TrelloLists.ON_HOLD;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61b35f8a4f5eab8d0b16235e" -> {
                 this.list = TrelloLists.PROCESSING;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "6259bb7ee9fc5f8d3659ca5e" -> {
                 this.list = TrelloLists.TO_BE_ORDERED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae648" -> {
                 this.list = TrelloLists.ON_ORDER;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae649" -> {
                 this.list = TrelloLists.RECEIVING;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "639871e0cb87d801a97ad7aa" -> {
                 this.list = TrelloLists.CREDIT_HOLD;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae64b" -> {
                 this.list = TrelloLists.SCHEDULING_POOL;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "6228d9a38275a92c6f512f69" -> {
                 this.list = TrelloLists.PRODUCTION_QUEUE;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae64c" -> {
                 this.list = TrelloLists.IN_PRODUCTION;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "6239c656ab5c356ec1568beb" -> {
                 this.list = TrelloLists.TO_BE_PICKED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae64d" -> {
                 this.list = TrelloLists.PICKED_AND_STAGED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "623c7ddd7e9e617c2c26df74" -> {
                 this.list = TrelloLists.TO_BE_LOADED_ROUTED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61e6d38623686777464221b9" -> {
                 this.list = TrelloLists.WILL_CALL;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "6384cfab789e5f01197094ec" -> {
                 this.list = TrelloLists.TRANSFERRED_TO_NASHVILLE;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae64e" -> {
                 this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61b360d9b996930158a55e11" -> {
                 this.list = TrelloLists.COD_TO_BE_PAID;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae64f" -> {
                 this.list = TrelloLists.DELIVERED_PICKED_UP;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61b360e35ab37c0d9037c19f" -> {
                 this.list = TrelloLists.INVOICED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "6214e94f500c90508ff521ed" -> {
                 this.list = TrelloLists.RECEIVED;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "60c26dfb44555566d32ae643" -> {
                 this.list = TrelloLists.BRANCH_ID;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61f2d5c461ac134ef274ae5f" -> {
                 this.list = TrelloLists.INBOX;
                 this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
 
 
@@ -132,161 +154,499 @@ public class TrelloListIDs {
             case "62869b5c1351de037ffd2cc2" -> {
                 this.list = TrelloLists.QUOTED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cc4" -> {
                 this.list = TrelloLists.PROCESSING;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cc5" -> {
                 this.list = TrelloLists.TO_BE_ORDERED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cc6" -> {
                 this.list = TrelloLists.ON_ORDER;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cc7" -> {
                 this.list = TrelloLists.RECEIVING;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cca" -> {
                 this.list = TrelloLists.PRODUCTION_QUEUE;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2ccb" -> {
                 this.list = TrelloLists.IN_PRODUCTION;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2ccd" -> {
                 this.list = TrelloLists.TO_BE_PICKED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cce" -> {
                 this.list = TrelloLists.PICKED_AND_STAGED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2ccf" -> {
                 this.list = TrelloLists.TO_BE_LOADED_ROUTED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cd0" -> {
                 this.list = TrelloLists.WILL_CALL;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cd1" -> {
                 this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cd3" -> {
                 this.list = TrelloLists.COD_TO_BE_PAID;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cd2" -> {
                 this.list = TrelloLists.DELIVERED_PICKED_UP;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cd4" -> {
                 this.list = TrelloLists.INVOICED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cd5" -> {
                 this.list = TrelloLists.RECEIVED;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cbb" -> {
                 this.list = TrelloLists.BRANCH_ID;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cbc" -> {
                 this.list = TrelloLists.INBOX;
                 this.branch = "CABINETS";
+                this.environment = "Production";
             }
 
             case "636bc3a95da9340015e47b8f" -> {
                 this.list = TrelloLists.QUOTED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b90" -> {
                 this.list = TrelloLists.PROCESSING;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b91" -> {
                 this.list = TrelloLists.TO_BE_ORDERED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b92" -> {
                 this.list = TrelloLists.ON_ORDER;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b93" -> {
                 this.list = TrelloLists.RECEIVING;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b94" -> {
                 this.list = TrelloLists.ON_HOLD;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b95" -> {
                 this.list = TrelloLists.PRODUCTION_QUEUE;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b96" -> {
                 this.list = TrelloLists.IN_PRODUCTION;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b98" -> {
                 this.list = TrelloLists.TO_BE_PICKED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b99" -> {
                 this.list = TrelloLists.PICKED_AND_STAGED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b9a" -> {
                 this.list = TrelloLists.TO_BE_LOADED_ROUTED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b9b" -> {
                 this.list = TrelloLists.WILL_CALL;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b9c" -> {
                 this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b9f" -> {
                 this.list = TrelloLists.COD_TO_BE_PAID;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b9d" -> {
                 this.list = TrelloLists.DELIVERED_PICKED_UP;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b9e" -> {
                 this.list = TrelloLists.INVOICED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47ba0" -> {
                 this.list = TrelloLists.RECEIVED;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b84" -> {
                 this.list = TrelloLists.BRANCH_ID;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
             case "636bc3a95da9340015e47b8b" -> {
                 this.list = TrelloLists.INBOX;
                 this.branch = "COMPONENTS";
+                this.environment = "Production";
             }
+
+            //Test Environment
+
+            case "6596e9210326360265ae3350" -> {
+                this.list = TrelloLists.QUOTED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3352" -> {
+                this.list = TrelloLists.BATCHING;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae334e" -> {
+                this.list = TrelloLists.DRAWING_RECHECK;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3354" -> {
+                this.list = TrelloLists.SO_SID_CHECK;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3351" -> {
+                this.list = TrelloLists.ON_HOLD;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3356" -> {
+                this.list = TrelloLists.TO_BE_ORDERED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3357" -> {
+                this.list = TrelloLists.ON_ORDER;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3358" -> {
+                this.list = TrelloLists.RECEIVING;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae335a" -> {
+                this.list = TrelloLists.CREDIT_HOLD;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae335b" -> {
+                this.list = TrelloLists.SCHEDULING_POOL;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae335c" -> {
+                this.list = TrelloLists.PRODUCTION_QUEUE;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae335d" -> {
+                this.list = TrelloLists.IN_PRODUCTION;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae335e" -> {
+                this.list = TrelloLists.TO_BE_PICKED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae335f" -> {
+                this.list = TrelloLists.PICKED_AND_STAGED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3361" -> {
+                this.list = TrelloLists.TO_BE_LOADED_ROUTED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3362" -> {
+                this.list = TrelloLists.WILL_CALL;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3363" -> {
+                this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3365" -> {
+                this.list = TrelloLists.DELIVERED_PICKED_UP;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3371" -> {
+                this.list = TrelloLists.INVOICED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3368" -> {
+                this.list = TrelloLists.RECEIVED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3347" -> { // Assuming this is BRANCH_ID as mentioned in the comment
+                this.list = TrelloLists.BRANCH_ID;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3370" -> {
+                this.list = TrelloLists.INBOX;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+
+
+            case "6596e945627ec8be307b1e11" -> {
+                this.list = TrelloLists.QUOTED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e12" -> {
+                this.list = TrelloLists.PROCESSING;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e13" -> {
+                this.list = TrelloLists.TO_BE_ORDERED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e14" -> {
+                this.list = TrelloLists.ON_ORDER;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e15" -> {
+                this.list = TrelloLists.RECEIVING;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e16" -> {
+                this.list = TrelloLists.ON_HOLD;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e17" -> {
+                this.list = TrelloLists.PRODUCTION_QUEUE;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e18" -> {
+                this.list = TrelloLists.IN_PRODUCTION;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e1a" -> {
+                this.list = TrelloLists.TO_BE_PICKED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e1b" -> {
+                this.list = TrelloLists.PICKED_AND_STAGED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e1c" -> {
+                this.list = TrelloLists.TO_BE_LOADED_ROUTED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e1d" -> {
+                this.list = TrelloLists.WILL_CALL;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e1e" -> {
+                this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e1f" -> {
+                this.list = TrelloLists.DELIVERED_PICKED_UP;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e20" -> {
+                this.list = TrelloLists.INVOICED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e22" -> {
+                this.list = TrelloLists.RECEIVED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e0f" -> { // Assuming this is BRANCH_ID as mentioned in the comment
+                this.list = TrelloLists.BRANCH_ID;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+            case "6596e945627ec8be307b1e24" -> {
+                this.list = TrelloLists.INBOX;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+
+
+
+            case "6596ece3760cfe2637c6f948" -> {
+                this.list = TrelloLists.QUOTED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f949" -> {
+                this.list = TrelloLists.PROCESSING;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f94b" -> {
+                this.list = TrelloLists.TO_BE_ORDERED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f94c" -> {
+                this.list = TrelloLists.ON_ORDER;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f94d" -> {
+                this.list = TrelloLists.RECEIVING;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f94e" -> {
+                this.list = TrelloLists.ON_HOLD;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f94f" -> {
+                this.list = TrelloLists.PRODUCTION_QUEUE;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f950" -> {
+                this.list = TrelloLists.IN_PRODUCTION;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f951" -> {
+                this.list = TrelloLists.TO_BE_PICKED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f952" -> {
+                this.list = TrelloLists.PICKED_AND_STAGED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f953" -> {
+                this.list = TrelloLists.TO_BE_LOADED_ROUTED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f954" -> {
+                this.list = TrelloLists.WILL_CALL;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f955" -> {
+                this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f957" -> {
+                this.list = TrelloLists.DELIVERED_PICKED_UP;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f959" -> {
+                this.list = TrelloLists.INVOICED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f95a" -> {
+                this.list = TrelloLists.RECEIVED;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f944" -> { // Assuming this is BRANCH_ID as mentioned in the comment
+                this.list = TrelloLists.BRANCH_ID;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "6596ece3760cfe2637c6f946" -> {
+                this.list = TrelloLists.INBOX;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+
 
             default -> {
                 this.list = TrelloLists.INBOX;
-                this.branch = "CABINETS";
+                this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
         }
     }
 
     public String getListID() {
+        //return this.listId;
 
         if(this.environment.equals("Production")){
             if(this.branch.equals("TOPSHOP")) {
@@ -490,7 +850,6 @@ public class TrelloListIDs {
                 return "61f2d5c461ac134ef274ae5f";
             }
         }else if (this.environment.equals("Test")){
-
             if(this.branch.equals("TOPSHOP")) {
                 switch (list) {
                     case QUOTED -> {
@@ -693,8 +1052,10 @@ public class TrelloListIDs {
         }else{
             return "61f2d5c461ac134ef274ae5f";
         }
+    }
 
-
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
     public Boolean offLimits(){

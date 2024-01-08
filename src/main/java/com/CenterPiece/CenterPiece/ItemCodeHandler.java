@@ -1,11 +1,11 @@
 package com.CenterPiece.CenterPiece;
 
 import com.CenterPiece.CenterPiece.APICalls.AgilityCalls;
+import com.CenterPiece.CenterPiece.TrelloIDs.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.http.HttpClient;
-import java.util.Locale;
 
 public class ItemCodeHandler {
 
@@ -17,7 +17,11 @@ public class ItemCodeHandler {
     private String itemCode;
     private String itemGroup = "None";
     private String linkedTranType;
+    private String linkedTranPO = "PO";
+    private String linkedTranRM = "RM";
     private String linkedTranID;
+    private String linkedTranPoID;
+    private String linkedTranRmID;
     private Integer countOfBuilds;
     private JSONObject agilityItemSearchResult;
     private final String branch;
@@ -39,7 +43,6 @@ public class ItemCodeHandler {
     }
 
     public JSONObject itemParseProcess() {
-
         JSONArray salesOrderArray = agilitySalesOrderListLookup();
 
         System.out.println("Returned Sales Orders");
@@ -55,7 +58,6 @@ public class ItemCodeHandler {
 
         System.out.println("Populated salesOrder: " + this.salesOrder);
 
-
         if (!(this.salesOrder == null)) {
             System.out.println("\n -- This sales order isn't null --");
             this.salesOrderNumber = String.valueOf(this.salesOrder.getNumber("OrderID"));
@@ -65,30 +67,41 @@ public class ItemCodeHandler {
                 salesOrderItemsArray = new JSONArray(this.salesOrder
                     .getJSONArray("dtOrderDetailResponse"));
             }
+
             JSONObject item = null;
-            if(salesOrderItemsArray != null && salesOrderItemsArray.length()>0){
+
+            if(salesOrderItemsArray != null && !salesOrderItemsArray.isEmpty()){
 
                 this.countOfBuilds = checkForNumOfCabBuilds(salesOrderItemsArray, salesOrderItemsArray.length());
                 System.out.println("Count of CBUILDS " + countOfBuilds);
 
                 System.out.println("\n -- This sales order has an item --");
-                item = salesOrderItemsArray.getJSONObject(0);
-                this.itemCode = item.getString("ItemCode");
-                this.linkedTranType = item.getString("LinkedTranType");
-                this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
+
+                for(int i = 0; i < salesOrderItemsArray.length(); i++){
+                    item = salesOrderItemsArray.getJSONObject(i);
+
+                    switch (item.getString("LinkedTranType")) {
+                        case "PO" -> {
+                            if(i==0) this.linkedTranPoID = String.valueOf(item.getInt("LinkedTranID"));
+                            else this.linkedTranPoID = this.linkedTranPoID + ", " + (item.getInt("LinkedTranID"));
+                        }
+                        case "RM" -> {
+                            if(i==0) this.linkedTranRmID = String.valueOf(item.getInt("LinkedTranID"));
+                            else linkedTranRmID = this.linkedTranRmID + ", " + (item.getInt("LinkedTranID"));
+                        }
+                    }
+                }
+
+                this.itemCode = salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
+//                this.linkedTranType = item.getString("LinkedTranType");
+//                this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
                 System.out.println("\n-- agilityItemSearchResult --");
                 this.agilityItemSearchResult = agilityItemSearch();
             }
             System.out.println("\n -- Item defined and searched in Agility --");
 
-
-
             if(this.agilityItemSearchResult != null && !this.agilityItemSearchResult.has("Empty")){
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
-//            if (!this.agilityItemSearchResult.getString("ExtendedDescription").contains(this.salesOrderNumber)) {
-//                agilityItemUpdate(this.agilityItemSearchResult.getString("ExtendedDescription"));
-//            }
-//                else
                 if(this.itemCode != null){
                     System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
                 }
@@ -99,9 +112,7 @@ public class ItemCodeHandler {
                     System.out.println("Something isn't alright here or there are no line items");
                 }
             }
-
             System.out.println("\n -- Item checked if valid --");
-
         }
         return this.getCardDestinationFromItemCodeResult();
     }
@@ -128,11 +139,16 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", false);
         innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart", timeHandler.getCurrentYear() + "-" +
+        innerRequestBody.put("OrderDateRangeStart",
+                timeHandler.getCurrentYear() + "-" +
                 timeHandler.getCurrentMonth() + "-" +
-                //"02-" +
                 timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
-                //"25T00:00:01-6:00");
+            //Year
+                //"2023-"+
+            //Month
+                // "10-" +
+            //Day
+                // "01T00:00:01-6:00");
 
         innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
@@ -202,9 +218,9 @@ public class ItemCodeHandler {
         AgilityCalls agilityPostCall = new AgilityCalls(client, contextId, "Inventory/ItemsList", dsItemsListRequest, branch);
         JSONObject response =  agilityPostCall.postAgilityAPICall();
 
-        if(response.getJSONObject("response")
+        if(!response.getJSONObject("response")
                 .getJSONObject("ItemsListResponse")
-                .getJSONObject("dsItemsListResponse").length() > 0) {
+                .getJSONObject("dsItemsListResponse").isEmpty()) {
             return response.getJSONObject("response")
                     .getJSONObject("ItemsListResponse")
                     .getJSONObject("dsItemsListResponse")
@@ -213,58 +229,6 @@ public class ItemCodeHandler {
         } else {
             return new JSONObject().put("Empty", true);
         }
-    }
-
-    public void agilityItemUpdate(String extDesc){
-
-//        JSONObject innerRequestBody = new JSONObject({
-//                "request": {
-//            "Item": "NS0000021618",
-//                    "ItemUpdateJSON": {
-//                "dsItemUpdate": {
-//                    "dtItemUpdate": [
-//                    {"ExtDescription": "Testing 123  Sales Order: 213879"}
-//                ]
-//                }
-//            }
-//        }
-//});
-        //String innerRequestBody = "";
-        JSONObject innerRequestBody = new JSONObject();
-        JSONObject dsItemUpdate = new JSONObject();
-        JSONObject dtItemUpdate = new JSONObject();
-        JSONArray dtItemUpdateArray = new JSONArray();
-        JSONObject innerDtItemUpdate = new JSONObject();
-
-//        if(extDesc.contains("Sales Orders:")) {
-//
-//            innerDtItemUpdate.put("ExtDescription", extDesc.split(" Sales Orders:")[0] + " Sales Orders:" + this.salesOrderNumber);
-//        }else {
-//            innerDtItemUpdate.put("ExtDescription", (extDesc + " Sales Orders:" + this.salesOrderNumber));
-//            System.out.println(innerDtItemUpdate);
-//        }
-        dtItemUpdateArray.put(innerDtItemUpdate);
-
-
-        dtItemUpdate.put("dtItemUpdate",dtItemUpdateArray);
-
-        dsItemUpdate.put("dsItemUpdate", dtItemUpdate);
-
-        innerRequestBody.put("Item", this.itemCode.toUpperCase(Locale.ROOT));
-        //innerRequestBody.put("Item", "PFTCT495422KSL");
-
-        innerRequestBody.put("ItemUpdateJSON", dsItemUpdate);
-        //innerRequestBody.put("ItemUpdateJSON", dsItemUpdate);
-
-        //innerRequestBody = "{\"Item\": \"NS0000021618\",\"ItemUpdateJSON\": {\"dsItemUpdate\": {\"dtItemUpdate\": [{\"ExtDescription\": \"Testing 1234 Sales Orders:213879\"}]}}}";
-
-        System.out.println(innerRequestBody.toString());
-
-        System.out.println("- AgilityItemUpdate -");
-        AgilityCalls agilityPostCall = new AgilityCalls(this.client, this.contextId, "Inventory/ItemUpdate", innerRequestBody, this.branch);
-        JSONObject response =  agilityPostCall.postAgilityAPICall();
-
-        System.out.println(response);
     }
 
     public JSONObject getCardDestinationFromItemCodeResult(){
@@ -290,67 +254,90 @@ public class ItemCodeHandler {
         switch (this.itemGroup) {
             case "1900", "3700", "2000", "1000" -> {
 
-                boardID = "636bc3a95da9340015e47b84";
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.COMPONENTS, "COMPONENTS", this.environment);
+                boardID = trelloBoardIDs.getBoardID();
+
+                //boardID = "636bc3a95da9340015e47b84";
                 //idList = "636bc3a95da9340015e47b8b";
                 idList = orderStatusLogic("Components");
-                colorCustomFieldID="636bc3aa5da9340015e47ce4";
 
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "COMPONENTS", this.environment);
+                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "COMPONENTS", this.environment);
 
-                rmCustomField = "636bc3aa5da9340015e47ce8";
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                rmCustomField = trelloRemanCustomFieldID.getFieldID();
+
+                //colorCustomFieldID="636bc3aa5da9340015e47ce4";
+                //rmCustomField = "636bc3aa5da9340015e47ce8";
 
             }
             case "3300" -> {
                 //kk cabinets
 
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
+                boardID = trelloBoardIDs.getBoardID();
+
                 //idList = "62869b5c1351de037ffd2cc4";
-                boardID = "62869b5c1351de037ffd2cbb";
+                //boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 if(this.environment.equals("Production"))
-                    idLabel = "6596e948627ec8be307b2c36";
+                    idLabel = "62869b5c1351de037ffd2d26";
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
 
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
-                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-                customerPoCustomField = "65944fad870030dd5e8ca1f0";
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
 
-                if(this.environment.equals("Production")) {
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
+                customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
 
-                }else if(this.environment.equals("Test")){
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                rmCustomField = "62869b5c1351de037ffd2dab";
+//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
 
-                }
             }
             case "3350" -> {
                 //cnc cabinets
 
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
+                boardID = trelloBoardIDs.getBoardID();
+
                 //idList = "62869b5c1351de037ffd2cc4";
-                boardID = "62869b5c1351de037ffd2cbb";
+                //boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 if(this.environment.equals("Production"))
                     idLabel = "62869e47dcae4f52e15c90e1";
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
 
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-                customerPoCustomField = "65944fad870030dd5e8ca1f0";
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
 
-                if(this.environment.equals("Production")) {
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
+                customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
 
-                }else if(this.environment.equals("Test")){
-
-                }
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
 
             }
             case "3455" -> {
                 //tru cabinets
 
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
+                boardID = trelloBoardIDs.getBoardID();
+
                 //idList = "62869b5c1351de037ffd2cc4";
-                boardID = "62869b5c1351de037ffd2cbb";
+                //boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
                 if(this.environment.equals("Production"))
                     idLabel = "62869db3e04b83468347996b";
@@ -358,23 +345,29 @@ public class ItemCodeHandler {
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
 
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-                customerPoCustomField = "65944fad870030dd5e8ca1f0";
-                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
 
-                if(this.environment.equals("Production")) {
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
+                customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
 
-                }else if(this.environment.equals("Test")){
-
-                }
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
+//                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
 
             }
             case "3450" -> {
                 //choice cabinets
 
                 //idList = "62869b5c1351de037ffd2cc4";
-                boardID = "62869b5c1351de037ffd2cbb";
+
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
+                boardID = trelloBoardIDs.getBoardID();
+
+//                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
 
                 if(this.environment.equals("Production"))
@@ -384,24 +377,33 @@ public class ItemCodeHandler {
                 linkedType = this.linkedTranType;
                 linkedID = this.linkedTranID;
 
-                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-                rmCustomField = "62869b5c1351de037ffd2dab";
-                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-                customerPoCustomField = "65944fad870030dd5e8ca1f0";
-                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloNoOfBuildsFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.NUMBER_OF_BUILDS, "CABINETS", this.environment);
 
-                if(this.environment.equals("Production")) {
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                rmCustomField = trelloRemanCustomFieldID.getFieldID();
+                agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
+                customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
+                countOfBuildsCustomField = trelloNoOfBuildsFieldID.getFieldID();
 
-                }else if(this.environment.equals("Test")){
-
-                }
+//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
+//                rmCustomField = "62869b5c1351de037ffd2dab";
+//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
+//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
+//                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
 
             }
             case "3500" -> {
 
                 //counter tops
 
-                boardID = "60c26dfb44555566d32ae643";
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.TOP_SHOP, "TOPSHOP", this.environment);
+                boardID = trelloBoardIDs.getBoardID();
+
+                //boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
                 if(this.environment.equals("Production"))
                     idLabel = "60c26dfc44555566d32ae700";
@@ -417,16 +419,20 @@ public class ItemCodeHandler {
                     colorCode = "Invalid Color Code Format";
                 }
 
-                colorCustomFieldID = "6197b500bbb79658801189ce";
-                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
-                rmCustomField = "621519b6944e3c4fc091a515";
-                customerPoCustomField = "65944bbce3ba00017427cb36";
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "TOPSHOP", this.environment);
+                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "TOPSHOP", this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "TOPSHOP", this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "TOPSHOP", this.environment);
 
-                if(this.environment.equals("Production")) {
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                rmCustomField = trelloRemanCustomFieldID.getFieldID();
+                agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
+                customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
 
-                }else if(this.environment.equals("Test")){
-
-                }
+//                colorCustomFieldID = "6197b500bbb79658801189ce";
+//                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
+//                rmCustomField = "621519b6944e3c4fc091a515";
+//                customerPoCustomField = "65944bbce3ba00017427cb36";
 
             }
             default -> {

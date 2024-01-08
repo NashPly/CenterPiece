@@ -5,15 +5,13 @@ import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import com.CenterPiece.CenterPiece.Objects.SalesOrder;
 import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
-import com.CenterPiece.CenterPiece.TrelloListIDs;
-import com.CenterPiece.CenterPiece.TrelloLists;
+import com.CenterPiece.CenterPiece.TrelloIDs.TrelloListIDs;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 import java.net.http.HttpClient;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CenterPieceFunctions {
