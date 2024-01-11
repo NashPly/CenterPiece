@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.http.HttpClient;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemCodeHandler {
 
@@ -77,20 +79,27 @@ public class ItemCodeHandler {
 
                 System.out.println("\n -- This sales order has an item --");
 
+                List<Integer> linkedPOList = new ArrayList<>();
+                List<Integer> linkedRMList = new ArrayList<>();
+
+
                 for(int i = 0; i < salesOrderItemsArray.length(); i++){
                     item = salesOrderItemsArray.getJSONObject(i);
 
                     switch (item.getString("LinkedTranType")) {
                         case "PO" -> {
-                            if(i==0) this.linkedTranPoID = String.valueOf(item.getInt("LinkedTranID"));
-                            else this.linkedTranPoID = this.linkedTranPoID + ", " + (item.getInt("LinkedTranID"));
+                            if(!linkedPOList.contains(item.getInt("LinkedTranID")))
+                                linkedPOList.add(item.getInt("LinkedTranID"));
                         }
                         case "RM" -> {
-                            if(i==0) this.linkedTranRmID = String.valueOf(item.getInt("LinkedTranID"));
-                            else linkedTranRmID = this.linkedTranRmID + ", " + (item.getInt("LinkedTranID"));
+                            if(!linkedRMList.contains(item.getInt("LinkedTranID")))
+                                linkedRMList.add(item.getInt("LinkedTranID"));
                         }
                     }
                 }
+
+                this.linkedTranPoID = linkedPOList.toString().replace("[","").replace("]", "");
+                this.linkedTranRmID = linkedRMList.toString().replace("[","").replace("]", "");;
 
                 this.itemCode = salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
 //                this.linkedTranType = item.getString("LinkedTranType");
@@ -137,21 +146,30 @@ public class ItemCodeHandler {
         TimeHandler timeHandler = new TimeHandler();
 
         innerRequestBody.put("IncludeOpenOrders", true);
-        innerRequestBody.put("IncludeInvoicedOrders", false);
+        innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart",
                 timeHandler.getCurrentYear() + "-" +
                 timeHandler.getCurrentMonth() + "-" +
                 timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
-            //Year
-                //"2023-"+
-            //Month
-                // "10-" +
-            //Day
-                // "01T00:00:01-6:00");
+//            //Year
+//                "2023-"+
+//            //Month
+//                 "10-" +
+//            //Day
+//                 "01T00:00:01-6:00");
 
-        innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" + timeHandler.getCurrentMonth() + "-" +
-                timeHandler.getCurrentDayOfMonth() + "T"+"23:59:59-6:00");
+        innerRequestBody.put("OrderDateRangeEnd",
+                timeHandler.getCurrentYear() + "-" +
+                timeHandler.getCurrentMonth() + "-" +
+                timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+
+//        //Year
+//        "2023-"+
+//        //Month
+//         "10-" +
+//        //Day
+//         "10T23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(this.client, this.contextId, "Orders/SalesOrderList", innerRequestBody, this.branch);
@@ -179,12 +197,27 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", true);
         innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd", timeHandler.getCurrentYear() + "-" +
-                timeHandler.getCurrentMonth() + "-" + timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
-        innerRequestBody.put("FetchOnlyChangedSince", timeHandler.getSearchYear() + "-" +
-                timeHandler.getSearchMonth() + "-" + timeHandler.getSearchDayOfMonth() +
-                //timeHandler.getSearchMonth() + "-07" +
-                //"T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
+        innerRequestBody.put("OrderDateRangeEnd",
+                timeHandler.getCurrentYear() + "-" +
+                timeHandler.getCurrentMonth() + "-" +
+                timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+        //Year
+                //"2023-"+
+        //Month
+                // "10-" +
+        //Day
+                // "01T23:59:59-6:00");
+
+        innerRequestBody.put("FetchOnlyChangedSince",
+                timeHandler.getSearchYear() + "-" +
+                timeHandler.getSearchMonth() + "-" +
+                timeHandler.getSearchDayOfMonth() +
+                //Year
+                    //"2023-"+
+                //Month
+                    // "10-" +
+                //Day
+                    // "01" +
                 "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
 
         System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
@@ -238,7 +271,8 @@ public class ItemCodeHandler {
         String idLabel = null;
         String colorCode = null;
         String linkedType = null;
-        String linkedID = null;
+        String linkedRmID = null;
+        String linkedPoID = null;
         String colorCustomFieldID = null;
         String rmCustomField = null;
         String agilityPoCustomField = null;
@@ -264,6 +298,9 @@ public class ItemCodeHandler {
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "COMPONENTS", this.environment);
                 TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "COMPONENTS", this.environment);
 
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
+
                 colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
                 rmCustomField = trelloRemanCustomFieldID.getFieldID();
 
@@ -285,7 +322,9 @@ public class ItemCodeHandler {
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
+                //
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
 
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
                 TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
@@ -314,7 +353,8 @@ public class ItemCodeHandler {
                     idLabel = "62869e47dcae4f52e15c90e1";
 
                 linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
 
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
                 TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
@@ -343,7 +383,8 @@ public class ItemCodeHandler {
                     idLabel = "62869db3e04b83468347996b";
 
                 linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
 
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
                 TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
@@ -375,7 +416,8 @@ public class ItemCodeHandler {
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
 
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
                 TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "CABINETS", this.environment);
@@ -408,7 +450,8 @@ public class ItemCodeHandler {
                 if(this.environment.equals("Production"))
                     idLabel = "60c26dfc44555566d32ae700";
                 linkedType = this.linkedTranType;
-                linkedID = this.linkedTranID;
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
 
 
                 if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("((F|f)|(S|sL|l))(A|a)(B|b)(S|s)? - [A-z ]{2,40}\\d{3,4}(K|k)?-(\\d{2}|[A-z]{2}) (\\d\"? )?[A-z]{2,20}")){
@@ -450,7 +493,8 @@ public class ItemCodeHandler {
         json.put("rmCustomField", rmCustomField);
         json.put("colorCode", colorCode);
         json.put("linkedType", linkedType);
-        json.put("linkedID", linkedID);
+        json.put("linkedPoID", linkedPoID);
+        json.put("linkedRmID", linkedRmID);
         json.put("agilityPoCustomField", agilityPoCustomField);
         json.put("customerPoCustomField", customerPoCustomField);
         json.put("countOfBuildsCustomField", countOfBuildsCustomField);
@@ -464,6 +508,8 @@ public class ItemCodeHandler {
         JSONObject itemDetails;
 
         if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
+            //TODO insert for loop to receive total data
+
              itemDetails = this.salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
         } else {
             System.out.println(" - " + board + " Inbox - ");
