@@ -285,10 +285,10 @@ public class CenterPieceFunctions {
             //Customer PO in the description
 
 
-                if (itemInformation.getString("linkedRmID") != null) {
+                if (itemInformation.getString("linkedRmID") != null && itemInformation.has("rmCustomField")) {
                     updateCustomFieldTrello(cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedRmID"));
                 }
-                if (itemInformation.getString("linkedPoID") != null ) {
+                if (itemInformation.getString("linkedPoID") != null && itemInformation.has("agilityPoCustomField")) {
                     updateCustomFieldTrello(cardId, itemInformation.getString("agilityPoCustomField"), itemInformation.getString("linkedPoID"));
                 }
 

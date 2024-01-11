@@ -157,7 +157,7 @@ public class ItemCodeHandler {
 //            //Month
 //                 "10-" +
 //            //Day
-//                 "01T00:00:01-6:00");
+//                 "21T00:00:01-6:00");
 
         innerRequestBody.put("OrderDateRangeEnd",
                 timeHandler.getCurrentYear() + "-" +
@@ -165,11 +165,11 @@ public class ItemCodeHandler {
                 timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
 
 //        //Year
-//        "2023-"+
+//            "2023-"+
 //        //Month
-//         "10-" +
+//            "11-" +
 //        //Day
-//         "10T23:59:59-6:00");
+//            "01T23:59:59-6:00");
 
         System.out.println("\n-- AgilitySalesOrderListLookup --");
         AgilityCalls agilityAPICall = new AgilityCalls(this.client, this.contextId, "Orders/SalesOrderList", innerRequestBody, this.branch);
