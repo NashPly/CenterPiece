@@ -506,6 +506,13 @@ public class ItemCodeHandler {
     public String orderStatusLogic(String board){
 
         JSONObject itemDetails;
+        Boolean hasBackOrderedItems = checkIfTrue(this.salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalBackorderedQuantity");;
+        Boolean hasUnstagedItems = checkIfTrue(this.salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalUnstagedQuantity");;
+        Boolean hasStagedItems = checkIfTrue(this.salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalStagedQuantity");;
+        Boolean hasInvoicedItems = checkIfTrue(this.salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalInvoicedQuantity");;
+
+
+
 
         if(!(this.salesOrder == null) && this.salesOrder.has("dtOrderDetailResponse")) {
             //TODO insert for loop to receive total data
@@ -547,10 +554,11 @@ public class ItemCodeHandler {
                     //Fresh order
 
                     //In Production
-                    if(itemDetails.getDouble("TotalBackorderedQuantity") >= 1.0 &&
-                            itemDetails.getDouble("TotalUnstagedQuantity") == 0.0  &&
-                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
-                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
+//                    if(itemDetails.getDouble("TotalBackorderedQuantity") >= 1.0 &&
+//                            itemDetails.getDouble("TotalUnstagedQuantity") == 0.0  &&
+//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
+//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
+                    if(hasBackOrderedItems){
 
                         if (itemDetails.has("LinkedTranType")) {
                             System.out.println(" - " + board + " Processing || Batching - ");
@@ -562,10 +570,11 @@ public class ItemCodeHandler {
                             return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
 
                         }
-                    }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
-                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
-                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
-                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
+//                    }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
+//                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
+//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
+//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
+                    }else if(hasUnstagedItems){
 
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
@@ -586,6 +595,13 @@ public class ItemCodeHandler {
 
 
         return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+    }
+
+    public boolean checkIfTrue(JSONArray itemList, String key){
+        for (int i = 0; i < itemList.length(); i++){
+            if(itemList.getJSONObject(i).getDouble(key) != 0.0) return true;
+        }
+        return false;
     }
 
     public String whichBoard(String cabList, String topList, String compList, String boardName){
