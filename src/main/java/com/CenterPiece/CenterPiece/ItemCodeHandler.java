@@ -530,6 +530,38 @@ public class ItemCodeHandler {
         if(orderStatus.equals("Open")){
 
             switch(orderProcessStatus){
+                case "" -> {
+                    //Fresh order
+
+                    //In Production
+//                    if(itemDetails.getDouble("TotalBackorderedQuantity") >= 1.0 &&
+//                            itemDetails.getDouble("TotalUnstagedQuantity") == 0.0  &&
+//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
+//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
+                    if(hasBackOrderedItems){
+
+//                        if (itemDetails.has("LinkedTranType")) {
+                        if (!this.linkedTranPoID.isEmpty()) {
+                            System.out.println(" - " + board + " Processing || Batching - ");
+                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+                        } else {
+
+                            //In Processing
+                            System.out.println(" - " + board + " Processing || Batching - ");
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+
+                        }
+//                    }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
+//                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
+//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
+//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
+                    }else if(hasUnstagedItems){
+
+                        //To Be Picked
+                        System.out.println(" - " + board + " To Be Picked - ");
+                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS", this.environment).getListID(), board);
+                    }
+                }
                 case "Picked" -> {
                     if(saleType.equals("WHSE")) {
 
@@ -550,37 +582,6 @@ public class ItemCodeHandler {
                         return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
-                case "" -> {
-                    //Fresh order
-
-                    //In Production
-//                    if(itemDetails.getDouble("TotalBackorderedQuantity") >= 1.0 &&
-//                            itemDetails.getDouble("TotalUnstagedQuantity") == 0.0  &&
-//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
-//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
-                    if(hasBackOrderedItems){
-
-                        if (itemDetails.has("LinkedTranType")) {
-                            System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
-                        } else {
-
-                            //In Processing
-                            System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
-
-                        }
-//                    }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
-//                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
-//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
-//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
-                    }else if(hasUnstagedItems){
-
-                        //To Be Picked
-                        System.out.println(" - " + board + " To Be Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS", this.environment).getListID(), board);
-                    }
-                }
             }
 
         }else if(orderStatus.equals("Invoiced")) {
@@ -598,6 +599,7 @@ public class ItemCodeHandler {
     }
 
     public boolean checkIfTrue(JSONArray itemList, String key){
+
         for (int i = 0; i < itemList.length(); i++){
             if(itemList.getJSONObject(i).getDouble(key) != 0.0) return true;
         }
