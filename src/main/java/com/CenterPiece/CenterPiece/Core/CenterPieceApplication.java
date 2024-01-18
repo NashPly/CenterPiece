@@ -31,8 +31,8 @@ public class CenterPieceApplication {
 			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, environment);
 			centerPieceSessionCabinets.mainProcess();
 
-			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, environment);
-			centerPieceSessionFabrication.mainProcess();
+//			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, environment);
+//			centerPieceSessionFabrication.mainProcess();
 
 		}, 0, 300, TimeUnit.SECONDS);
 	}
