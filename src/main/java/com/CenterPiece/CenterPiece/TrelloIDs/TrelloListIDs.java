@@ -176,6 +176,16 @@ public class TrelloListIDs {
                 this.branch = "CABINETS";
                 this.environment = "Production";
             }
+            case "65aee18278d14ff30addcf66" -> {
+                this.list = TrelloLists.TO_BE_RECEIVED_SHOP;
+                this.branch = "CABINETS";
+                this.environment = "Production";
+            }
+            case "62869b5c1351de037ffd2ccc" -> {
+                this.list = TrelloLists.RM_TO_BE_COMPLETED_RS;
+                this.branch = "CABINETS";
+                this.environment = "Production";
+            }
             case "62869b5c1351de037ffd2cca" -> {
                 this.list = TrelloLists.PRODUCTION_QUEUE;
                 this.branch = "CABINETS";
@@ -1069,11 +1079,12 @@ public class TrelloListIDs {
 
         switch(branch){
             case "CABINETS" ->{
-                liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK, TrelloLists.SO_SID_CHECK,
-                        TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD, TrelloLists.PROCESSING,
-                        TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.TO_BE_LOADED_ROUTED,
-                        TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.WILL_CALL,TrelloLists.ON_TRUCK_ON_DELIVERY,
-                        TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
+                liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
+                        TrelloLists.SO_SID_CHECK, TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD, TrelloLists.PROCESSING,
+                        TrelloLists.ON_ORDER, TrelloLists.TO_BE_RECEIVED_SHOP, TrelloLists.RECEIVING, TrelloLists.SCHEDULING_POOL,
+                        TrelloLists.RM_TO_BE_COMPLETED_RS,TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION,
+                        TrelloLists.TO_BE_LOADED_ROUTED, TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.WILL_CALL,
+                        TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
             }
             default ->{
                 liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK, TrelloLists.SO_SID_CHECK,
