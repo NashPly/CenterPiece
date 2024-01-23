@@ -563,6 +563,17 @@ public class ItemCodeHandler {
                     }
                 }
                 case "Picked" -> {
+                    if(hasBackOrderedItems){
+                        if (!this.linkedTranPoID.isEmpty()) {
+                            System.out.println(" - " + board + " Processing || Batching - ");
+                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+                        } else {
+                            //In Processing
+                            System.out.println(" - " + board + " Processing || Batching - ");
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+
+                        }
+                    }
                     if(saleType.equals("WHSE")) {
 
                         System.out.println(" - " + board + " Picked - ");
