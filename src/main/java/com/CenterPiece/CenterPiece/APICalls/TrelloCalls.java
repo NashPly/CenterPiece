@@ -3,11 +3,9 @@ package com.CenterPiece.CenterPiece.APICalls;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 public class TrelloCalls {
 
@@ -105,7 +103,7 @@ public class TrelloCalls {
         return new JSONObject(apiCaller.makeAPICall().body());
     }
 
-    public JSONObject deleteTrelloAPICall(String cardId) {
+    public JSONObject deleteTrelloCardAPICall(String cardId) {
 
         System.out.println("- Delete Call to Trello -");
         String uri = String.format("%s%s%s?&key=%s&token=%s",
@@ -124,6 +122,27 @@ public class TrelloCalls {
         APICaller apiCaller = new APICaller(client, request);
 
         return new JSONObject(apiCaller.makeAPICall().body());
+    }
+
+    public void deleteTrelloCardLabelAPICall(String cardId, String labelId) {
+
+        System.out.println("- Delete Label From Card Call to Trello -");
+        String uri = String.format("%s%s%s/idLabels/%s?&key=%s&token=%s",
+                this.baseUrl, this.urlEndpoint, cardId, labelId, this.key, this.token);
+
+        System.out.println("URL -- "+ uri);
+
+        var request = HttpRequest.newBuilder(
+                        URI.create(uri))
+                .header("accept", "application/json")
+                .header("Content-Type", "application/json")
+                .DELETE()
+                .build();
+
+        System.out.println("- Delete Label From Card Call to Trello -");
+        APICaller apiCaller = new APICaller(client, request);
+
+        new JSONObject(apiCaller.makeAPICall().body());
     }
 
     public HttpRequest.BodyPublisher buildRequest(JSONObject innerRequest){

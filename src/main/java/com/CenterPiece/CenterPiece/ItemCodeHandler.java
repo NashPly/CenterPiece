@@ -295,6 +295,9 @@ public class ItemCodeHandler {
                 //idList = "636bc3a95da9340015e47b8b";
                 idList = orderStatusLogic("Components");
 
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.COMPONENTS, "COMPONENTS", this.environment, this.salesOrder.getString("SaleType"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "COMPONENTS", this.environment);
                 TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "COMPONENTS", this.environment);
 
@@ -303,9 +306,6 @@ public class ItemCodeHandler {
 
                 colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
                 rmCustomField = trelloRemanCustomFieldID.getFieldID();
-
-                //colorCustomFieldID="636bc3aa5da9340015e47ce4";
-                //rmCustomField = "636bc3aa5da9340015e47ce8";
 
             }
             case "3300" -> {
@@ -317,8 +317,19 @@ public class ItemCodeHandler {
                 //idList = "62869b5c1351de037ffd2cc4";
                 //boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                if(this.environment.equals("Production"))
-                    idLabel = "62869b5c1351de037ffd2d26";
+
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.KK_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+
+
+//                if(this.environment.equals("Production")) {
+//                    idLabel = "62869b5c1351de037ffd2d26";
+//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
+//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
+//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
+//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
+//                }
+
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -334,11 +345,6 @@ public class ItemCodeHandler {
                 agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
 
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                rmCustomField = "62869b5c1351de037ffd2dab";
-//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
-
             }
             case "3350" -> {
                 //cnc cabinets
@@ -346,11 +352,18 @@ public class ItemCodeHandler {
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
-                //idList = "62869b5c1351de037ffd2cc4";
-                //boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                if(this.environment.equals("Production"))
-                    idLabel = "62869e47dcae4f52e15c90e1";
+
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CNC_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+
+//                if(this.environment.equals("Production")) {
+//                    idLabel = "62869e47dcae4f52e15c90e1";
+//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
+//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
+//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
+//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
+//                }
 
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
@@ -364,23 +377,21 @@ public class ItemCodeHandler {
                 agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
 
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
-
             }
             case "3455" -> {
-                //tru cabinets
+                //legacy cabinets
 
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
-                //idList = "62869b5c1351de037ffd2cc4";
-                //boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
-                if(this.environment.equals("Production"))
+                if(this.environment.equals("Production")){
                     idLabel = "62869db3e04b83468347996b";
+                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
+                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
+                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
+                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
+                }
 
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
@@ -393,11 +404,6 @@ public class ItemCodeHandler {
                 colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
                 agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
-
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
-//                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
 
             }
             case "3450" -> {
@@ -411,8 +417,16 @@ public class ItemCodeHandler {
 //                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("Cabinets");
 
-                if(this.environment.equals("Production"))
-                    idLabel = "62869b5c1351de037ffd2d32";
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CHOICE_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+
+//                if(this.environment.equals("Production")){
+//                    idLabel = "62869b5c1351de037ffd2d32";
+//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
+//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
+//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
+//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
+//                }
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -431,12 +445,6 @@ public class ItemCodeHandler {
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
                 countOfBuildsCustomField = trelloNoOfBuildsFieldID.getFieldID();
 
-//                colorCustomFieldID = "62869b5c1351de037ffd2da7";
-//                rmCustomField = "62869b5c1351de037ffd2dab";
-//                agilityPoCustomField = "62869b5c1351de037ffd2da9";
-//                customerPoCustomField = "65944fad870030dd5e8ca1f0";
-//                countOfBuildsCustomField = "62f3ac5b4eb96040bdd01827";
-
             }
             case "3500" -> {
 
@@ -445,10 +453,11 @@ public class ItemCodeHandler {
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.TOP_SHOP, "TOPSHOP", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
-                //boardID = "60c26dfb44555566d32ae643";
                 idList = orderStatusLogic("Tops");
-                if(this.environment.equals("Production"))
-                    idLabel = "60c26dfc44555566d32ae700";
+
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.TOPS, "TOPSHOP", this.environment, this.salesOrder.getString("SaleType"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
                 linkedRmID = this.linkedTranRmID;
@@ -471,11 +480,6 @@ public class ItemCodeHandler {
                 rmCustomField = trelloRemanCustomFieldID.getFieldID();
                 agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
-
-//                colorCustomFieldID = "6197b500bbb79658801189ce";
-//                agilityPoCustomField = "6197b57d371dc08c1f2a469a";
-//                rmCustomField = "621519b6944e3c4fc091a515";
-//                customerPoCustomField = "65944bbce3ba00017427cb36";
 
             }
             default -> {

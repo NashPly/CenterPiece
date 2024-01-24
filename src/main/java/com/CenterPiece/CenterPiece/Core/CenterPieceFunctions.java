@@ -5,6 +5,7 @@ import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import com.CenterPiece.CenterPiece.Objects.SalesOrder;
 import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
+import com.CenterPiece.CenterPiece.TrelloIDs.TrelloLabelIds;
 import com.CenterPiece.CenterPiece.TrelloIDs.TrelloListIDs;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,7 +13,9 @@ import org.json.JSONObject;
 
 import java.net.http.HttpClient;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CenterPieceFunctions {
 
@@ -131,7 +134,7 @@ public class CenterPieceFunctions {
                     for(JSONObject json: openTrelloCards){
                         System.out.println("\n - Deleted Duplicate TrelloCard -\n" + json + "\n");
                         var stinker = "hello";
-                        trelloCalls.deleteTrelloAPICall(json.getString("id"));
+                        trelloCalls.deleteTrelloCardAPICall(json.getString("id"));
                     }
 
                     JSONArray jsonArray = new JSONArray().put(0, desiredCard);
@@ -177,18 +180,6 @@ public class CenterPieceFunctions {
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch, this.environment);
 
-//        List<String> liveTrelloBuckets = new ArrayList<>(Arrays.asList("62869b5c1351de037ffd2cbc", "61f2d5c461ac134ef274ae5f",
-//                "62869b5c1351de037ffd2ccd", "6239c656ab5c356ec1568beb", "62869b5c1351de037ffd2cce",
-//                "60c26dfb44555566d32ae64d", "62869b5c1351de037ffd2cd0", "61e6d38623686777464221b9",
-//                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
-//                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec", "639871e0cb87d801a97ad7aa"));
-//
-//        List<TrelloLists> offLimitsTrelloLists = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING,TrelloLists.SO_SID_CHECK,
-//                TrelloLists.ON_HOLD, TrelloLists.PROCESSING,TrelloLists.TO_BE_ORDERED ,TrelloLists.ON_ORDER,
-//                TrelloLists.RECEIVING, TrelloLists.CREDIT_HOLD, TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE,
-//                TrelloLists.SS_And_RS, TrelloLists.IN_PRODUCTION, TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.ON_TRUCK_ON_DELIVERY));
-
-
         JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup();
 
         //TODO adapt this for Sales orders
@@ -220,7 +211,9 @@ public class CenterPieceFunctions {
 
                             for(int p = 0; p < resultArray.length(); p++) {
 
-                                ArrayList<String> labelIds = new ArrayList<>();
+                                List<String> labelIds = new ArrayList<>();
+                                List<String> trelloLabelIds = new ArrayList<>(List.of(itemInformation.getString("idLabel").split(",")));
+
 
                                 if(resultArray.getJSONObject(p).has("labels") && sameBoard) {
                                     for(int x = 0; x < resultArray.getJSONObject(p).getJSONArray("labels").length(); x++){
@@ -230,7 +223,28 @@ public class CenterPieceFunctions {
                                     }
 
                                     itemInformation.remove("idLabel");
-                                    itemInformation.put("idLabel", String.join(",", labelIds));
+                                    itemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds,
+                                            resultArray.getJSONObject(p).getString("id"))));
+
+
+
+//                                    itemInformation.remove("idLabel");
+//                                    itemInformation.put("idLabel", compareContrastLabels(labelIds, List.of(itemInformation.getString("idLabel").split(","))));
+
+
+                                    //CP Label list
+
+
+
+                                    //If not the same (cnc/kk/choice/legacy) delete and replace
+
+                                    //If Opposite (willcall/whse) delete and replace
+                                    //if what Trello has != what CP is calling for delete and replace
+
+                                    //Trello Labels -> resultArray.getJSONObject(p)
+
+                                    //CP Labels -> itemInformation.getString("idLabel")
+
                                 }
 
                                 if(resultArray.getJSONObject(p).has("idList")){
@@ -277,6 +291,51 @@ public class CenterPieceFunctions {
         }else{
             System.out.println("\n-- No Updates --");
         }
+    }
+
+    private List<String> compareContrastLabels(List<String> trelloLabels, List<String> centerPieceLabels, String cardId) {
+
+        List<String> resultLabelList = new ArrayList<>();
+        TrelloCalls trelloCalls = new TrelloCalls(this.client, "cards/");
+
+        for (int i = 0; i < trelloLabels.size(); i++) {
+
+            if (centerPieceLabels.contains(trelloLabels.get(i))) {
+                resultLabelList.add(trelloLabels.get(i));
+                centerPieceLabels.remove(trelloLabels.get(i));
+            } else if (new TrelloLabelIds(trelloLabels.get(i)).isBrandLabel()) {
+                for (String cpLabel : centerPieceLabels) {
+                    if (new TrelloLabelIds(cpLabel).isBrandLabel() && !cpLabel.equals(trelloLabels.get(i))) {
+                        //Delete Label from card
+                        System.out.println("Delete the brand label: " + trelloLabels.get(i) + " from Trello\n");
+                        trelloCalls.deleteTrelloCardLabelAPICall(cardId, trelloLabels.get(i));
+                        resultLabelList.add(cpLabel);
+                        centerPieceLabels.remove(cpLabel);
+                    }
+
+                }
+            } else if (new TrelloLabelIds(trelloLabels.get(i)).isSaleTypeLabel()) {
+                for (String cpLabel : centerPieceLabels) {
+                    if (new TrelloLabelIds(cpLabel).isSaleTypeLabel() && !cpLabel.equals(trelloLabels.get(i))) {
+                        //Delete Label from card
+                        System.out.println("Delete the saletype label: " + trelloLabels.get(i) + " from Trello\n");
+                        trelloCalls.deleteTrelloCardLabelAPICall(cardId, trelloLabels.get(i));
+                        resultLabelList.add(cpLabel);
+                        centerPieceLabels.remove(cpLabel);
+                    }
+                }
+            } else {
+                System.out.println("Neither brand nor saletype label. Leave it.\n");
+                resultLabelList.add(trelloLabels.get(i));
+            }
+        }
+
+        resultLabelList.addAll(centerPieceLabels);
+        Set<String> set = new LinkedHashSet<>(resultLabelList);
+        resultLabelList.clear();
+        resultLabelList.addAll(set);
+
+        return resultLabelList;
     }
 
     public void checkTrelloCardForEmptyCustomFields(String cardId, JSONObject itemInformation, JSONObject jsonSO) {
