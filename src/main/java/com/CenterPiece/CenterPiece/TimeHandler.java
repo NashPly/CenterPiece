@@ -27,7 +27,7 @@ public class TimeHandler {
         DateTime dtus = new DateTime();
         DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
         this.dt = dtus.withZone(dtZone);
-
+        
         int searchMinHold = dt.getMinuteOfHour()-searchSplit;
         int searchHourHold = dt.getHourOfDay();
         int searchDayHold = dt.getDayOfMonth();

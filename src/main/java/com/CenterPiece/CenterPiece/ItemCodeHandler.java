@@ -463,7 +463,7 @@ public class ItemCodeHandler {
                 linkedRmID = this.linkedTranRmID;
 
 
-                if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("((F|f)|(S|sL|l))(A|a)(B|b)(S|s)? - [A-z ]{2,40}\\d{3,4}(K|k)?-(\\d{2}|[A-z]{2}) (\\d\"? )?[A-z]{2,20}")){
+                if(this.agilityItemSearchResult.getString("ExtendedDescription").matches("((F|f)|(S|sL|l))(A|a)(B|b)(S|s)? - [A-z ]{2,40}\\d{3,4}(K|k)?-(\\d{2}|[A-z]{2}) (\\d\"? )?[A-z]{2,20} - .{0,60}")){
                     var extDescRough = this.agilityItemSearchResult.getString("ExtendedDescription").split("-|:");
                     //TODO Not a long term parsing solution
                     colorCode = extDescRough[1].replaceFirst(" ", "") + "-" + extDescRough[2];

@@ -14,8 +14,8 @@ public class CenterPieceApplication {
 	public static void main(String[] args) {
 		//SpringApplication.run(CenterPieceApplication.class, args);
 
-//		String environment = "Production";
-		String environment = "Test";
+		String environment = "Production";
+		//String environment = "Test";
 
 		HttpClient client = HttpClient.newBuilder().build();
 		ScheduledExecutorService session = Executors.newSingleThreadScheduledExecutor();
@@ -28,8 +28,8 @@ public class CenterPieceApplication {
 
 			System.out.println("\n--- Ran at: " + timeHandler.getCurrentHour() + ":" + timeHandler.getCurrentMinuteOfHour() + " ---\n");
 
-			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, environment);
-			centerPieceSessionCabinets.mainProcess();
+//			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, environment);
+//			centerPieceSessionCabinets.mainProcess();
 
 			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, environment);
 			centerPieceSessionFabrication.mainProcess();
