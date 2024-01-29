@@ -2,13 +2,13 @@ package com.CenterPiece.CenterPiece;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-
-import java.time.YearMonth;
+import org.joda.time.LocalDateTime;
 
 public class TimeHandler {
 
     private int searchSplit = 5; //Mins
 
+    private LocalDateTime localDateTime;
     private DateTime dt;
     private String currentYear;
     private String currentMonth;
@@ -16,6 +16,11 @@ public class TimeHandler {
     private String currentHour;
     private String currentMinuteOfHour;
 
+    private String yesterdaysYear;
+    private String yesterdaysMonth;
+    private String yesterdaysDayOfMonth;
+    private String yesterdaysHour;
+    private String yesterdaysMinuteOfHour;
     private String searchYear;
     private String searchMonth;
     private String searchDayOfMonth;
@@ -23,49 +28,45 @@ public class TimeHandler {
     private String searchMinuteOfHour;
 
     public TimeHandler(){
-
-        DateTime dtus = new DateTime();
         DateTimeZone dtZone = DateTimeZone.forID("America/Chicago");
-        this.dt = dtus.withZone(dtZone);
-        
-        int searchMinHold = dt.getMinuteOfHour()-searchSplit;
-        int searchHourHold = dt.getHourOfDay();
-        int searchDayHold = dt.getDayOfMonth();
-        int searchMonthHold = dt.getMonthOfYear();
-        int searchYearHold = dt.getYear();
+        this.localDateTime = new LocalDateTime(dtZone);
 
-        if(searchMinHold<0){
-            searchMinHold = dt.getMinuteOfHour()+(60-(searchSplit+1));
-            searchHourHold--;
-            if(searchHourHold<0) {
-                searchHourHold += 24;
-                searchDayHold--;
-                if(searchDayHold<0) {
-                    //searchDayHold += 31;
-                    searchMonthHold--;
-                    if(searchMonthHold<0) {
-                        searchMonthHold += 12;
-                        searchYearHold--;
-                    }
-                    //Adding the previous year's info
-                    YearMonth yearMonthObject = YearMonth.of(searchYearHold, searchMonthHold);
-                    searchDayHold += yearMonthObject.lengthOfMonth();
-                }
-            }
-        }
+        this.setToday();
+        this.setYesterday();
+        this.setSearchBeginning();
 
-        this.searchYear = addZeroIfLessThanTen(searchYearHold);
-        this.searchMonth = addZeroIfLessThanTen(searchMonthHold);
-        this.searchDayOfMonth = addZeroIfLessThanTen(searchDayHold);
-        this.searchHour = addZeroIfLessThanTen(searchHourHold);
-        this.searchMinuteOfHour = addZeroIfLessThanTen(searchMinHold);
-
-        this.currentYear = String.valueOf(dt.getYear());
-        this.currentMonth = addZeroIfLessThanTen(dt.getMonthOfYear());
-        this.currentDayOfMonth = addZeroIfLessThanTen(dt.getDayOfMonth());
-        this.currentHour = addZeroIfLessThanTen(dt.getHourOfDay());
-        this.currentMinuteOfHour = addZeroIfLessThanTen(dt.getMinuteOfHour());
     }
+
+    private void setToday(){
+        this.currentYear = String.valueOf(this.localDateTime.getYear());
+        this.currentMonth = String.valueOf(this.localDateTime.getMonthOfYear());
+        this.currentDayOfMonth = String.valueOf(this.localDateTime.getDayOfMonth());
+        this.currentHour = String.valueOf(this.localDateTime.getHourOfDay());
+        this.currentMinuteOfHour = String.valueOf(this.localDateTime.getMinuteOfHour());
+    }
+
+    private void setYesterday(){
+        LocalDateTime yesterday = this.localDateTime.minusDays(1);
+
+        this.yesterdaysYear = String.valueOf(yesterday.getYear());
+        this.yesterdaysMonth = String.valueOf(yesterday.getMonthOfYear());
+        this.yesterdaysDayOfMonth = String.valueOf(yesterday.getDayOfMonth());
+        this.yesterdaysHour = String.valueOf(yesterday.getHourOfDay());
+        this.yesterdaysMinuteOfHour = String.valueOf(yesterday.getMinuteOfHour());
+    }
+
+    private void setSearchBeginning(){
+
+        LocalDateTime searchStart = this.localDateTime.minusMinutes(this.searchSplit);
+
+        this.searchYear = String.valueOf(searchStart.getYear());
+        this.searchMonth = String.valueOf(searchStart.getMonthOfYear());
+        this.searchDayOfMonth = String.valueOf(searchStart.getDayOfMonth());
+        this.searchHour = String.valueOf(searchStart.getHourOfDay());
+        this.searchMinuteOfHour = String.valueOf(searchStart.getMinuteOfHour());
+    }
+
+
 
     public String getCurrentYear() {
         return currentYear;
@@ -85,6 +86,26 @@ public class TimeHandler {
 
     public String getCurrentMinuteOfHour() {
         return currentMinuteOfHour;
+    }
+
+    public String getYesterdaysYear() {
+        return yesterdaysYear;
+    }
+
+    public String getYesterdaysMonth() {
+        return yesterdaysMonth;
+    }
+
+    public String getYesterdaysDayOfMonth() {
+        return yesterdaysDayOfMonth;
+    }
+
+    public String getYesterdaysHour() {
+        return yesterdaysHour;
+    }
+
+    public String getYesterdaysMinuteOfHour() {
+        return yesterdaysMinuteOfHour;
     }
 
     public String getSearchYear() {
