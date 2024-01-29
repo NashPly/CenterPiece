@@ -149,9 +149,9 @@ public class ItemCodeHandler {
         innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", false);
         innerRequestBody.put("OrderDateRangeStart",
-                timeHandler.getCurrentYear() + "-" +
-                timeHandler.getCurrentMonth() + "-" +
-                timeHandler.getCurrentDayOfMonth() + "T00:00:01-6:00");
+                timeHandler.getYesterdaysYear() + "-" +
+                timeHandler.getYesterdaysMonth() + "-" +
+                timeHandler.getYesterdaysDayOfMonth() + "T00:00:01-6:00");
 //            //Year
 //                "2023-"+
 //            //Month

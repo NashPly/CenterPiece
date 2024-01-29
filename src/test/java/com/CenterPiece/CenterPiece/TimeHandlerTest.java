@@ -1,77 +1,114 @@
 package com.CenterPiece.CenterPiece;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
+
+import java.time.Year;
+import java.time.YearMonth;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TimeHandlerTest {
 
     @Test
-    public void testPreviousDayOfMonth() {
+    public void testSetYesterday() {
         // Create a TimeHandler instance
         TimeHandler timeHandler = new TimeHandler();
 
-        // Get the expected previous day of the month
-        String expectedPreviousDay = getExpectedPreviousDay(timeHandler.getCurrentDayOfMonth());
+        // Get the current date
+        String currentYear = timeHandler.getCurrentYear();
+        String currentMonth = timeHandler.getCurrentMonth();
+        String currentDayOfMonth = timeHandler.getCurrentDayOfMonth();
 
+        // Set the expected yesterday's date
+        String expectedYesterday = calculateExpectedYesterday(currentYear, currentMonth, currentDayOfMonth);
 
         // Compare the actual result with the expected result
-        assertEquals(expectedPreviousDay, timeHandler.getPreviousDay());
+        assertEquals(expectedYesterday, (timeHandler.getYesterdaysYear() +"-"+ timeHandler.getYesterdaysMonth()+"-"+timeHandler.getYesterdaysDayOfMonth()));
     }
 
-    // Helper method to calculate the expected previous day of the month
-    private String getExpectedPreviousDay(String currentDay) {
-        int currentDayInt = Integer.parseInt(currentDay);
-        int expectedPreviousDayInt;
 
-        if (currentDayInt == 1) {
-            // If current day is the first day of the month, set the expected previous day to the last day of the previous month
-            expectedPreviousDayInt = 31; // Assuming the maximum day of the month is 31
+
+    // Helper method to calculate the expected date for yesterday
+    private String calculateExpectedYesterday(String currentYear, String currentMonth, String currentDayOfMonth) {
+        int year = Integer.parseInt(currentYear);
+        int month = Integer.parseInt(currentMonth);
+        int dayOfMonth = Integer.parseInt(currentDayOfMonth);
+
+        // Adjust the date for yesterday
+        if (dayOfMonth > 1) {
+            dayOfMonth--;
         } else {
-            // Otherwise, subtract 1 from the current day
-            expectedPreviousDayInt = currentDayInt - 1;
+            if (month > 1) {
+                month--;
+                dayOfMonth = getDaysInMonth(year, month);
+            } else {
+                year--;
+                month = 12;
+                dayOfMonth = getDaysInMonth(year, month);
+            }
         }
 
-        // Return the expected previous day as a string
-        return addZeroIfLessThanTen(expectedPreviousDayInt);
+        return String.format("%04d-%02d-%02d", year, month, dayOfMonth);
     }
 
-    // Helper method to add zero if the unit is less than 10
-    private String addZeroIfLessThanTen(int unit) {
-        return (unit < 10) ? "0" + unit : String.valueOf(unit);
+    @Test
+    public void testSearchWindowBeginning() {
+        // Create a TimeHandler instance
+        TimeHandler timeHandler = new TimeHandler();
+
+        // Get the current date
+        String currentYear = timeHandler.getCurrentYear();
+        String currentMonth = timeHandler.getCurrentMonth();
+        String currentDayOfMonth = timeHandler.getCurrentDayOfMonth();
+        String currentHourOfDay = timeHandler.getCurrentHour();
+        String currentMinuteOfHour = timeHandler.getCurrentMinuteOfHour();
+
+        // Set the expected yesterday's date
+        String expectedYesterday = calculateExpected2HoursAgo(currentYear, currentMonth,
+                currentDayOfMonth, currentHourOfDay, currentMinuteOfHour, timeHandler.getSearchWindow());
+
+        // Compare the actual result with the expected result
+        assertEquals(expectedYesterday, (timeHandler.getSearchYear() +"-"+ timeHandler.getSearchMonth()+"-"+
+                timeHandler.getSearchDayOfMonth()+"T"+timeHandler.getSearchHour()+":"+
+                timeHandler.getSearchMinuteOfHour()));
     }
 
-//    @Test
-//    public void testPreviousYear() {
-//
-//        TimeHandler timeHandler = new TimeHandler();
-//
-//        // Get the expected previous day of the month
-//        String expectedPreviousDay = getExpectedPreviousDay(timeHandler.getCurrentYear());
-//
-//        // Compare the actual result with the expected result
-//        assertEquals(expectedPreviousDay, timeHandler.getPreviousDay());
-//
-//
-//
-//
-//
-//
-//
-//        org.joda.time.LocalDate localDate = new org.joda.time.LocalDate(2024, 1, 1);
-//        org.joda.time.LocalDate yesterdayDate = localDate.minusDays(1);
-//        org.joda.time.LocalDate expectedYesterdayDate = new org.joda.time.LocalDate(2023, 12, 31);
-//
-//        assertEquals(expectedYesterdayDate, yesterdayDate);
-//    }
-//
-//    @Test
-//    public void testPreviousMonth() {
-//
-//    }
-//
-//    @Test
-//    public void testPreviousHour(){
-//
-//    }
+    // Helper method to calculate the expected date for yesterday
+    private String calculateExpected2HoursAgo(String currentYear, String currentMonth, String currentDayOfMonth, String currentHourOfDay, String currentMinuteOfHour, int searchWindow) {
+        int year = Integer.parseInt(currentYear);
+        int month = Integer.parseInt(currentMonth);
+        int dayOfMonth = Integer.parseInt(currentDayOfMonth);
+        int hourOfDay = Integer.parseInt(currentHourOfDay);
+        int minuteOfHour = Integer.parseInt(currentMinuteOfHour);
+
+        // Adjust the date for yesterday
+
+        if(minuteOfHour > 1 && (searchWindow <= 60)){
+            minuteOfHour -= searchWindow;
+        }else{
+            if(hourOfDay >1 && (searchWindow <= 2400)){
+                hourOfDay -= searchWindow/60;
+            }else{
+                if (dayOfMonth > 1) {
+                    dayOfMonth--;
+                } else {
+                    if (month > 1) {
+                        month--;
+                        dayOfMonth = getDaysInMonth(year, month);
+                    } else {
+                        year--;
+                        month = 12;
+                        dayOfMonth = getDaysInMonth(year, month);
+                    }
+                }
+            }
+        }
+
+        return String.format("%04d-%02d-%02dT%02d:%02d", year, month, dayOfMonth, hourOfDay, minuteOfHour);
+    }
+
+    // Helper method to get the number of days in a month
+    private int getDaysInMonth(int year, int month) {
+        return java.time.YearMonth.of(year,month).lengthOfMonth();
+    }
 }
