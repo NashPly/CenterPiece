@@ -5,7 +5,7 @@ import org.joda.time.LocalDateTime;
 
 public class TimeHandler {
 
-    private static final int SEARCH_SPLIT_MINUTES = 4;
+    private static final int SEARCH_SPLIT_MINUTES = 60;
     private String currentYear, currentMonth, currentDayOfMonth, currentHour, currentMinuteOfHour;
     private String yesterdaysYear, yesterdaysMonth, yesterdaysDayOfMonth, yesterdaysHour, yesterdaysMinuteOfHour;
     private String searchYear, searchMonth, searchDayOfMonth, searchHour, searchMinuteOfHour;
