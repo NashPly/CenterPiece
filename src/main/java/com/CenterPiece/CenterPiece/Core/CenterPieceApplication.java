@@ -15,7 +15,11 @@ public class CenterPieceApplication {
 		//SpringApplication.run(CenterPieceApplication.class, args);
 
 		String environment = "Production";
+<<<<<<< HEAD
 		//String environment = "Test";
+=======
+//		String environment = "Test";
+>>>>>>> 44be36f8b45774f9c168f77640bb4bb4042133d5
 
 		HttpClient client = HttpClient.newBuilder().build();
 		ScheduledExecutorService session = Executors.newSingleThreadScheduledExecutor();
