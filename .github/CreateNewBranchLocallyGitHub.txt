@@ -1,0 +1,25 @@
+How to create new branch locally
+
+- Make sure you are on the master branch:
+git checkout master
+
+- Pull the latest changes from the remote repository:
+git pull origin master
+
+- Create a new branch locally:
+git checkout -b new-branch-name
+
+- This command creates and switches to a new branch named new-branch-name. Replace new-branch-name with your desired branch name.
+- Make your changes, stage, and commit them:
+git add .
+git commit -m "Your commit message here"
+
+- Push the new branch to the remote repository on GitHub:
+git push origin new-branch-name
+
+- This command will push your new branch to GitHub. Replace new-branch-name with your actual branch name.
+- Now, your new branch is created locally, and a copy of it is available on GitHub. If you want others to collaborate on this branch, they can pull it and create a local copy using:
+git fetch origin
+git checkout -b new-branch-name origin/new-branch-name
+
+- Remember to replace new-branch-name with your actual branch name.

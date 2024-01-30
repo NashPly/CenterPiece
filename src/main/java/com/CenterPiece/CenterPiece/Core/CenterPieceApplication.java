@@ -14,8 +14,8 @@ public class CenterPieceApplication {
 	public static void main(String[] args) {
 		//SpringApplication.run(CenterPieceApplication.class, args);
 
-		//String environment = "Production";
-		String environment = "Test";
+		String environment = "Production";
+		//String environment = "Test";
 
 		HttpClient client = HttpClient.newBuilder().build();
 		ScheduledExecutorService session = Executors.newSingleThreadScheduledExecutor();
@@ -31,8 +31,8 @@ public class CenterPieceApplication {
 			CenterPieceSession centerPieceSessionCabinets = new CenterPieceSession("CABINETS", client, environment);
 			centerPieceSessionCabinets.mainProcess();
 
-//			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, environment);
-//			centerPieceSessionFabrication.mainProcess();
+			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, environment);
+			centerPieceSessionFabrication.mainProcess();
 
 		}, 0, 300, TimeUnit.SECONDS);
 	}

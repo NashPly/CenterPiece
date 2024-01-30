@@ -254,7 +254,7 @@ public class CenterPieceFunctions {
                                         //TODO above checks if current board is destination board
                                         TrelloListIDs listIDs = new TrelloListIDs(itemInformation.getString("idList"));
 
-                                        if(listIDs.offLimits(this.branch) || labelIds.contains("638e5d85e978f805fbcbf36f")) {
+                                        if(!listIDs.offLimits(this.branch) || !labelIds.contains("638e5d85e978f805fbcbf36f")) {
                                             itemInformation.remove("idList");
                                             itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
                                         }

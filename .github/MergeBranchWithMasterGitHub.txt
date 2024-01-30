@@ -1,0 +1,16 @@
+- Switch to the master branch:
+git checkout master
+
+- Pull the latest changes from the remote master branch:
+git pull origin master
+
+- Merge your new branch into master:
+git merge new-branch-name
+
+- Replace new-branch-name with the actual name of your branch.
+- Resolve any merge conflicts if there are any:
+
+- If there are conflicting changes between your branch and the master branch, Git will prompt you to resolve them. You'll need to manually resolve the conflicts, add the changes, and then commit the merge.
+
+- Push the changes to the remote master branch:
+git push origin master
