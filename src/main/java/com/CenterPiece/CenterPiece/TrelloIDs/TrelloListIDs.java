@@ -181,11 +181,6 @@ public class TrelloListIDs {
                 this.branch = "CABINETS";
                 this.environment = "Production";
             }
-            case "62869b5c1351de037ffd2ccc" -> {
-                this.list = TrelloLists.RM_TO_BE_COMPLETED_RS;
-                this.branch = "CABINETS";
-                this.environment = "Production";
-            }
             case "62869b5c1351de037ffd2cca" -> {
                 this.list = TrelloLists.PRODUCTION_QUEUE;
                 this.branch = "CABINETS";
@@ -196,6 +191,11 @@ public class TrelloListIDs {
                 this.branch = "CABINETS";
                 this.environment = "Production";
             }
+            case "62869b5c1351de037ffd2ccc" -> {
+                this.list = TrelloLists.PICK_REMAINING_ITEMS;
+                this.branch = "CABINETS";
+                this.environment = "Production";
+            }
             case "62869b5c1351de037ffd2ccd" -> {
                 this.list = TrelloLists.TO_BE_PICKED;
                 this.branch = "CABINETS";
@@ -203,6 +203,11 @@ public class TrelloListIDs {
             }
             case "62869b5c1351de037ffd2cce" -> {
                 this.list = TrelloLists.PICKED_AND_STAGED;
+                this.branch = "CABINETS";
+                this.environment = "Production";
+            }
+            case "65b0395291d16fe6bf741791" -> {
+                this.list = TrelloLists.ORDER_STAGED;
                 this.branch = "CABINETS";
                 this.environment = "Production";
             }
@@ -502,6 +507,11 @@ public class TrelloListIDs {
                 this.branch = "CABINETS";
                 this.environment = "Test";
             }
+            case "65b9450e4fdebd1e7f321f5a" -> {
+                this.list = TrelloLists.PICK_REMAINING_ITEMS;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
             case "6596e945627ec8be307b1e1a" -> {
                 this.list = TrelloLists.TO_BE_PICKED;
                 this.branch = "CABINETS";
@@ -512,6 +522,12 @@ public class TrelloListIDs {
                 this.branch = "CABINETS";
                 this.environment = "Test";
             }
+            case "65b94976232cd298b4a0b7b9" -> {
+                this.list = TrelloLists.ORDER_STAGED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
+
             case "6596e945627ec8be307b1e1c" -> {
                 this.list = TrelloLists.TO_BE_LOADED_ROUTED;
                 this.branch = "CABINETS";
@@ -752,18 +768,30 @@ public class TrelloListIDs {
                     case RECEIVING -> {
                         return "62869b5c1351de037ffd2cc7";
                     }
+                    case TO_BE_RECEIVED_SHOP -> {
+                        return "65aee18278d14ff30addcf66";
+                    }
                     case ON_HOLD -> {
                         return "62869b5c1351de037ffd2cc8";
                     }
                     case PRODUCTION_QUEUE -> {
                         return "62869b5c1351de037ffd2cca";
                     }
-                    case IN_PRODUCTION -> {
-                        return "62869b5c1351de037ffd2ccb";
+
+                    case PICK_REMAINING_ITEMS -> {
+                        return "62869b5c1351de037ffd2ccc";
                     }
+
+
                     case TO_BE_PICKED -> {
                         return "62869b5c1351de037ffd2ccd";
                     }
+
+                    case ORDER_STAGED -> {
+                        return "65b0395291d16fe6bf741791";
+                    }
+
+
                     case PICKED_AND_STAGED -> {
                         return "62869b5c1351de037ffd2cce";
                     }
@@ -952,6 +980,9 @@ public class TrelloListIDs {
                     case RECEIVING -> {
                         return "6596e945627ec8be307b1e15";
                     }
+                    case TO_BE_RECEIVED_SHOP -> {
+                        return "65b94b57b2736af752942cc5";
+                    }
                     case ON_HOLD -> {
                         return "6596e945627ec8be307b1e16";
                     }
@@ -961,11 +992,17 @@ public class TrelloListIDs {
                     case IN_PRODUCTION -> {
                         return "6596e945627ec8be307b1e18";
                     }
+                    case PICK_REMAINING_ITEMS -> {
+                        return "65b9450e4fdebd1e7f321f5a";
+                    }
                     case TO_BE_PICKED -> {
                         return "6596e945627ec8be307b1e1a";
                     }
                     case PICKED_AND_STAGED -> {
                         return "6596e945627ec8be307b1e1b";
+                    }
+                    case ORDER_STAGED -> {
+                        return "65b94976232cd298b4a0b7b9";
                     }
                     case TO_BE_LOADED_ROUTED -> {
                         return "6596e945627ec8be307b1e1c";
@@ -1075,30 +1112,27 @@ public class TrelloListIDs {
 //                "62869b5c1351de037ffd2cd1", "60c26dfb44555566d32ae64e", "62869b5c1351de037ffd2cd4",
 //                "61b360e35ab37c0d9037c19f","6384cfab789e5f01197094ec"));
 
-        List<TrelloLists> liveTrelloBuckets = null;
+        List<TrelloLists> offLimitsTrelloBuckets = null;
 
         switch(branch){
             case "CABINETS" ->{
-                liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
-                        TrelloLists.SO_SID_CHECK, TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD, TrelloLists.PROCESSING,
-                        TrelloLists.ON_ORDER, TrelloLists.TO_BE_RECEIVED_SHOP, TrelloLists.RECEIVING, TrelloLists.SCHEDULING_POOL,
-                        TrelloLists.RM_TO_BE_COMPLETED_RS,TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION,
-                        TrelloLists.TO_BE_LOADED_ROUTED, TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.WILL_CALL,
-                        TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
+                offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.ON_ORDER, TrelloLists.RECEIVING,
+                        TrelloLists.TO_BE_RECEIVED_SHOP, TrelloLists.PRODUCTION_QUEUE,
+                        TrelloLists.PICK_REMAINING_ITEMS, TrelloLists.ORDER_STAGED, TrelloLists.TO_BE_LOADED_ROUTED,
+                        TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID, TrelloLists.RECEIVED));
             }
             default ->{
-                liveTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK, TrelloLists.SO_SID_CHECK,
+                offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK, TrelloLists.SO_SID_CHECK,
                             TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
                             TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.TO_BE_LOADED_ROUTED,
-                            TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.WILL_CALL,TrelloLists.ON_TRUCK_ON_DELIVERY,
-                            TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
+                            TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
             }
         }
 
 
         //var hold = liveTrelloBuckets.contains(this.list);
 
-        return liveTrelloBuckets.contains(this.list);
+        return offLimitsTrelloBuckets.contains(this.list);
     }
 }
 //TODO create transferred to nashville and COD TO BE PAID
