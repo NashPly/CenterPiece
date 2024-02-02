@@ -252,12 +252,18 @@ public class CenterPieceFunctions {
                                                 itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
                                         sameBoard ){
                                         //TODO above checks if current board is destination board
-                                        TrelloListIDs listIDs = new TrelloListIDs(itemInformation.getString("idList"));
+                                        TrelloListIDs listIDs = new TrelloListIDs(resultArray.getJSONObject(p).getString("idList"));
+                                        //TrelloListIDs listIDs = new TrelloListIDs(itemInformation.getString("idList"));
 
-                                        if(!listIDs.offLimits(this.branch) || !labelIds.contains("638e5d85e978f805fbcbf36f")) {
+                                        if(listIDs.offLimits(this.branch) || labelIds.contains("638e5d85e978f805fbcbf36f")) {
+                                            //If either of those two are true, leave it where it is
                                             itemInformation.remove("idList");
-                                            itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+                                            itemInformation.put("idList", listIDs.getListID());
                                         }
+//                                            if(!listIDs.offLimits(this.branch) || !labelIds.contains("638e5d85e978f805fbcbf36f")) {
+//                                                itemInformation.remove("idList");
+//                                                itemInformation.put("idList", resultArray.getJSONObject(p).getString("idList"));
+//                                            }
                                     }
                                 }
 
