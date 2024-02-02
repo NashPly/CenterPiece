@@ -190,75 +190,55 @@ public class CenterPieceFunctions {
 
             for(int i = 0; i < salesOrderDataArray.length(); i++) {
 
-                JSONArray resultArray = (checkTrelloForSO(String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID"))));
+                JSONArray trelloSearchResultArray = (checkTrelloForSO(String.valueOf(salesOrderDataArray.getJSONObject(i).getNumber("OrderID"))));
 
-                JSONObject firstResult = resultArray.getJSONObject(0);
+                JSONObject firstResult = trelloSearchResultArray.getJSONObject(0);
 
                 ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderDataArray.getJSONObject(i).getNumber("OrderID").toString(), salesOrderDataArray.getJSONObject(i), this.branch, this.environment);
 
                 if (!(firstResult == null) && firstResult.has("id")){
                     if (!firstResult.getString("id").equals("Empty")) {
 
-                        JSONObject itemInformation = salesDataItemHandler.itemParseProcess();
+                        JSONObject agilityItemInformation = salesDataItemHandler.itemParseProcess();
 
-                        boolean sameBoard = itemInformation.getString("boardID").equals(firstResult.getJSONObject("board").getString("id"));
+                        boolean sameBoard = agilityItemInformation.getString("boardID").equals(firstResult.getJSONObject("board").getString("id"));
 
                         //boolean foundBoard = !itemInformation.getString("boardID").equals("None Found");
 
-                        if(!itemInformation.getString("boardID").equals("None Found")){
+                        if(!agilityItemInformation.getString("boardID").equals("None Found")){
 
-                            System.out.println(itemInformation.getString("idList")+"\n");
+                            System.out.println(agilityItemInformation.getString("idList")+"\n");
 
-                            for(int p = 0; p < resultArray.length(); p++) {
+                            for(int p = 0; p < trelloSearchResultArray.length(); p++) {
 
                                 List<String> labelIds = new ArrayList<>();
-                                List<String> trelloLabelIds = new ArrayList<>(List.of(itemInformation.getString("idLabel").split(",")));
+                                List<String> trelloLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
 
 
-                                if(resultArray.getJSONObject(p).has("labels") && sameBoard) {
-                                    for(int x = 0; x < resultArray.getJSONObject(p).getJSONArray("labels").length(); x++){
+                                if(trelloSearchResultArray.getJSONObject(p).has("labels") && sameBoard) {
+                                    for(int x = 0; x < trelloSearchResultArray.getJSONObject(p).getJSONArray("labels").length(); x++){
 
-                                        labelIds.add(resultArray.getJSONObject(p).getJSONArray("labels")
+                                        labelIds.add(trelloSearchResultArray.getJSONObject(p).getJSONArray("labels")
                                                 .getJSONObject(x).getString("id"));
                                     }
 
-                                    itemInformation.remove("idLabel");
-                                    itemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds,
-                                            resultArray.getJSONObject(p).getString("id"))));
-
-
-
-//                                    itemInformation.remove("idLabel");
-//                                    itemInformation.put("idLabel", compareContrastLabels(labelIds, List.of(itemInformation.getString("idLabel").split(","))));
-
-
-                                    //CP Label list
-
-
-
-                                    //If not the same (cnc/kk/choice/legacy) delete and replace
-
-                                    //If Opposite (willcall/whse) delete and replace
-                                    //if what Trello has != what CP is calling for delete and replace
-
-                                    //Trello Labels -> resultArray.getJSONObject(p)
-
-                                    //CP Labels -> itemInformation.getString("idLabel")
-
+                                    agilityItemInformation.remove("idLabel");
+                                    agilityItemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds,
+                                            trelloSearchResultArray.getJSONObject(p).getString("id"))));
                                 }
 
-                                if(resultArray.getJSONObject(p).has("idList")){
-                                        if(!(itemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
-                                                itemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
+                                if(trelloSearchResultArray.getJSONObject(p).has("idList")){
+                                        if(!(agilityItemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4") ||
+                                                agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f")) &&
                                         sameBoard ){
                                         //TODO above checks if current board is destination board
-                                        TrelloListIDs listIDs = new TrelloListIDs(resultArray.getJSONObject(p).getString("idList"));
+                                        TrelloListIDs listIDs = new TrelloListIDs(trelloSearchResultArray.getJSONObject(p).getString("idList"));
                                         //TrelloListIDs listIDs = new TrelloListIDs(itemInformation.getString("idList"));
 
                                         if(listIDs.offLimits(this.branch) || labelIds.contains("638e5d85e978f805fbcbf36f")) {
                                             //If either of those two are true, leave it where it is
-                                            itemInformation.remove("idList");
-                                            itemInformation.put("idList", listIDs.getListID());
+                                            agilityItemInformation.remove("idList");
+                                            agilityItemInformation.put("idList", listIDs.getListID());
                                         }
 //                                            if(!listIDs.offLimits(this.branch) || !labelIds.contains("638e5d85e978f805fbcbf36f")) {
 //                                                itemInformation.remove("idList");
@@ -267,15 +247,15 @@ public class CenterPieceFunctions {
                                     }
                                 }
 
-                                boolean sameList = itemInformation.getString("idList").equals(firstResult.getString("idList"));
+                                boolean sameList = agilityItemInformation.getString("idList").equals(firstResult.getString("idList"));
 
-                                String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), itemInformation, sameList);
+                                String parameters = agilityDataForTrelloGather(salesOrderDataArray.getJSONObject(i), agilityItemInformation, sameList);
 
                                 System.out.println("\n--- Updated a Trello Card ---");
-                                TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + resultArray.getJSONObject(p).getString("id")), parameters);
+                                TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + trelloSearchResultArray.getJSONObject(p).getString("id")), parameters);
                                 var response = trelloCalls.putTrelloAPICall(new JSONObject());
 
-                                checkTrelloCardForEmptyCustomFields(response.getString("id"), itemInformation, salesOrderDataArray.getJSONObject(i));
+                                checkTrelloCardForEmptyCustomFields(response.getString("id"), agilityItemInformation, salesOrderDataArray.getJSONObject(i));
 
                                 System.out.println("\nUpdates Applied");
                             }
