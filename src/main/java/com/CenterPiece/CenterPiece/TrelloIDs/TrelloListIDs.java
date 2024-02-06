@@ -663,11 +663,11 @@ public class TrelloListIDs {
             }
 
 
-            default -> {
-                this.list = TrelloLists.INBOX;
-                this.branch = "TOPSHOP";
-                this.environment = "Production";
-            }
+//            default -> {
+//                this.list = TrelloLists.INBOX;
+//                this.branch = "TOPSHOP";
+//                this.environment = "Production";
+//            }
         }
     }
 
@@ -743,9 +743,6 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "60c26dfb44555566d32ae643";
                     }
-                    case INBOX -> {
-                        return "61f2d5c461ac134ef274ae5f";
-                    }
                     default -> {
                         return "61f2d5c461ac134ef274ae5f";
                     }
@@ -816,9 +813,6 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "62869b5c1351de037ffd2cbb";
                     }
-                    case INBOX -> {
-                        return "62869b5c1351de037ffd2cbc";
-                    }
                     default -> {
                         return "62869b5c1351de037ffd2cbc";
                     }
@@ -876,9 +870,6 @@ public class TrelloListIDs {
                     }
                     case BRANCH_ID -> {
                         return "636bc3a95da9340015e47b84";
-                    }
-                    case INBOX -> {
-                        return "636bc3a95da9340015e47b8b";
                     }
                     default -> {
                         return "636bc3a95da9340015e47b8b";
@@ -956,9 +947,6 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "6596e9210326360265ae3347"; // Set BRANCH_ID to the value of "idBoard"
                     }
-                    case INBOX -> {
-                        return "6596e9210326360265ae3370";
-                    }
                     default -> {
                         return "6596e9210326360265ae3370";
                     }
@@ -1025,9 +1013,6 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "6596e945627ec8be307b1e0f"; // Set BRANCH_ID to the value of "idBoard"
                     }
-                    case INBOX -> {
-                        return "6596e945627ec8be307b1e24";
-                    }
                     default -> {
                         return "6596e945627ec8be307b1e24";
                     }
@@ -1085,20 +1070,20 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "6596ece3760cfe2637c6f944"; // Set BRANCH_ID to the value of "idBoard"
                     }
-                    case INBOX -> {
-                        return "6596ece3760cfe2637c6f946";
-                    }
                     default -> {
                         return "6596ece3760cfe2637c6f946";
                     }
                 }
-            }else{
-                return "61f2d5c461ac134ef274ae5f";
             }
+//            else{
+//                return "61f2d5c461ac134ef274ae5f";
+//            }
 
-        }else{
-            return "61f2d5c461ac134ef274ae5f";
         }
+//        else{
+//            return "61f2d5c461ac134ef274ae5f";
+//        }
+        return null;
     }
 
     public void setBranch(String branch) {

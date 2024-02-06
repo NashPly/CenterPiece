@@ -266,7 +266,7 @@ public class ItemCodeHandler {
 
     public JSONObject getCardDestinationFromItemCodeResult(){
 
-        String boardID;
+        String boardID = null;
         String idList = null;
         String idLabel = null;
         String colorCode = null;
@@ -484,8 +484,44 @@ public class ItemCodeHandler {
             }
             default -> {
                 System.out.println("No item shared. Placing it in Top Shop Inbox List");
-                boardID = "60c26dfb44555566d32ae643";
-                idList = "61f2d5c461ac134ef274ae5f";
+
+                TrelloBoardIDs trelloBoardIDs = null;
+                String branch = null;
+
+                switch(this.branch){
+                    case "CABINETS" -> {
+                        branch = "CABINETS";
+                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.TOP_SHOP, branch, this.environment);
+                        idList = orderStatusLogic("Cabinets");
+                    }
+                    case "FABRICATION" -> {
+                        branch = "TOPSHOP";
+                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, branch, this.environment);
+                        idList = orderStatusLogic("Tops");
+                    }
+                    case "COMPONENTS" ->{
+                        branch = "COMPONENTS";
+                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.COMPONENTS, branch, this.environment);
+                    }
+
+                }
+
+                assert trelloBoardIDs != null;
+                boardID = trelloBoardIDs.getBoardID();
+
+                linkedType = this.linkedTranType;
+                linkedPoID = this.linkedTranPoID;
+                linkedRmID = this.linkedTranRmID;
+
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, branch, this.environment);
+                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, branch, this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, branch, this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, branch, this.environment);
+
+                colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                rmCustomField = trelloRemanCustomFieldID.getFieldID();
+                agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
+                customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
             }
         }
 
