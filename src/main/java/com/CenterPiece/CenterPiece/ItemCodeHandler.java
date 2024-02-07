@@ -583,13 +583,11 @@ public class ItemCodeHandler {
 //                        if (itemDetails.has("LinkedTranType")) {
                         if (!this.linkedTranPoID.isEmpty()) {
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
                         } else {
-
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
-
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
                         }
 //                    }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
 //                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
@@ -606,22 +604,22 @@ public class ItemCodeHandler {
                     if(hasBackOrderedItems){
                         if (!this.linkedTranPoID.isEmpty()) {
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
                         } else {
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+                            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
 
                         }
                     }
                     if(saleType.equals("WHSE")) {
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS", this.environment).getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.SENT_TO_PICK, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.SENT_TO_PICK, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.SENT_TO_PICK, "COMPONENTS", this.environment).getListID(), board);
                     } else if (saleType.equals("WILLCALL")){
 
                         System.out.println(" - " + board + " Picked - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PICKED_AND_STAGED, "COMPONENTS", this.environment).getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.SENT_TO_PICK, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.SENT_TO_PICK, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.SENT_TO_PICK, "COMPONENTS", this.environment).getListID(), board);
                     }
                 }
                 case "Staged" -> {
@@ -641,12 +639,12 @@ public class ItemCodeHandler {
 
         }else{
             System.out.println(" - " + board + " Processing || Batching - ");
-            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+            return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
         }
         System.out.println(" - " + board + " Processing || Batching - ");
 
 
-        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.BATCHING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
+        return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", this.environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", this.environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", this.environment).getListID(), board);
     }
 
     public boolean checkIfTrue(JSONArray itemList, String key){
