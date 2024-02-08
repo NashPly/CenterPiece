@@ -960,7 +960,7 @@ public class TrelloListIDs {
                         return "6596e9210326360265ae3365";
                     }
                     case INVOICED -> {
-                        return "6596e9210326360265ae3371";
+                        return "6596e9210326360265ae3367";
                     }
                     case RECEIVED -> {
                         return "6596e9210326360265ae3368";
