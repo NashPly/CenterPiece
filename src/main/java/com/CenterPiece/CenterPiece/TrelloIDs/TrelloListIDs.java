@@ -147,6 +147,10 @@ public class TrelloListIDs {
                 this.list = TrelloLists.BRANCH_ID;
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
+            }case "65ca39a840f98488461880e9" -> {
+                this.list = TrelloLists.CANCELED;
+                this.branch = "TOPSHOP";
+                this.environment = "Production";
             }
             case "61f2d5c461ac134ef274ae5f" -> {
                 this.list = TrelloLists.INBOX;
@@ -255,6 +259,10 @@ public class TrelloListIDs {
                 this.list = TrelloLists.BRANCH_ID;
                 this.branch = "CABINETS";
                 this.environment = "Production";
+            }case "65ca3979ae84629f987e86db" -> {
+                this.list = TrelloLists.CANCELED;
+                this.branch = "CABINETS";
+                this.environment = "Production";
             }
             case "62869b5c1351de037ffd2cbc" -> {
                 this.list = TrelloLists.INBOX;
@@ -349,6 +357,10 @@ public class TrelloListIDs {
             }
             case "636bc3a95da9340015e47b84" -> {
                 this.list = TrelloLists.BRANCH_ID;
+                this.branch = "COMPONENTS";
+                this.environment = "Production";
+            }case "65ca39c7dea33c7536e94891" -> {
+                this.list = TrelloLists.CANCELED;
                 this.branch = "COMPONENTS";
                 this.environment = "Production";
             }
@@ -469,6 +481,10 @@ public class TrelloListIDs {
                 this.list = TrelloLists.BRANCH_ID;
                 this.branch = "TOPSHOP";
                 this.environment = "Test";
+            }case "65ca39d9e3e704fe2bfeb3f4" -> {
+                this.list = TrelloLists.CANCELED;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
             }
             case "6596e9210326360265ae3370" -> {
                 this.list = TrelloLists.INBOX;
@@ -573,6 +589,11 @@ public class TrelloListIDs {
                 this.branch = "CABINETS";
                 this.environment = "Test";
             }
+            case "65ca39e475842efe3de328cb" -> {
+                this.list = TrelloLists.CANCELED;
+                this.branch = "CABINETS";
+                this.environment = "Test";
+            }
             case "6596e945627ec8be307b1e24" -> {
                 this.list = TrelloLists.INBOX;
                 this.branch = "CABINETS";
@@ -663,6 +684,11 @@ public class TrelloListIDs {
             }
             case "6596ece3760cfe2637c6f944" -> { // Assuming this is BRANCH_ID as mentioned in the comment
                 this.list = TrelloLists.BRANCH_ID;
+                this.branch = "COMPONENTS";
+                this.environment = "Test";
+            }
+            case "65ca39f08b3e03a2ce77ebe5" -> {
+                this.list = TrelloLists.CANCELED;
                 this.branch = "COMPONENTS";
                 this.environment = "Test";
             }
@@ -759,6 +785,9 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "60c26dfb44555566d32ae643";
                     }
+                    case CANCELED -> {
+                        return "65ca39a840f98488461880e9";
+                    }
                     default -> {
                         return "61f2d5c461ac134ef274ae5f";
                     }
@@ -828,6 +857,9 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "62869b5c1351de037ffd2cbb";
                     }
+                    case CANCELED -> {
+                        return "65ca3979ae84629f987e86db";
+                    }
                     default -> {
                         return "62869b5c1351de037ffd2cbc";
                     }
@@ -885,6 +917,9 @@ public class TrelloListIDs {
                     }
                     case BRANCH_ID -> {
                         return "636bc3a95da9340015e47b84";
+                    }
+                    case CANCELED -> {
+                        return "65ca39c7dea33c7536e94891";
                     }
                     default -> {
                         return "636bc3a95da9340015e47b8b";
@@ -968,6 +1003,9 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "6596e9210326360265ae3347"; // Set BRANCH_ID to the value of "idBoard"
                     }
+                    case CANCELED -> {
+                        return "65ca39d9e3e704fe2bfeb3f4";
+                    }
                     default -> {
                         return "6596e9210326360265ae3370";
                     }
@@ -1034,6 +1072,9 @@ public class TrelloListIDs {
                     case BRANCH_ID -> {
                         return "6596e945627ec8be307b1e0f"; // Set BRANCH_ID to the value of "idBoard"
                     }
+                    case CANCELED -> {
+                        return "65ca39e475842efe3de328cb";
+                    }
                     default -> {
                         return "6596e945627ec8be307b1e24";
                     }
@@ -1090,6 +1131,9 @@ public class TrelloListIDs {
                     }
                     case BRANCH_ID -> {
                         return "6596ece3760cfe2637c6f944"; // Set BRANCH_ID to the value of "idBoard"
+                    }
+                    case CANCELED -> {
+                        return "65ca39f08b3e03a2ce77ebe5";
                     }
                     default -> {
                         return "6596ece3760cfe2637c6f946";

@@ -641,7 +641,11 @@ public class ItemCodeHandler {
             System.out.println(" - " + board + " Invoiced - ");
             return whichBoard( new TrelloListIDs(TrelloLists.INVOICED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.INVOICED, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.INVOICED, "COMPONENTS", environment).getListID(), board);
 
-        }else{
+        }else if(orderStatus.equals("Canceled")) {
+        System.out.println(" - " + board + " Canceled - ");
+        return whichBoard( new TrelloListIDs(TrelloLists.CANCELED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.CANCELED, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.CANCELED, "COMPONENTS", environment).getListID(), board);
+
+    }else{
             System.out.println(" - " + board + " Processing || Batching - ");
             return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
         }
