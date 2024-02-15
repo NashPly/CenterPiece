@@ -1,97 +1,43 @@
 package com.CenterPiece.CenterPiece.APICalls;
 
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 public class AgilityCalls {
 
     private final HttpClient client;
-    private final String contextId;
-    private JSONObject requestBody = new JSONObject();
-    private String stringRequestBody = "";
-    private final String urlEndpoint;
-    private String branch;
+    public AgilityCalls(HttpClient cl){
+        this.client = cl;
+    }
+    public JSONObject postAgilityAPICall(String urlEndpoint, JSONObject innerRequestBody, String contextId, String branch) {
+        String url = buildUrl(urlEndpoint);
+        System.out.println("URL -- " + url);
+        System.out.println("requestBody -- " + innerRequestBody);
 
-
-    public AgilityCalls(HttpClient cl, String cId, String ue, JSONObject bod, String branch){
-        client = cl;
-        contextId = cId;
-        requestBody = bod;
-        urlEndpoint = ue;
-        this.branch = branch;
+        HttpRequest request = buildRequest(url, innerRequestBody, contextId, branch);
+        APICaller apiCaller = new APICaller(this.client, request);
+        return new JSONObject(apiCaller.makeAPICall().body());
     }
 
-    public AgilityCalls(HttpClient cl, String cId, String ue, String bod, String branch){
-        client = cl;
-        contextId = cId;
-        stringRequestBody = bod;
-        urlEndpoint = ue;
-        this.branch = branch;
+    private String buildUrl(String urlEndpoint) {
+        return "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/" + urlEndpoint;
     }
 
-    public JSONObject postAgilityAPICall() {
-
-        System.out.println("- POST Call to Agility -");
-        String url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
-
-        System.out.println("URL -- "+ url + urlEndpoint);
-        System.out.println("requestBody -- "+ this.requestBody);
-
-        var request = HttpRequest.newBuilder(
-                URI.create(url + urlEndpoint))
+    private HttpRequest buildRequest(String url, JSONObject innerRequestBody, String contextId, String branch) {
+        return HttpRequest.newBuilder(URI.create(url))
                 .header("accept", "*/*")
-                .header("Content-Type","application/json")
-                .header("ContextId", this.contextId)
-                .header("Branch", this.branch)
+                .header("Content-Type", "application/json")
+                .header("ContextId", contextId)
+                .header("Branch", branch)
                 .header("Accept", "*/*")
-                .POST(buildRequest())
+                .POST(buildRequestBody(innerRequestBody))
                 .build();
-
-        APICaller apiCaller = new APICaller(client, request);
-
-        return new JSONObject(apiCaller.makeAPICall().body());
     }
-
-
-
-    public HttpRequest.BodyPublisher buildRequest(){
+    private static HttpRequest.BodyPublisher buildRequestBody(JSONObject innerRequestBody){
         JSONObject requestBody = new JSONObject();
-        requestBody.put("request", this.requestBody);
-        System.out.println("\n\n--- HTTP Full Request Body ---");
-        System.out.println(requestBody + "\n");
-        return HttpRequest.BodyPublishers.ofString(requestBody.toString());
-    }
-
-    public JSONObject postAgilityAPICallStringBody() {
-
-        System.out.println("- POST Call to Agility -");
-        String url = "https://api-1086-1.dmsi.com/nashvilleplywoodprodAgilityPublic/rest/";
-
-        System.out.println("URL -- "+ url + urlEndpoint);
-        System.out.println("requestBody -- "+ this.requestBody);
-
-        var request = HttpRequest.newBuilder(
-                URI.create(url + urlEndpoint))
-                .header("accept", "application/json")
-                .header("ContextId", this.contextId)
-                .header("Branch", this.branch)
-                .header("Accept", "*/*")
-                .POST(buildRequestStringBody())
-                .build();
-
-        APICaller apiCaller = new APICaller(client, request);
-
-        return new JSONObject(apiCaller.makeAPICall().body());
-    }
-
-    public HttpRequest.BodyPublisher buildRequestStringBody(){
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("request", this.stringRequestBody);
+        requestBody.put("request", innerRequestBody);
         System.out.println("\n\n--- HTTP Full Request Body ---");
         System.out.println(requestBody + "\n");
         return HttpRequest.BodyPublishers.ofString(requestBody.toString());

@@ -81,39 +81,41 @@ class ItemCodeHandlerTest {
     public static String getListId(String filePath, String branch, String board, String environment, String linkedPoID){
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(HttpClient.newBuilder().build(),
                 "Fake ContextId", branch, environment);
-        return itemCodeHandler.orderStatusLogic(board, extractSOArrayFromJson(convertJsonFileToJsonObject(filePath)).getJSONObject(0), environment, linkedPoID);
+
+        JSONConverter jsonConverter = new JSONConverter(filePath);
+        return itemCodeHandler.orderStatusLogic(board, jsonConverter.extractSOArrayFromJson(jsonConverter.convertJsonFileToJsonObject()).getJSONObject(0), environment, linkedPoID);
     }
 
-    public static JSONObject convertJsonFileToJsonObject(String filePath) {
-        // Step 1: Provide the path to the JSON file
-        //String filePath = "src/test/java/com/CenterPiece/CenterPiece/APICallResults/OrderLogic-Cabinets-WHSE-Staged.json";
-
-        // Step 2: Load the JSON file and read its contents
-        JSONObject jsonContent = null;
-        try {
-            jsonContent = new JSONObject(readFile(filePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return jsonContent;
-    }
-
-    public static JSONArray extractSOArrayFromJson(JSONObject response){
-
-        JSONObject json = response.getJSONObject("response")
-                .getJSONObject("OrdersResponse")
-                .getJSONObject("dsOrdersResponse");
-
-        if(json.has("dtOrderResponse")){
-            return json.getJSONArray("dtOrderResponse");
-        }
-
-        return new JSONArray();
-    }
-
-    // Utility method to read file contents
-    private static String readFile(String filePath) throws IOException {
-        return new String(java.nio.file.Files.readAllBytes(new File(filePath).toPath()));
-    }
+//    public static JSONObject convertJsonFileToJsonObject(String filePath) {
+//        // Step 1: Provide the path to the JSON file
+//        //String filePath = "src/test/java/com/CenterPiece/CenterPiece/APICallResults/OrderLogic-Cabinets-WHSE-Staged.json";
+//
+//        // Step 2: Load the JSON file and read its contents
+//        JSONObject jsonContent = null;
+//        try {
+//            jsonContent = new JSONObject(readFile(filePath));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//        return jsonContent;
+//    }
+//
+//    public static JSONArray extractSOArrayFromJson(JSONObject response){
+//
+//        JSONObject json = response.getJSONObject("response")
+//                .getJSONObject("OrdersResponse")
+//                .getJSONObject("dsOrdersResponse");
+//
+//        if(json.has("dtOrderResponse")){
+//            return json.getJSONArray("dtOrderResponse");
+//        }
+//
+//        return new JSONArray();
+//    }
+//
+//    // Utility method to read file contents
+//    private static String readFile(String filePath) throws IOException {
+//        return new String(java.nio.file.Files.readAllBytes(new File(filePath).toPath()));
+//    }
 }
