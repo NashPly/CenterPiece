@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.http.HttpClient;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,55 +139,32 @@ public class ItemCodeHandler {
         }
         return 0;
     }
-
-    public JSONArray agilitySalesOrderListLookup() {
-
-        JSONObject innerRequestBody = new JSONObject();
-
-        TimeHandler timeHandler = new TimeHandler();
-
-        innerRequestBody.put("IncludeOpenOrders", true);
-        innerRequestBody.put("IncludeInvoicedOrders", true);
-        innerRequestBody.put("IncludeCanceledOrders", false);
-        innerRequestBody.put("OrderDateRangeStart",
-                timeHandler.getYesterdaysYear() + "-" +
-                timeHandler.getYesterdaysMonth() + "-" +
-                timeHandler.getYesterdaysDayOfMonth() + "T00:00:01-6:00");
-//            //Year
-//                "2023-"+
-//            //Month
-//                 "10-" +
-//            //Day
-//                 "21T00:00:01-6:00");
-
-        innerRequestBody.put("OrderDateRangeEnd",
-                timeHandler.getCurrentYear() + "-" +
-                timeHandler.getCurrentMonth() + "-" +
-                timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
-
-//        //Year
-//            "2023-"+
-//        //Month
-//            "11-" +
-//        //Day
-//            "01T23:59:59-6:00");
-
-        System.out.println("\n-- AgilitySalesOrderListLookup --");
-        AgilityCalls agilityAPICall = new AgilityCalls(this.client);
-
-        var response = agilityAPICall.postAgilityAPICall("Orders/SalesOrderList", innerRequestBody, this.contextId, this.branch);
-
-        JSONObject json = response.getJSONObject("response")
-                .getJSONObject("OrdersResponse")
-                .getJSONObject("dsOrdersResponse");
-
-        if(json.has("dtOrderResponse")){
-            return json.getJSONArray("dtOrderResponse");
-        }
-
-        return new JSONArray();
-    }
-
+    //    private static void getInnerRequestBody(TimeHandler timeHandler, JSONObject innerRequestBody) {
+//        innerRequestBody.put("IncludeOpenOrders", true);
+//        innerRequestBody.put("IncludeInvoicedOrders", true);
+//        innerRequestBody.put("IncludeCanceledOrders", false);
+//        innerRequestBody.put("OrderDateRangeStart",
+//                timeHandler.getYesterdaysYear() + "-" +
+//                timeHandler.getYesterdaysMonth() + "-" +
+//                timeHandler.getYesterdaysDayOfMonth() + "T00:00:01-6:00");
+////            //Year
+////                "2023-"+
+////            //Month
+////                 "10-" +
+////            //Day
+////                 "21T00:00:01-6:00");
+//
+//        innerRequestBody.put("OrderDateRangeEnd",
+//                timeHandler.getCurrentYear() + "-" +
+//                timeHandler.getCurrentMonth() + "-" +
+//                timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+////        //Year
+////            "2023-"+
+////        //Month
+////            "11-" +
+////        //Day
+////            "01T23:59:59-6:00");
+//    }
 //    public JSONObject agilityChangedSalesOrderListLookup() {
 //
 //        JSONObject innerRequestBody = new JSONObject();
@@ -228,11 +206,42 @@ public class ItemCodeHandler {
 //                .getJSONObject("OrdersResponse")
 //                .getJSONObject("dsOrdersResponse");
 //    }
+    public JSONArray agilitySalesOrderListLookup() {
+        JSONObject innerRequestBody = new JSONObject();
+        TimeHandler timeHandler = new TimeHandler();
+        getUpdateInnerRequestBody(timeHandler, innerRequestBody,
+                timeHandler.getYesterdaysYear() + "-" +
+                        timeHandler.getYesterdaysMonth() + "-" +
+                        timeHandler.getYesterdaysDayOfMonth() + "T00:00:01-6:00",
+                timeHandler.getCurrentYear() + "-" +
+                        timeHandler.getCurrentMonth() + "-" +
+                        timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00",
+                false);
 
+        System.out.println("\n-- AgilitySalesOrderListLookup --");
+        AgilityCalls agilityAPICall = new AgilityCalls(this.client);
+
+        var response = agilityAPICall.postAgilityAPICall("Orders/SalesOrderList", innerRequestBody, this.contextId, this.branch);
+
+        JSONObject json = response.getJSONObject("response")
+                .getJSONObject("OrdersResponse")
+                .getJSONObject("dsOrdersResponse");
+
+        if(json.has("dtOrderResponse")){
+            return json.getJSONArray("dtOrderResponse");
+        }
+
+        return new JSONArray();
+    }
     public JSONObject agilityChangedSalesOrderListLookup(AgilityCalls agilityCalls) {
         JSONObject innerRequestBody = new JSONObject();
 
-        getUpdateSearchBody(new TimeHandler(), innerRequestBody);
+        TimeHandler timeHandler = new TimeHandler();
+
+        getUpdateInnerRequestBody(new TimeHandler(), innerRequestBody, "2020-01-01T01:00:00-6:00",
+                timeHandler.getCurrentYear() + "-" +
+                        timeHandler.getCurrentMonth() + "-" +
+                        timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00", true);
 
         System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
         var response = agilityCalls.postAgilityAPICall("Orders/SalesOrderList", innerRequestBody, this.contextId, this.branch);
@@ -241,41 +250,45 @@ public class ItemCodeHandler {
                 .getJSONObject("dsOrdersResponse");
     }
 
-    public void getUpdateSearchBody(TimeHandler timeHandler, JSONObject innerRequestBody){
+    public void getUpdateInnerRequestBody(TimeHandler timeHandler, JSONObject innerRequestBody, String orderDateRangeStart, String orderDateRangeEnd, Boolean fetchUpdates) {
         innerRequestBody.put("IncludeOpenOrders", true);
         innerRequestBody.put("IncludeInvoicedOrders", true);
         innerRequestBody.put("IncludeCanceledOrders", true);
-        innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-        innerRequestBody.put("OrderDateRangeEnd",
-                timeHandler.getCurrentYear() + "-" +
-                        timeHandler.getCurrentMonth() + "-" +
-                        timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+        innerRequestBody.put("OrderDateRangeStart", orderDateRangeStart);
+        innerRequestBody.put("OrderDateRangeEnd", orderDateRangeEnd);
 
+        if(fetchUpdates) addFetchUpdateJSON(timeHandler,innerRequestBody);
+
+    }
+
+    public void addFetchUpdateJSON(TimeHandler timeHandler, JSONObject innerRequestBody){
         innerRequestBody.put("FetchOnlyChangedSince",
                 timeHandler.getSearchYear() + "-" +
                         timeHandler.getSearchMonth() + "-" +
                         timeHandler.getSearchDayOfMonth() +
                         "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
     }
+//    public void getUpdateInnerRequestBody(TimeHandler timeHandler, JSONObject innerRequestBody){
+//        innerRequestBody.put("IncludeOpenOrders", true);
+//        innerRequestBody.put("IncludeInvoicedOrders", true);
+//        innerRequestBody.put("IncludeCanceledOrders", true);
+//        innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
+//        innerRequestBody.put("OrderDateRangeEnd",
+//                timeHandler.getCurrentYear() + "-" +
+//                        timeHandler.getCurrentMonth() + "-" +
+//                        timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
+//
+//        innerRequestBody.put("FetchOnlyChangedSince",
+//                timeHandler.getSearchYear() + "-" +
+//                        timeHandler.getSearchMonth() + "-" +
+//                        timeHandler.getSearchDayOfMonth() +
+//                        "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
+//    }
 
 
     public JSONObject agilityItemSearch() {
 
-        JSONObject dsItemsListRequest = new JSONObject();
-        JSONObject innerDtItemsListRequest = new JSONObject();
-        JSONArray dtItemsListRequestArray = new JSONArray();
-        JSONObject dtItemsListRequestBody = new JSONObject();
-
-        dtItemsListRequestBody.put("SearchBy", "Item Code");
-        dtItemsListRequestBody.put("SearchValue", this.itemCode);
-        dtItemsListRequestBody.put("IncludeNonStock", true);
-        dtItemsListRequestBody.put("IncludePriceData", true);
-        dtItemsListRequestBody.put("IncludeQuantityData", true);
-        dtItemsListRequestBody.put("IncludeNonSaleable", true);
-
-        dtItemsListRequestArray.put(dtItemsListRequestBody);
-        innerDtItemsListRequest.put("dtItemsListRequest", dtItemsListRequestArray);
-        dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
+        JSONObject dsItemsListRequest = getDsItemsListRequest();
 
         System.out.println("- AgilityItemSearch Response -");
         AgilityCalls agilityPostCall = new AgilityCalls(this.client);
@@ -292,6 +305,25 @@ public class ItemCodeHandler {
         } else {
             return new JSONObject().put("Empty", true);
         }
+    }
+
+    private JSONObject getDsItemsListRequest() {
+        JSONObject dsItemsListRequest = new JSONObject();
+        JSONObject innerDtItemsListRequest = new JSONObject();
+        JSONArray dtItemsListRequestArray = new JSONArray();
+        JSONObject dtItemsListRequestBody = new JSONObject();
+
+        dtItemsListRequestBody.put("SearchBy", "Item Code");
+        dtItemsListRequestBody.put("SearchValue", this.itemCode);
+        dtItemsListRequestBody.put("IncludeNonStock", true);
+        dtItemsListRequestBody.put("IncludePriceData", true);
+        dtItemsListRequestBody.put("IncludeQuantityData", true);
+        dtItemsListRequestBody.put("IncludeNonSaleable", true);
+
+        dtItemsListRequestArray.put(dtItemsListRequestBody);
+        innerDtItemsListRequest.put("dtItemsListRequest", dtItemsListRequestArray);
+        dsItemsListRequest.put("dsItemsListRequest", innerDtItemsListRequest);
+        return dsItemsListRequest;
     }
 
     public JSONObject getCardDestinationFromItemCodeResult(){
@@ -351,16 +383,6 @@ public class ItemCodeHandler {
                 TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.KK_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
                 idLabel = trelloLabelIds.getAllRelevantLabelIds();
 
-
-//                if(this.environment.equals("Production")) {
-//                    idLabel = "62869b5c1351de037ffd2d26";
-//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
-//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
-//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
-//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
-//                }
-
-
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
                 //
@@ -387,14 +409,6 @@ public class ItemCodeHandler {
                 TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CNC_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
                 idLabel = trelloLabelIds.getAllRelevantLabelIds();
 
-//                if(this.environment.equals("Production")) {
-//                    idLabel = "62869e47dcae4f52e15c90e1";
-//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
-//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
-//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
-//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
-//                }
-
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
                 linkedRmID = this.linkedTranRmID;
@@ -419,14 +433,6 @@ public class ItemCodeHandler {
                 TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.LEGACY_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
                 idLabel = trelloLabelIds.getAllRelevantLabelIds();
 
-                //                if(this.environment.equals("Production")){
-//                    idLabel = "62869db3e04b83468347996b";
-//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
-//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
-//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
-//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
-//                }
-
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
                 linkedRmID = this.linkedTranRmID;
@@ -442,25 +448,12 @@ public class ItemCodeHandler {
             }
             case "3450" -> {
                 //choice cabinets
-
-                //idList = "62869b5c1351de037ffd2cc4";
-
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
-
-//                boardID = "62869b5c1351de037ffd2cbb";
                 idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
 
                 TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CHOICE_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
                 idLabel = trelloLabelIds.getAllRelevantLabelIds();
-
-//                if(this.environment.equals("Production")){
-//                    idLabel = "62869b5c1351de037ffd2d32";
-//                    if(this.salesOrder.getString("SaleType").equals("WHSE")){
-//                        idLabel = idLabel + ",65a9526ced9de1398df49ae3";
-//                    }else if(this.salesOrder.getString("SaleType").equals("WILLCALL"))
-//                        idLabel = idLabel + ",65a952409cdbee377a23b6f7";
-//                }
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -585,10 +578,7 @@ public class ItemCodeHandler {
         Boolean hasStagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalStagedQuantity");;
         Boolean hasInvoicedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalInvoicedQuantity");;
 
-
-
-
-        if(!(salesOrder == null) && salesOrder.has("dtOrderDetailResponse")) {
+        if(salesOrder.has("dtOrderDetailResponse")) {
             //TODO insert for loop to receive total data
 
              itemDetails = salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
@@ -608,13 +598,8 @@ public class ItemCodeHandler {
                     //Fresh order
 
                     //In Production
-//                    if(itemDetails.getDouble("TotalBackorderedQuantity") >= 1.0 &&
-//                            itemDetails.getDouble("TotalUnstagedQuantity") == 0.0  &&
-//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
-//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
-                    if(hasBackOrderedItems){
 
-//                        if (itemDetails.has("LinkedTranType")) {
+                    if(hasBackOrderedItems){
                         if (!linkedTranPoID.isEmpty()) {
                             System.out.println(" - " + board + " Processing || Batching - ");
                             return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
@@ -623,10 +608,6 @@ public class ItemCodeHandler {
                             System.out.println(" - " + board + " Processing || Batching - ");
                             return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
                         }
-//                    }else if(itemDetails.getDouble("TotalBackorderedQuantity") == 0.0 &&
-//                            itemDetails.getDouble("TotalUnstagedQuantity") >= 1.0  &&
-//                            itemDetails.getDouble("TotalStagedQuantity")== 0.0 &&
-//                            itemDetails.getDouble("TotalInvoicedQuantity") == 0.0){
                     }else if(hasUnstagedItems){
 
                         //To Be Picked
@@ -680,7 +661,6 @@ public class ItemCodeHandler {
             return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
         }
         System.out.println(" - " + board + " Processing || Batching - ");
-
 
         return whichBoard( new TrelloListIDs(TrelloLists.PROCESSING, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
     }
