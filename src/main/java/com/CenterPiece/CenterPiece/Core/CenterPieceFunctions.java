@@ -19,17 +19,20 @@ import java.util.*;
 public class CenterPieceFunctions {
 
     private final HttpClient client;
-    private final String contextID;
+    private String contextID;
     private final String environment;
     private List<SalesOrder> salesOrderList;
     private JSONObject itemInformation;
-    private final String branch;
+    private String branch;
+    private AgilityCalls agilityCalls;
 
     public CenterPieceFunctions(HttpClient client, String contextID, String branch, String environment) {
         this.client = client;
         this.contextID = contextID;
         this.branch = branch;
         this.environment = environment;
+
+        this.agilityCalls = new AgilityCalls(this.client);
     }
 
     public List<String> salesOrderParser(JSONArray jsonArray){
@@ -178,8 +181,7 @@ public class CenterPieceFunctions {
     public void updateTrelloCards() {
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(this.client, this.contextID, this.branch, this.environment);
 
-
-        JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup(new AgilityCalls(client));
+        JSONObject fetchedSalesOrderData = itemCodeHandler.agilityChangedSalesOrderListLookup(this.agilityCalls);
 
         if (fetchedSalesOrderData != null && fetchedSalesOrderData.has("dtOrderResponse")) {
             JSONArray salesOrderDataArray = fetchedSalesOrderData.getJSONArray("dtOrderResponse");
@@ -218,7 +220,6 @@ public class CenterPieceFunctions {
 
             updateCardList(agilityItemInformation, (JSONObject) trelloCard, isSameBoard);
         }
-        // Your existing logic for updating Trello card
         System.out.println("\n--- Updated a Trello Card ---");
         TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + firstResult.getString("id")),
                 agilityDataForTrelloGather(salesOrderData, agilityItemInformation, agilityItemInformation.getString("idList")
@@ -236,67 +237,42 @@ public class CenterPieceFunctions {
         JSONArray labelsArray = trelloCard.getJSONArray("labels");
 
         if (trelloCard.has("labels") && isSameBoard) {
-
                 for (Object labelObject : labelsArray) {
                     if (labelObject instanceof JSONObject) {
                         String labelId = ((JSONObject) labelObject).getString("id");
                         labelIds.add(labelId);
                     }
                 }
-
                 agilityItemInformation.remove("idLabel");
                 agilityItemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds, trelloCard.getString("id"))));
             }
 
     }
-
-
-//    private void updateCardList(JSONObject agilityItemInformation, JSONArray trelloSearchResultArray, boolean isSameBoard) {
-//        if (trelloSearchResultArray.getJSONObject(0).has("idList") && !(agilityItemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4")
-//                || agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))
-//                && agilityItemInformation.getString("boardID").equals(trelloSearchResultArray.getJSONObject(0).getJSONObject("board").getString("id"))) {
-//            TrelloListIDs listIDs = new TrelloListIDs(trelloSearchResultArray.getJSONObject(0).getString("idList"));
-//
-//            if (listIDs.offLimits(this.branch) || trelloSearchResultArray.getJSONObject(0).getJSONArray("labels").toString().contains("638e5d85e978f805fbcbf36f")) {
-//                agilityItemInformation.remove("idList");
-//                agilityItemInformation.put("idList", listIDs.getListID());
-//            }
-//        }
-//    }
-
     private void updateCardList(JSONObject agilityItemInformation, JSONObject trelloCard, boolean sameBoard) {
         if(trelloCard.has("idList") &&
                 !(agilityItemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4")
                         || agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))
                 && sameBoard ){
-
                 TrelloListIDs listIDs = new TrelloListIDs(trelloCard.getString("idList"));
 
                 if(listIDs.offLimits(this.branch) || trelloCard.getJSONArray("labels").toList().contains("638e5d85e978f805fbcbf36f")) {
-                    //If either of those two are true, leave it where it is
                     agilityItemInformation.remove("idList");
                     agilityItemInformation.put("idList", listIDs.getListID());
                 }
         }
     }
-
-// Other helper functions can be added as needed
-
-
     private List<String> compareContrastLabels(List<String> trelloLabels, List<String> centerPieceLabels, String cardId) {
 
         List<String> resultLabelList = new ArrayList<>();
         TrelloCalls trelloCalls = new TrelloCalls(this.client, "cards/");
 
         for (int i = 0; i < trelloLabels.size(); i++) {
-
             if (centerPieceLabels.contains(trelloLabels.get(i))) {
                 resultLabelList.add(trelloLabels.get(i));
                 centerPieceLabels.remove(trelloLabels.get(i));
             } else if (new TrelloLabelIds(trelloLabels.get(i)).isBrandLabel()) {
                 for (String cpLabel : centerPieceLabels) {
                     if (new TrelloLabelIds(cpLabel).isBrandLabel() && !cpLabel.equals(trelloLabels.get(i))) {
-                        //Delete Label from card
                         System.out.println("Delete the brand label: " + trelloLabels.get(i) + " from Trello\n");
                         trelloCalls.deleteTrelloCardLabelAPICall(cardId, trelloLabels.get(i));
                         resultLabelList.add(cpLabel);
@@ -331,16 +307,12 @@ public class CenterPieceFunctions {
     public void checkTrelloCardForEmptyCustomFields(String cardId, JSONObject itemInformation, JSONObject jsonSO) {
 
         if(!(itemInformation == null)) {
-            //Customer PO in the description
-
-
                 if (itemInformation.getString("linkedRmID") != null && itemInformation.has("rmCustomField")) {
                     updateCustomFieldTrello(cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedRmID"));
                 }
                 if (itemInformation.getString("linkedPoID") != null && itemInformation.has("agilityPoCustomField")) {
                     updateCustomFieldTrello(cardId, itemInformation.getString("agilityPoCustomField"), itemInformation.getString("linkedPoID"));
                 }
-
 
             if (itemInformation.has("colorCode")) {
                 if (itemInformation.getString("colorCode") != null)
@@ -350,14 +322,11 @@ public class CenterPieceFunctions {
             if (!(itemInformation.isNull("countOfBuildsCustomField")))
                 updateCustomFieldTrello(cardId, itemInformation.getString("countOfBuildsCustomField"), itemInformation.getInt("countOfBuilds"));
 
-
             if (!(itemInformation.isNull("customerPoCustomField")))
                 updateCustomFieldTrello(cardId, itemInformation.getString("customerPoCustomField"),
                         jsonSO.getString("CustomerPO"));
-
         }
     }
-
     public JSONArray getCardCustomFieldTrello(String cardID){
 
         TrelloCalls trelloAPICall = new TrelloCalls(this.client, String.format("cards/%s/customFieldItems", cardID));
@@ -381,7 +350,6 @@ public class CenterPieceFunctions {
         TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
         trelloCalls.putTrelloAPICall(jsonObject);
     }
-
     public void updateCustomFieldTrello(String cardId, String customFieldID, Integer value) {
         String urlEndpoint = String.format("cards/%s/customField/%s/item", cardId, customFieldID );
         JSONObject jsonObject = new JSONObject();
@@ -392,7 +360,6 @@ public class CenterPieceFunctions {
         TrelloCalls trelloCalls = new TrelloCalls(client, urlEndpoint, "");
         trelloCalls.putTrelloAPICall(jsonObject);
     }
-
     public String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation, boolean sameList){
 
         System.out.println("\n----Formatting Data for Trello URL Parameters ----\n");
@@ -431,9 +398,9 @@ public class CenterPieceFunctions {
 
         boolean address2ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress2"));
 
-        if((!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())) && address1ContainsNumbers == true){
+        if((!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())) && address1ContainsNumbers){
             address = jsonSO.getString("ShipToAddress1");
-        }else if(!jsonSO.getString("ShipToAddress2").isBlank() && address2ContainsNumbers == true){
+        }else if(!jsonSO.getString("ShipToAddress2").isBlank() && address2ContainsNumbers){
             address = jsonSO.getString("ShipToAddress2");
         }
 
@@ -471,20 +438,16 @@ public class CenterPieceFunctions {
         System.out.println("\n---- Complete - Formatting Data for Trello URL Parameters ----\n");
         return parameters;
     }
-
     private String addOrRemoveOrderDate(String orderDate){
         if(this.branch.equals("CABINETS")) return "";
         else return "&start=" + orderDate;
     }
-
     private String moveToTopIfCabinetsAndMoved(boolean sameList){
         if(this.branch.equals("CABINETS")){
             if(sameList) return "";
             else return "&pos=top";
         }else return "";
     }
-
-    //Clean for URL
     private String urlify(String string){
 
         string = string.replace(" ", "%20");
@@ -498,31 +461,28 @@ public class CenterPieceFunctions {
 
         return string;
     }
-
-
     private boolean checkIfAddressHasStreetNumbers(String address){
 
-        Boolean containsNumbers = false;
+        boolean containsNumbers = false;
 
         char[] chars2 = address.toCharArray();
 
-        for(int i = 0; i < chars2.length; i++){
-            if(Character.isDigit(chars2[i])){
+        for (char c : chars2) {
+            if (Character.isDigit(c)) {
                 containsNumbers = true;
             }
         }
         return containsNumbers;
     }
-
     private String trelloDateAdjuster(String date){
-//        int dateHold = Integer.parseInt(date.substring(8, 10));
-//
-//        if(dateHold+1>31) {
-//            return date.substring(0, 8) + (Integer.valueOf(date.substring(8, 10)));
-//        }else{
-//            dateHold++;
-//            return date.substring(0, 8) + dateHold;
-//        }
         return date+"T12:00:00.00-06:00";
     }
+
+    public void setContextId(String contextId) {
+        this.contextID = contextId;
+    }
+
+    public void setBranch(String branch) {this.branch = branch;}
+
+    public void setAgilityCalls(AgilityCalls agilityCalls) {this.agilityCalls = agilityCalls;}
 }

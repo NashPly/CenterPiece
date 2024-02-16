@@ -15,6 +15,7 @@ public class AgilityCalls {
         String url = buildUrl(urlEndpoint);
         System.out.println("URL -- " + url);
         System.out.println("requestBody -- " + innerRequestBody);
+        System.out.println("contextId -- " + contextId);
 
         HttpRequest request = buildRequest(url, innerRequestBody, contextId, branch);
         APICaller apiCaller = new APICaller(this.client, request);

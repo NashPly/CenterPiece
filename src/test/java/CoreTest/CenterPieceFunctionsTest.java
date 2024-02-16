@@ -33,7 +33,7 @@ class CenterPieceFunctionsTest {
 
         this.session = new CenterPieceSession("CABINETS", client, "Production");
 
-        session.setContextID(session.login());
+        session.setContextID(session.login(this.client));
 
         this.functions = new CenterPieceFunctions(client, session.getContextID(), session.getBranch(), session.getEnvironment());
 

@@ -34,9 +34,9 @@ public class CenterPieceSession {
 
         CenterPieceFunctions centerPieceFunctions;
 
-        this.contextID = login();
+        this.contextID = login(this.client);
         System.out.println("\n-- Login - "+ this.branch +" --");
-        centerPieceFunctions = new CenterPieceFunctions(this.client, this.contextID, this.branch, this.environment);
+        centerPieceFunctions = new CenterPieceFunctions(client, this.contextID, this.branch, this.environment);
 
         ItemCodeHandler itemCodeHandler = new ItemCodeHandler(client, this.contextID, this.branch, this.environment);
 
@@ -62,7 +62,7 @@ public class CenterPieceSession {
 
     }
 
-    public String login(){
+    public static String login(HttpClient client){
         JSONObject innerRequestBody = new JSONObject();
         innerRequestBody.put("LoginID","tbeals");
         innerRequestBody.put("Password","5668");

@@ -15,7 +15,7 @@ class CenterPieceSessionsTest {
 
         CenterPieceSession session = new CenterPieceSession("FABRICATION", client, environment);
 
-        String contextID = session.login();
+        String contextID = session.login(client);
         String sampleString = "3638678bc949309-7bd4-4abc-a614-4f38f88ce4ef";
 
         assertEquals(contextID.length(), sampleString.length());

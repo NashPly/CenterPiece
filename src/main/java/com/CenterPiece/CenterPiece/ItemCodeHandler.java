@@ -103,8 +103,6 @@ public class ItemCodeHandler {
                 this.linkedTranRmID = linkedRMList.toString().replace("[","").replace("]", "");;
 
                 this.itemCode = salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
-//                this.linkedTranType = item.getString("LinkedTranType");
-//                this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
                 System.out.println("\n-- agilityItemSearchResult --");
                 this.agilityItemSearchResult = agilityItemSearch();
             }
@@ -126,7 +124,6 @@ public class ItemCodeHandler {
         }
         return this.getCardDestinationFromItemCodeResult();
     }
-
     private int checkForNumOfCabBuilds(JSONArray salesOrderItemsArray, int length) {
         JSONObject item = null;
         String itemCode = "";
@@ -139,73 +136,6 @@ public class ItemCodeHandler {
         }
         return 0;
     }
-    //    private static void getInnerRequestBody(TimeHandler timeHandler, JSONObject innerRequestBody) {
-//        innerRequestBody.put("IncludeOpenOrders", true);
-//        innerRequestBody.put("IncludeInvoicedOrders", true);
-//        innerRequestBody.put("IncludeCanceledOrders", false);
-//        innerRequestBody.put("OrderDateRangeStart",
-//                timeHandler.getYesterdaysYear() + "-" +
-//                timeHandler.getYesterdaysMonth() + "-" +
-//                timeHandler.getYesterdaysDayOfMonth() + "T00:00:01-6:00");
-////            //Year
-////                "2023-"+
-////            //Month
-////                 "10-" +
-////            //Day
-////                 "21T00:00:01-6:00");
-//
-//        innerRequestBody.put("OrderDateRangeEnd",
-//                timeHandler.getCurrentYear() + "-" +
-//                timeHandler.getCurrentMonth() + "-" +
-//                timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
-////        //Year
-////            "2023-"+
-////        //Month
-////            "11-" +
-////        //Day
-////            "01T23:59:59-6:00");
-//    }
-//    public JSONObject agilityChangedSalesOrderListLookup() {
-//
-//        JSONObject innerRequestBody = new JSONObject();
-//
-//        TimeHandler timeHandler = new TimeHandler();
-//
-//        innerRequestBody.put("IncludeOpenOrders", true);
-//        innerRequestBody.put("IncludeInvoicedOrders", true);
-//        innerRequestBody.put("IncludeCanceledOrders", true);
-//        innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-//        innerRequestBody.put("OrderDateRangeEnd",
-//                timeHandler.getCurrentYear() + "-" +
-//                timeHandler.getCurrentMonth() + "-" +
-//                timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
-//        //Year
-//                //"2023-"+
-//        //Month
-//                // "10-" +
-//        //Day
-//                // "01T23:59:59-6:00");
-//
-//        innerRequestBody.put("FetchOnlyChangedSince",
-//                timeHandler.getSearchYear() + "-" +
-//                timeHandler.getSearchMonth() + "-" +
-//                timeHandler.getSearchDayOfMonth() +
-//                //Year
-//                    //"2023-"+
-//                //Month
-//                    // "10-" +
-//                //Day
-//                    // "01" +
-//                "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
-//
-//        System.out.println("\n-- AgilityChangedSalesOrderListLookup --");
-//        AgilityCalls agilityAPICall = new AgilityCalls(client, contextId, "Orders/SalesOrderList", innerRequestBody, branch);
-//        var response = agilityAPICall.postAgilityAPICall();
-//
-//        return response.getJSONObject("response")
-//                .getJSONObject("OrdersResponse")
-//                .getJSONObject("dsOrdersResponse");
-//    }
     public JSONArray agilitySalesOrderListLookup() {
         JSONObject innerRequestBody = new JSONObject();
         TimeHandler timeHandler = new TimeHandler();
@@ -258,7 +188,6 @@ public class ItemCodeHandler {
         innerRequestBody.put("OrderDateRangeEnd", orderDateRangeEnd);
 
         if(fetchUpdates) addFetchUpdateJSON(timeHandler,innerRequestBody);
-
     }
 
     public void addFetchUpdateJSON(TimeHandler timeHandler, JSONObject innerRequestBody){
@@ -268,23 +197,6 @@ public class ItemCodeHandler {
                         timeHandler.getSearchDayOfMonth() +
                         "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
     }
-//    public void getUpdateInnerRequestBody(TimeHandler timeHandler, JSONObject innerRequestBody){
-//        innerRequestBody.put("IncludeOpenOrders", true);
-//        innerRequestBody.put("IncludeInvoicedOrders", true);
-//        innerRequestBody.put("IncludeCanceledOrders", true);
-//        innerRequestBody.put("OrderDateRangeStart", "2020-01-01T01:00:00-6:00");
-//        innerRequestBody.put("OrderDateRangeEnd",
-//                timeHandler.getCurrentYear() + "-" +
-//                        timeHandler.getCurrentMonth() + "-" +
-//                        timeHandler.getCurrentDayOfMonth() + "T23:59:59-6:00");
-//
-//        innerRequestBody.put("FetchOnlyChangedSince",
-//                timeHandler.getSearchYear() + "-" +
-//                        timeHandler.getSearchMonth() + "-" +
-//                        timeHandler.getSearchDayOfMonth() +
-//                        "T" + timeHandler.getSearchHour() + ":" + timeHandler.getSearchMinuteOfHour() + ":00-6:00");
-//    }
-
 
     public JSONObject agilityItemSearch() {
 
