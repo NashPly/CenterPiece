@@ -312,6 +312,7 @@ public class CenterPieceFunctions {
     }
 
     private void updateCardLabels(JSONObject agilityItemInformation, JSONObject trelloCard, boolean isSameBoard) {
+        System.out.println("\n--- Updating Card Labels ---");
         List<String> labelIds = new ArrayList<>();
         List<String> trelloLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
         JSONArray labelsArray = trelloCard.getJSONArray("labels");
@@ -346,6 +347,7 @@ public class CenterPieceFunctions {
 //    }
 
     private void updateCardList(JSONObject agilityItemInformation, JSONObject trelloCard, boolean sameBoard) {
+        System.out.println("\n--- Updating Card List ---");
         if(trelloCard.has("idList") &&
                 !(agilityItemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4")
                         || agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))
