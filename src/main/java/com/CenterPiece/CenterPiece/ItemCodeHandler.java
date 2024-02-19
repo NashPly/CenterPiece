@@ -552,7 +552,6 @@ public class ItemCodeHandler {
 
                 }
 
-                idLabel = "";
                 assert trelloBoardIDs != null;
                 boardID = trelloBoardIDs.getBoardID();
 

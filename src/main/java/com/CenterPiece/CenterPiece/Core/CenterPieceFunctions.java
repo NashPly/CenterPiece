@@ -314,21 +314,24 @@ public class CenterPieceFunctions {
     private void updateCardLabels(JSONObject agilityItemInformation, JSONObject trelloCard, boolean isSameBoard) {
         System.out.println("\n--- Updating Card Labels ---");
         List<String> labelIds = new ArrayList<>();
-        List<String> trelloLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
+        List<String> trelloLabelIds = null;
+
+        if(agilityItemInformation.has("idlabel") && agilityItemInformation.get("idlabel") != null)
+            trelloLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
+
         JSONArray labelsArray = trelloCard.getJSONArray("labels");
 
-        if (trelloCard.has("labels") && isSameBoard) {
-
-                for (Object labelObject : labelsArray) {
-                    if (labelObject instanceof JSONObject) {
-                        String labelId = ((JSONObject) labelObject).getString("id");
-                        labelIds.add(labelId);
-                    }
+        if (trelloCard.has("labels") && trelloLabelIds != null && isSameBoard) {
+            for (Object labelObject : labelsArray) {
+                if (labelObject instanceof JSONObject) {
+                    String labelId = ((JSONObject) labelObject).getString("id");
+                    labelIds.add(labelId);
                 }
-
-                agilityItemInformation.remove("idLabel");
-                agilityItemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds, trelloCard.getString("id"))));
             }
+
+            agilityItemInformation.remove("idLabel");
+            agilityItemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds, trelloCard.getString("id"))));
+        }
 
     }
 
