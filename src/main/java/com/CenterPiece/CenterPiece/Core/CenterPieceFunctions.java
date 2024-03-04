@@ -316,7 +316,7 @@ public class CenterPieceFunctions {
         List<String> labelIds = new ArrayList<>();
         List<String> trelloLabelIds = null;
 
-        if(agilityItemInformation.has("idlabel") && agilityItemInformation.get("idlabel") != null)
+        if(agilityItemInformation.has("idLabel") && agilityItemInformation.get("idLabel") != null)
             trelloLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
 
         JSONArray labelsArray = trelloCard.getJSONArray("labels");
