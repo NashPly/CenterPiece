@@ -108,6 +108,11 @@ public class TrelloListIDs {
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
             }
+            case "654b9a13fbfe562537ab4e84" -> {
+                this.list = TrelloLists.ORDER_STAGED;
+                this.branch = "TOPSHOP";
+                this.environment = "Production";
+            }
             case "623c7ddd7e9e617c2c26df74" -> {
                 this.list = TrelloLists.TO_BE_LOADED_ROUTED;
                 this.branch = "TOPSHOP";
@@ -449,6 +454,11 @@ public class TrelloListIDs {
             }
             case "6596e9210326360265ae335f" -> {
                 this.list = TrelloLists.SENT_TO_PICK;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "6596e9210326360265ae3360" -> {
+                this.list = TrelloLists.ORDER_STAGED;
                 this.branch = "TOPSHOP";
                 this.environment = "Test";
             }

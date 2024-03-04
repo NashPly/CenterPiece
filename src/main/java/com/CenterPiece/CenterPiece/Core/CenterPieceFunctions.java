@@ -601,14 +601,6 @@ public class CenterPieceFunctions {
     }
 
     private String trelloDateAdjuster(String date){
-//        int dateHold = Integer.parseInt(date.substring(8, 10));
-//
-//        if(dateHold+1>31) {
-//            return date.substring(0, 8) + (Integer.valueOf(date.substring(8, 10)));
-//        }else{
-//            dateHold++;
-//            return date.substring(0, 8) + dateHold;
-//        }
         return date+"T12:00:00.00-06:00";
     }
 }
