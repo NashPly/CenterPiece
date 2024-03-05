@@ -72,40 +72,41 @@ public class ItemCodeHandler {
 
             JSONObject item = null;
 
-            if(salesOrderItemsArray != null && !salesOrderItemsArray.isEmpty()){
+            if(salesOrderItemsArray != null){
+                if(!salesOrderItemsArray.isEmpty()){
+                    this.countOfBuilds = checkForNumOfCabBuilds(salesOrderItemsArray, salesOrderItemsArray.length());
+                    System.out.println("Count of CBUILDS " + countOfBuilds);
 
-                this.countOfBuilds = checkForNumOfCabBuilds(salesOrderItemsArray, salesOrderItemsArray.length());
-                System.out.println("Count of CBUILDS " + countOfBuilds);
+                    System.out.println("\n -- This sales order has an item --");
 
-                System.out.println("\n -- This sales order has an item --");
-
-                List<Integer> linkedPOList = new ArrayList<>();
-                List<Integer> linkedRMList = new ArrayList<>();
+                    List<Integer> linkedPOList = new ArrayList<>();
+                    List<Integer> linkedRMList = new ArrayList<>();
 
 
-                for(int i = 0; i < salesOrderItemsArray.length(); i++){
-                    item = salesOrderItemsArray.getJSONObject(i);
+                    for(int i = 0; i < salesOrderItemsArray.length(); i++){
+                        item = salesOrderItemsArray.getJSONObject(i);
 
-                    switch (item.getString("LinkedTranType")) {
-                        case "PO" -> {
-                            if(!linkedPOList.contains(item.getInt("LinkedTranID")))
-                                linkedPOList.add(item.getInt("LinkedTranID"));
-                        }
-                        case "RM" -> {
-                            if(!linkedRMList.contains(item.getInt("LinkedTranID")))
-                                linkedRMList.add(item.getInt("LinkedTranID"));
+                        switch (item.getString("LinkedTranType")) {
+                            case "PO" -> {
+                                if(!linkedPOList.contains(item.getInt("LinkedTranID")))
+                                    linkedPOList.add(item.getInt("LinkedTranID"));
+                            }
+                            case "RM" -> {
+                                if(!linkedRMList.contains(item.getInt("LinkedTranID")))
+                                    linkedRMList.add(item.getInt("LinkedTranID"));
+                            }
                         }
                     }
-                }
 
-                this.linkedTranPoID = linkedPOList.toString().replace("[","").replace("]", "");
-                this.linkedTranRmID = linkedRMList.toString().replace("[","").replace("]", "");;
+                    this.linkedTranPoID = linkedPOList.toString().replace("[","").replace("]", "");
+                    this.linkedTranRmID = linkedRMList.toString().replace("[","").replace("]", "");;
 
-                this.itemCode = salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
+                    this.itemCode = salesOrderItemsArray.getJSONObject(0).getString("ItemCode");
 //                this.linkedTranType = item.getString("LinkedTranType");
 //                this.linkedTranID = String.valueOf(item.getInt("LinkedTranID"));
-                System.out.println("\n-- agilityItemSearchResult --");
-                this.agilityItemSearchResult = agilityItemSearch();
+                    System.out.println("\n-- agilityItemSearchResult --");
+                    this.agilityItemSearchResult = agilityItemSearch();
+                }
             }
             System.out.println("\n -- Item defined and searched in Agility --");
 
@@ -592,18 +593,22 @@ public class ItemCodeHandler {
     public String orderStatusLogic(String board, JSONObject salesOrder, String environment, String linkedTranPoID){
 
         JSONObject itemDetails;
-        Boolean hasBackOrderedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalBackorderedQuantity");;
-        Boolean hasUnstagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalUnstagedQuantity");;
-        Boolean hasStagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalStagedQuantity");;
-        Boolean hasInvoicedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalInvoicedQuantity");;
+        Boolean hasBackOrderedItems = null;
+        Boolean hasUnstagedItems = null;
+        Boolean hasStagedItems = null;
+        Boolean hasInvoicedItems = null;
 
-
-
-
-        if(!(salesOrder == null) && salesOrder.has("dtOrderDetailResponse")) {
+        if(!(salesOrder == null)) {
             //TODO insert for loop to receive total data
 
-             itemDetails = salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
+            if(salesOrder.has("dtOrderDetailResponse")){
+                hasBackOrderedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalBackorderedQuantity");
+                hasUnstagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalUnstagedQuantity");
+                hasStagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalStagedQuantity");
+                hasInvoicedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalInvoicedQuantity");
+                itemDetails = salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
+            }
+
         } else {
             System.out.println(" - " + board + " Inbox - ");
             return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "COMPONENTS", environment).getListID(), board);

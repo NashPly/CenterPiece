@@ -420,12 +420,16 @@ public class CenterPieceFunctions {
             //Customer PO in the description
 
 
+            if(itemInformation.has("linkedRmID")){
                 if (itemInformation.getString("linkedRmID") != null && itemInformation.has("rmCustomField")) {
                     updateCustomFieldTrello(cardId, itemInformation.getString("rmCustomField"), itemInformation.getString("linkedRmID"));
                 }
+            }
+            if(itemInformation.has("linkedPoID")){
                 if (itemInformation.getString("linkedPoID") != null && itemInformation.has("agilityPoCustomField")) {
                     updateCustomFieldTrello(cardId, itemInformation.getString("agilityPoCustomField"), itemInformation.getString("linkedPoID"));
                 }
+            }
 
 
             if (itemInformation.has("colorCode")) {
