@@ -292,8 +292,6 @@ public class ItemCodeHandler {
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.COMPONENTS, "COMPONENTS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
-                //boardID = "636bc3a95da9340015e47b84";
-                //idList = "636bc3a95da9340015e47b8b";
                 idList = orderStatusLogic("COMPONENTS", this.salesOrder, this.environment, this.linkedTranPoID);
 
                 TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.COMPONENTS, "COMPONENTS", this.environment, this.salesOrder.getString("SaleType"));
