@@ -674,7 +674,7 @@ public class ItemCodeHandler {
                 case "Staged" -> {
                     if(saleType.equals("WHSE")) {
                         System.out.println(" - " + board + " Staged - ");
-                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "COMPONENTS", environment).getListID(), board);
+                        return whichBoard( new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.ORDER_STAGED, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.ON_TRUCK_ON_DELIVERY, "COMPONENTS", environment).getListID(), board);
                     }else if(saleType.equals("WILLCALL")) {
                         System.out.println(" - " + board + " Willcall - ");
                         return whichBoard( new TrelloListIDs(TrelloLists.WILL_CALL, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.WILL_CALL, "COMPONENTS", environment).getListID(), board);
