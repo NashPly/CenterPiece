@@ -496,12 +496,12 @@ public class ItemCodeHandler {
                 switch(this.branch){
                     case "CABINETS" -> {
                         branch = "CABINETS";
-                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.TOP_SHOP, branch, this.environment);
+                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, branch, this.environment);
                         idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
                     }
                     case "FABRICATION" -> {
                         branch = "TOPSHOP";
-                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, branch, this.environment);
+                        trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.TOP_SHOP, branch, this.environment);
                         idList = orderStatusLogic("TOPSHOP", this.salesOrder, this.environment, this.linkedTranPoID);
                     }
                     case "COMPONENTS" ->{
@@ -557,16 +557,19 @@ public class ItemCodeHandler {
         Boolean hasStagedItems = null;
         Boolean hasInvoicedItems = null;
 
-        if(!(salesOrder == null)) {
+        if(!(salesOrder == null) && salesOrder.has("dtOrderDetailResponse")) {
             //TODO insert for loop to receive total data
 
-            if(salesOrder.has("dtOrderDetailResponse")){
+//            if(){
                 hasBackOrderedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalBackorderedQuantity");
                 hasUnstagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalUnstagedQuantity");
                 hasStagedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalStagedQuantity");
                 hasInvoicedItems = checkIfTrue(salesOrder.getJSONArray("dtOrderDetailResponse"), "TotalInvoicedQuantity");
                 itemDetails = salesOrder.getJSONArray("dtOrderDetailResponse").getJSONObject(0);
-            }
+//            }else {
+//                System.out.println(" - " + board + " Inbox - ");
+//                return whichBoard( new TrelloListIDs(TrelloLists.INBOX, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.INBOX, "COMPONENTS", environment).getListID(), board);
+//            }
 
         } else {
             System.out.println(" - " + board + " Inbox - ");
