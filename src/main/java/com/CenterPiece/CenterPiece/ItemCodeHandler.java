@@ -88,11 +88,11 @@ public class ItemCodeHandler {
 
                         switch (item.getString("LinkedTranType")) {
                             case "PO" -> {
-                                if(!linkedPOList.contains(item.getInt("LinkedTranID")))
+                                if(!linkedPOList.contains(item.getInt("LinkedTranID")) && !(item.getInt("LinkedTranID") == 0))
                                     linkedPOList.add(item.getInt("LinkedTranID"));
                             }
                             case "RM" -> {
-                                if(!linkedRMList.contains(item.getInt("LinkedTranID")))
+                                if(!linkedRMList.contains(item.getInt("LinkedTranID")) && !(item.getInt("LinkedTranID") == 0))
                                     linkedRMList.add(item.getInt("LinkedTranID"));
                             }
                         }

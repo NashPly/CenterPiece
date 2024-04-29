@@ -5,6 +5,8 @@ import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import com.CenterPiece.CenterPiece.Objects.SalesOrder;
 import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
+import com.CenterPiece.CenterPiece.TrelloIDs.TrelloCustomFieldIDs;
+import com.CenterPiece.CenterPiece.TrelloIDs.TrelloCustomFields;
 import com.CenterPiece.CenterPiece.TrelloIDs.TrelloLabelIds;
 import com.CenterPiece.CenterPiece.TrelloIDs.TrelloListIDs;
 import org.json.JSONArray;
@@ -99,10 +101,20 @@ public class CenterPieceFunctions {
                                         //Check the partial box
 
                                         String partialCustomFieldID = "";
-                                        switch (openTrelloCards.get(i).getJSONObject("board").getString("id")) {
-                                            case "60c26dfb44555566d32ae643" -> partialCustomFieldID = "638e63205f249b03ac9edd81"; //Top Shop
-//                                        case "asdf" -> partialCustomFieldID = "asdf"; //Cabinets
-//                                        case "asdf" -> partialCustomFieldID = "asdf"; // Components
+
+                                        switch (openTrelloCards.get(i).getJSONObject("board").getString("name")) {
+                                            case "Top Shop", "Top Shop Test Environment"-> {
+                                                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.PARTIAL_CHECKBOX, "TOPSHOP", this.environment);
+                                                partialCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                                            }
+                                            case "Cabinet Shop", "Cabinet Shop Test Environment" -> {
+                                                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.PARTIAL_CHECKBOX, "CABINETS", this.environment);
+                                                partialCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                                            }
+                                            case "Component Shop","Component Shop Test Environment" -> {
+                                                    TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.PARTIAL_CHECKBOX, "COMPONENTS", this.environment);
+                                                    partialCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
+                                                }
                                         }
 
                                         updateCustomFieldTrello(openTrelloCards.get(i).getString("id"), partialCustomFieldID, "true");
