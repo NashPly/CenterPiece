@@ -24,7 +24,7 @@ public class TrelloLabelIds {
             System.out.println(getlabelID(label) + "," + getlabelID(TrelloLabels.WHSE));
         return (getlabelID(label) + "," + getlabelID(TrelloLabels.WHSE));
     }
-        else if (saleType.equals("Willcall"))
+        else if (saleType.equals("WILLCALL"))
             return getlabelID(label) + "," + getlabelID(TrelloLabels.WILLCALL);
 
         return getlabelID(label);
