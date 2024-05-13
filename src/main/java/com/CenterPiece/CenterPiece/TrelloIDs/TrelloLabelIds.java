@@ -52,7 +52,7 @@ public class TrelloLabelIds {
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
             }
-            case "6197b500bbb79658801189ce" -> {
+            case "65b123937910864d56086ecc" -> {
                 this.label = TrelloLabels.WILLCALL;
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
@@ -212,7 +212,7 @@ public class TrelloLabelIds {
                 this.labelId = switch (trelloLabel) {
                     case TOPS -> "60c26dfc44555566d32ae700";
                     case WHSE -> "65b023cfbafe018f9f113c78";
-                    case WILLCALL -> "6197b500bbb79658801189ce";
+                    case WILLCALL -> "65b123937910864d56086ecc";
                     case NONE -> "62f6a75f8db34f1e9ac4467e";
                     default -> "62f6a75f8db34f1e9ac4467e";
                 };
