@@ -311,7 +311,7 @@ public class CenterPieceFunctions {
                         System.out.println("Delete the saletype label: " + trelloLabels.get(i) + " from Trello\n");
                         trelloCalls.deleteTrelloCardLabelAPICall(cardId, trelloLabels.get(i));
                         resultLabelList.add(cpLabel);
-                        centerPieceLabels.remove(cpLabel);
+                        //centerPieceLabels.remove(cpLabel);
                     }
                 }
             } else {
@@ -320,7 +320,7 @@ public class CenterPieceFunctions {
             }
         }
 
-        resultLabelList.addAll(centerPieceLabels);
+        //resultLabelList.addAll(centerPieceLabels);
         Set<String> set = new LinkedHashSet<>(resultLabelList);
         resultLabelList.clear();
         resultLabelList.addAll(set);
