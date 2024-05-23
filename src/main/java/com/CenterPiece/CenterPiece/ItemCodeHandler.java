@@ -595,8 +595,11 @@ public class ItemCodeHandler {
 
 //                        if (itemDetails.has("LinkedTranType")) {
                         if (!linkedTranPoID.isEmpty()) {
-                            System.out.println(" - " + board + " Processing || Batching - ");
-                            return whichBoard( new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
+                            System.out.println(" - " + board + " Processing || To Be Ordered - ");
+                            return whichBoard(new TrelloListIDs(TrelloLists.TO_BE_ORDERED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.DRAWING, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PROCESSING, "COMPONENTS", environment).getListID(), board);
+                        }else if(!linkedTranRmID.isEmpty()){
+                            System.out.println(" - " + board + " Processing || To Be Ordered - ");
+                            return whichBoard(new TrelloListIDs(TrelloLists.PRODUCTION_QUEUE, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.PRODUCTION_QUEUE, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.PRODUCTION_QUEUE, "COMPONENTS", environment).getListID(), board);
                         } else {
                             //In Processing
                             System.out.println(" - " + board + " Processing || Batching - ");
