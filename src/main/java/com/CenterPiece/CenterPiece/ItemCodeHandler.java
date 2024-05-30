@@ -287,7 +287,7 @@ public class ItemCodeHandler {
 
 
         switch (this.itemGroup) {
-            case "1000", "1900", "2000", "3600", "3700",  "9800" -> {
+            case "1000", "1900", "2000", "3400", "3600", "3700",  "9800" -> {
 
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.COMPONENTS, "COMPONENTS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
