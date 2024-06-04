@@ -324,7 +324,6 @@ public class TrelloLabelIds {
         }
         return this.labelId;
     }
-
     public boolean isBrandLabel() {
 
         List<TrelloLabels> brandLabelList = new ArrayList<>(Arrays.asList(TrelloLabels.CNC_CABINET,
