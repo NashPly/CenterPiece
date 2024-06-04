@@ -40,6 +40,11 @@ public class TrelloBoardIDs {
                 this.branch = "COMPONENTS";
                 this.environment = "Production";
             }
+            case "6655edac93277a7afa62cda6" -> {
+                this.board = TrelloBoards.NASHVILLE;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
 
             //Test Environment
 
@@ -60,7 +65,13 @@ public class TrelloBoardIDs {
                 this.branch = "COMPONENTS";
                 this.environment = "Test";
             }
-            
+
+//            //TODO change to actual test board
+//            case "6655edac93277a7afa62cda6" -> {
+//                this.board = TrelloBoards.NASHVILLE;
+//                this.branch = "NASHVILLE";
+//                this.environment = "Test";
+//            }
             default -> {
                 this.board = TrelloBoards.TOP_SHOP;
                 this.branch = "TOPSHOP";
@@ -77,6 +88,8 @@ public class TrelloBoardIDs {
                 this.boardId = "62869b5c1351de037ffd2cbb";
             }else if(this.branch.equals("COMPONENTS")) {
                 this.boardId = "636bc3a95da9340015e47b84";
+            }else if(this.branch.equals("NASHVILLE")) {
+                this.boardId = "6655edac93277a7afa62cda6";
             }else{
                 this.boardId = "60c26dfb44555566d32ae643";}
         }else if (this.environment.equals("Test")){
@@ -86,6 +99,8 @@ public class TrelloBoardIDs {
                 this.boardId = "6596e945627ec8be307b1e0f";
             }else if(this.branch.equals("COMPONENTS")) {
                 this.boardId = "6596ece3760cfe2637c6f944";
+            }else if(this.branch.equals("NASHVILLE")) {
+                this.boardId = "6655edac93277a7afa62cda6";
             }else{
                 this.boardId = "60c26dfb44555566d32ae643";
             }

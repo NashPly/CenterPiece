@@ -200,6 +200,43 @@ public class TrelloCustomFieldIDs {
                 this.branch = "COMPONENTS";
                 this.environment = "Test";
             }
+
+            case "6655edac93277a7afa62d08f" -> {
+                this.field = TrelloCustomFields.COLOR_CODE;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62d091" -> {
+                this.field = TrelloCustomFields.AGILITY_PO_NUMBER;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62d093" -> {
+                this.field = TrelloCustomFields.REMAN_NUMBER;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62d095" -> {
+                this.field = TrelloCustomFields.NUMBER_OF_BUILDS;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62d097" -> {
+                this.field = TrelloCustomFields.PARTIAL_CHECKBOX;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62d099" -> {
+                this.field = TrelloCustomFields.NOTES;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62d09b" -> {
+                this.field = TrelloCustomFields.CUSTOMER_PO_NUMBER;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+
             default -> {
                 this.field = TrelloCustomFields.NOTES;
                 this.branch = "TOPSHOP";
@@ -240,6 +277,17 @@ public class TrelloCustomFieldIDs {
                     case NUMBER_OF_BUILDS -> "636bc3aa5da9340015e47cea";
                     default -> "636bc3a95da9340015e47b8b";
                 };
+            } else if (branch.equals("NASHVILLE")) {
+                this.fieldId = switch (field) {
+                    case COLOR_CODE -> "6655edac93277a7afa62d08f";
+                    case AGILITY_PO_NUMBER -> "6655edac93277a7afa62d091";
+                    case REMAN_NUMBER -> "6655edac93277a7afa62d093";
+                    case NUMBER_OF_BUILDS -> "6655edac93277a7afa62d095";
+                    case PARTIAL_CHECKBOX -> "63af037df4d6d906575988e9";
+                    case NOTES -> "6655edac93277a7afa62d099";
+                    case CUSTOMER_PO_NUMBER -> "6655edac93277a7afa62d09b";
+                    default -> "6655edac93277a7afa62d099";
+                };
             } else {
                 // Handle other branches in Production environment
                 this.fieldId = "61f2d5c461ac134ef274ae5f";
@@ -273,6 +321,17 @@ public class TrelloCustomFieldIDs {
                     case REMAN_NUMBER -> "6596ece3760cfe2637c6facf";
                     case NUMBER_OF_BUILDS -> "6596ece3760cfe2637c6facb";
                     default -> "6596ece3760cfe2637c6facd";
+                };
+            } else if (branch.equals("NASHVILLE")) {
+                this.fieldId = switch (field) {
+                    case COLOR_CODE -> "6655edac93277a7afa62d08f";
+                    case AGILITY_PO_NUMBER -> "6655edac93277a7afa62d091";
+                    case REMAN_NUMBER -> "6655edac93277a7afa62d093";
+                    case NUMBER_OF_BUILDS -> "6655edac93277a7afa62d095";
+                    case PARTIAL_CHECKBOX -> "63af037df4d6d906575988e9";
+                    case NOTES -> "6655edac93277a7afa62d099";
+                    case CUSTOMER_PO_NUMBER -> "6655edac93277a7afa62d09b";
+                    default -> "6655edac93277a7afa62d099";
                 };
             } else {
                 // Handle other branches in Test environment

@@ -63,8 +63,8 @@ public class CenterPieceFunctions {
         String card_fields = "name,closed,desc,idList,labels";
         String boardIds = "";
 
-        if(this.environment.equals("Production"))boardIds = "60c26dfb44555566d32ae643,62869b5c1351de037ffd2cbb,636bc3a95da9340015e47b84";
-        else if(this.environment.equals("Test")) boardIds = "6596e9210326360265ae3347,6596e945627ec8be307b1e0f,6596ece3760cfe2637c6f944";
+        if(this.environment.equals("Production"))boardIds = "60c26dfb44555566d32ae643,62869b5c1351de037ffd2cbb,636bc3a95da9340015e47b84,6655edac93277a7afa62cda6";
+        else if(this.environment.equals("Test")) boardIds = "6596e9210326360265ae3347,6596e945627ec8be307b1e0f,6596ece3760cfe2637c6f944,6655edac93277a7afa62cda6";
         //String card_fields = "closed,idList,labels";
 
         TrelloCalls trelloAPICall = new TrelloCalls(this.client, "search", String.format("query=%s&idBoards=%s&card_board=true&modelTypes=%s&card_fields=%s&card_attachments=true",
@@ -435,7 +435,7 @@ public class CenterPieceFunctions {
 
         boolean address2ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress2"));
 
-        if((!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())) && address1ContainsNumbers == true){
+        if((!(jsonSO.getString("ShipToAddress1").equals("- Verified Address -") || jsonSO.getString("ShipToAddress1").isBlank())) && address1ContainsNumbers == true && !(jsonSO.getString("ShipToAddress1").contains("@"))){
             address = jsonSO.getString("ShipToAddress1");
         }else if(!jsonSO.getString("ShipToAddress2").isBlank() && address2ContainsNumbers == true){
             address = jsonSO.getString("ShipToAddress2");

@@ -196,6 +196,39 @@ public class TrelloLabelIds {
                 this.environment = "Test";
             }
 
+            case "6655edac93277a7afa62ce24" -> {
+                this.label = TrelloLabels.WHSE;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62ce21" -> {
+                this.label = TrelloLabels.WILLCALL;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62ce1e" -> {
+                this.label = TrelloLabels.NONE;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+
+// TODO uncomment when test distribution board is created
+//            case "6655edac93277a7afa62ce24" -> {
+//                this.label = TrelloLabels.WHSE;
+//                this.branch = "NASHVILLE";
+//                this.environment = "Test";
+//            }
+//            case "" -> {
+//                this.label = TrelloLabels.WILLCALL;
+//                this.branch = "NASHVILLE";
+//                this.environment = "Test";
+//            }
+//            case "" -> {
+//                this.label = TrelloLabels.NONE;
+//                this.branch = "NASHVILLE";
+//                this.environment = "Test";
+//            }
+
             default -> {
                 this.label = TrelloLabels.NONE;
                 this.branch = "TOPSHOP";
@@ -235,6 +268,13 @@ public class TrelloLabelIds {
                     case NONE -> "636bc3a95da9340015e47c2c";
                     default -> "636bc3a95da9340015e47c2c";
                 };
+            } else if (branch.equals("NASHVILLE")) {
+                this.labelId = switch (trelloLabel) {
+                    case WHSE -> "6655edac93277a7afa62ce24";
+                    case WILLCALL -> "6655edac93277a7afa62ce21";
+                    case NONE -> "6655edac93277a7afa62ce1e";
+                    default -> "6655edac93277a7afa62ce1e";
+                };
             } else {
                 // Handle other branches in Production environment
                 this.labelId = "";
@@ -266,6 +306,13 @@ public class TrelloLabelIds {
                     case WILLCALL -> "65b03bc83da6dd695bc2e220";
                     case NONE -> "6596ece3760cfe2637c6f9d2";
                     default -> "6596ece3760cfe2637c6f9d2";
+                };
+            } else if (branch.equals("NASHVILLE")) {
+                this.labelId = switch (trelloLabel) {
+                    case WHSE -> "6655edac93277a7afa62ce24";
+                    case WILLCALL -> "6655edac93277a7afa62ce21";
+                    case NONE -> "6655edac93277a7afa62ce1e";
+                    default -> "6655edac93277a7afa62ce1e";
                 };
             } else {
                 // Handle other branches in Test environment

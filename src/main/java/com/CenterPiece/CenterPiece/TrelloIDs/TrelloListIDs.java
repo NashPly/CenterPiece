@@ -380,6 +380,111 @@ public class TrelloListIDs {
                 this.environment = "Production";
             }
 
+            case "6655edac93277a7afa62cda8" -> {
+                this.list = TrelloLists.QUOTED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdab" -> {
+                this.list = TrelloLists.PROCESSING;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdac" -> {
+                this.list = TrelloLists.TO_BE_ORDERED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdad" -> {
+                this.list = TrelloLists.ON_ORDER;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdae" -> {
+                this.list = TrelloLists.RECEIVING;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdaf" -> {
+                this.list = TrelloLists.TO_BE_RECEIVED_SHOP;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb0" -> {
+                this.list = TrelloLists.PRODUCTION_QUEUE;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb1" -> {
+                this.list = TrelloLists.PICK_REMAINING_ITEMS;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb2" -> {
+                this.list = TrelloLists.TO_BE_PICKED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb3" -> {
+                this.list = TrelloLists.SENT_TO_PICK;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb4" -> {
+                this.list = TrelloLists.ORDER_STAGED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb5" -> {
+                this.list = TrelloLists.TO_BE_LOADED_ROUTED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb7" -> {
+                this.list = TrelloLists.WILL_CALL;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb6" -> {
+                this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdba" -> {
+                this.list = TrelloLists.COD_TO_BE_PAID;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb8" -> {
+                this.list = TrelloLists.DELIVERED_PICKED_UP;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb9" -> {
+                this.list = TrelloLists.INVOICED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdbb" -> {
+                this.list = TrelloLists.RECEIVED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cda6" -> {
+                this.list = TrelloLists.BRANCH_ID;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdbc" -> {
+                this.list = TrelloLists.CANCELED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdbe" -> {
+                this.list = TrelloLists.INBOX;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
             //Test Environment
 
             case "6596e9210326360265ae3350" -> {
@@ -712,6 +817,121 @@ public class TrelloListIDs {
                 this.branch = "COMPONENTS";
                 this.environment = "Test";
             }
+            /*
+            *
+            * case "6655edac93277a7afa62cda8" -> {
+                this.list = TrelloLists.QUOTED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdab" -> {
+                this.list = TrelloLists.PROCESSING;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdac" -> {
+                this.list = TrelloLists.TO_BE_ORDERED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdad" -> {
+                this.list = TrelloLists.ON_ORDER;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdae" -> {
+                this.list = TrelloLists.RECEIVING;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdaf" -> {
+                this.list = TrelloLists.TO_BE_RECEIVED_SHOP;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb0" -> {
+                this.list = TrelloLists.PRODUCTION_QUEUE;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb1" -> {
+                this.list = TrelloLists.PICK_REMAINING_ITEMS;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb2" -> {
+                this.list = TrelloLists.TO_BE_PICKED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb3" -> {
+                this.list = TrelloLists.SENT_TO_PICK;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb4" -> {
+                this.list = TrelloLists.ORDER_STAGED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb5" -> {
+                this.list = TrelloLists.TO_BE_LOADED_ROUTED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb7" -> {
+                this.list = TrelloLists.WILL_CALL;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb6" -> {
+                this.list = TrelloLists.ON_TRUCK_ON_DELIVERY;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdba" -> {
+                this.list = TrelloLists.COD_TO_BE_PAID;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb8" -> {
+                this.list = TrelloLists.DELIVERED_PICKED_UP;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdb9" -> {
+                this.list = TrelloLists.INVOICED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdbb" -> {
+                this.list = TrelloLists.RECEIVED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cda6" -> {
+                this.list = TrelloLists.BRANCH_ID;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdbc" -> {
+                this.list = TrelloLists.CANCELED;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            case "6655edac93277a7afa62cdbe" -> {
+                this.list = TrelloLists.INBOX;
+                this.branch = "NASHVILLE";
+                this.environment = "Production";
+            }
+            *
+            * */
+            //TODO replace id with Test ID
+//            case "6655edac93277a7afa62cdbe" -> {
+//                this.list = TrelloLists.INBOX;
+//                this.branch = "NASHVILLE";
+//                this.environment = "Test";
+//            }
 
 
 //            default -> {
@@ -839,7 +1059,6 @@ public class TrelloListIDs {
                         return "62869b5c1351de037ffd2ccc";
                     }
 
-
                     case TO_BE_PICKED -> {
                         return "62869b5c1351de037ffd2ccd";
                     }
@@ -938,6 +1157,72 @@ public class TrelloListIDs {
                     }
                     default -> {
                         return "636bc3a95da9340015e47b8b";
+                    }
+                }
+            }else if(this.branch.equals("NASHVILLE")) {
+                switch (list) {
+                    case QUOTED -> {
+                        return "6655edac93277a7afa62cda8";
+                    }
+                    case PROCESSING -> {
+                        return "6655edac93277a7afa62cdab";
+                    }
+                    case TO_BE_ORDERED -> {
+                        return "6655edac93277a7afa62cdac";
+                    }
+                    case ON_ORDER -> {
+                        return "6655edac93277a7afa62cdad";
+                    }
+                    case RECEIVING -> {
+                        return "6655edac93277a7afa62cdae";
+                    }
+                    case TO_BE_RECEIVED_SHOP -> {
+                        return "6655edac93277a7afa62cdaf";
+                    }
+                    case ON_HOLD -> {
+                        return "6655edac93277a7afa62cda9";
+                    }
+                    case PRODUCTION_QUEUE -> {
+                        return "6655edac93277a7afa62cdb0";
+                    }
+                    case PICK_REMAINING_ITEMS -> {
+                        return "6655edac93277a7afa62cdb1";
+                    }
+                    case TO_BE_PICKED -> {
+                        return "6655edac93277a7afa62cdb2";
+                    }
+                    case SENT_TO_PICK -> {
+                        return "6655edac93277a7afa62cdb3";
+                    }
+                    case ORDER_STAGED -> {
+                        return "6655edac93277a7afa62cdb4";
+                    }
+                    case TO_BE_LOADED_ROUTED -> {
+                        return "6655edac93277a7afa62cdb5";
+                    }
+                    case WILL_CALL -> {
+                        return "6655edac93277a7afa62cdb7";
+                    }
+                    case ON_TRUCK_ON_DELIVERY -> {
+                        return "6655edac93277a7afa62cdb6";
+                    }
+                    case DELIVERED_PICKED_UP -> {
+                        return "6655edac93277a7afa62cdb8";
+                    }
+                    case INVOICED -> {
+                        return "6655edac93277a7afa62cdb9";
+                    }
+                    case RECEIVED -> {
+                        return "6655edac93277a7afa62cdbb";
+                    }
+                    case BRANCH_ID -> {
+                        return "6655edac93277a7afa62cda6";
+                    }
+                    case CANCELED -> {
+                        return "6655edac93277a7afa62cdbc";
+                    }
+                    default -> {
+                        return "6655edac93277a7afa62cdbe";
                     }
                 }
             }else{
@@ -1154,7 +1439,9 @@ public class TrelloListIDs {
                         return "6596ece3760cfe2637c6f946";
                     }
                 }
-            }
+            }else if(this.branch.equals("NASHVILLE")) {
+            return "6655edac93277a7afa62cdbe";
+        }
 //            else{
 //                return "61f2d5c461ac134ef274ae5f";
 //            }
