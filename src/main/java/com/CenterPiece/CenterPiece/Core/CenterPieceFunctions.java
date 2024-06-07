@@ -311,10 +311,18 @@ public class CenterPieceFunctions {
                         System.out.println("Delete the saletype label: " + trelloLabels.get(i) + " from Trello\n");
                         trelloCalls.deleteTrelloCardLabelAPICall(cardId, trelloLabels.get(i));
                         resultLabelList.add(cpLabel);
-                        //centerPieceLabels.remove(cpLabel);
                     }
                 }
-            } else {
+            } else if (new TrelloLabelIds(trelloLabels.get(i)).isPaymentCodeLabel()) {
+                for (String cpLabel : centerPieceLabels) {
+                    if (new TrelloLabelIds(cpLabel).isPaymentCodeLabel() && !cpLabel.equals(trelloLabels.get(i))) {
+                        //Delete Label from card
+                        System.out.println("Delete the payment code label: " + trelloLabels.get(i) + " from Trello\n");
+                        trelloCalls.deleteTrelloCardLabelAPICall(cardId, trelloLabels.get(i));
+                        resultLabelList.add(cpLabel);
+                    }
+                }
+            }else {
                 System.out.println("Neither brand nor saletype label. Leave it.\n");
                 resultLabelList.add(trelloLabels.get(i));
             }

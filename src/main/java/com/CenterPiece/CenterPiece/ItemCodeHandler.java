@@ -288,14 +288,16 @@ public class ItemCodeHandler {
 
         switch (this.itemGroup) {
             case "1000", "1900", "2000", "3400", "3600", "3700",  "9800" -> {
+                //Components
 
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.COMPONENTS, "COMPONENTS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
                 idList = orderStatusLogic("COMPONENTS", this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.COMPONENTS, "COMPONENTS", this.environment, this.salesOrder.getString("SaleType"));
-                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.COMPONENTS, "COMPONENTS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIDs();
+
 
                 TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "COMPONENTS", this.environment);
                 TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "COMPONENTS", this.environment);
@@ -315,8 +317,8 @@ public class ItemCodeHandler {
 
                 idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.KK_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
-                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.KK_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -341,8 +343,8 @@ public class ItemCodeHandler {
 
                 idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CNC_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
-                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CNC_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
@@ -365,8 +367,8 @@ public class ItemCodeHandler {
 
                 idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.LEGACY_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
-                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.LEGACY_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
@@ -389,8 +391,8 @@ public class ItemCodeHandler {
 
                 idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CHOICE_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"));
-                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CHOICE_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
                 linkedType = this.linkedTranType;
@@ -459,8 +461,8 @@ public class ItemCodeHandler {
 
                 idList = orderStatusLogic("TOPSHOP", this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.TOPS, "TOPSHOP", this.environment, this.salesOrder.getString("SaleType"));
-                idLabel = trelloLabelIds.getAllRelevantLabelIds();
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.TOPS, "TOPSHOP", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 linkedType = this.linkedTranType;
                 linkedPoID = this.linkedTranPoID;
