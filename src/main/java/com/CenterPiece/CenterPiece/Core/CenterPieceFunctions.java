@@ -419,9 +419,18 @@ public class CenterPieceFunctions {
 
         String dueDate = jsonSO.getString("ExpectedDate");
 
+        String desc = String.format("Contact: %s - %s; ShipTo Phone: %s; BillTo Phone: %s" +
+                        "",
+                jsonSO.getString("ContactName"), jsonSO.getString("ContactPhone"),
+                jsonSO.getString("ShipToPhone"), jsonSO.getString("BillToPhone"));
+
+
+
         orderDate = trelloDateAdjuster(orderDate);
 
         dueDate = trelloDateAdjuster(dueDate);
+
+        System.out.println("\n----Formatting Address for Trello URL Parameters ----\n");
 
         String address = "";
         String city = "";
@@ -469,15 +478,16 @@ public class CenterPieceFunctions {
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
                             "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&coordinates=%s" +
-                            "&locationName=%s" + moveToTopIfCabinetsAndMoved(sameList),
+                            "&locationName=%s&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
                     boardID, idList, name, idLabels,dueDate,
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
-                    urlify(tomTomCalls.getResponseAddress()));
+                    urlify(tomTomCalls.getResponseAddress()),
+                    urlify(desc));
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s" + moveToTopIfCabinetsAndMoved(sameList),
-                    boardID, idList, name, idLabels, dueDate);
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
+                    boardID, idList, name, idLabels, dueDate, urlify(desc));
         }
 
         System.out.println("\n---- Complete - Formatting Data for Trello URL Parameters ----\n");
