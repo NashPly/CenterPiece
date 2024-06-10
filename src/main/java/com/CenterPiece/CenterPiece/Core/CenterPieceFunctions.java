@@ -288,6 +288,11 @@ public class CenterPieceFunctions {
         List<String> resultLabelList = new ArrayList<>();
         TrelloCalls trelloCalls = new TrelloCalls(this.client, "cards/");
 
+//        int labelSize = trelloLabels.size();
+//
+//        if (centerPieceLabels.size() > labelSize)
+//            labelSize = centerPieceLabels.size();
+
         for (int i = 0; i < trelloLabels.size(); i++) {
 
             if (centerPieceLabels.contains(trelloLabels.get(i))) {
@@ -332,6 +337,7 @@ public class CenterPieceFunctions {
         Set<String> set = new LinkedHashSet<>(resultLabelList);
         resultLabelList.clear();
         resultLabelList.addAll(set);
+        resultLabelList.addAll(centerPieceLabels);
 
         return resultLabelList;
     }

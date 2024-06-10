@@ -25,7 +25,7 @@ public class TrelloLabelIds {
         String saleType = this.getSaleTypeLabelIds();
         String payTerm = this.getPaymentTermLabelIds();
 
-        if(payTerm.isEmpty())
+        if(payTerm.isEmpty() || payTerm.contains("Net"))
             return saleType;
         else
             return saleType + "," + payTerm;
