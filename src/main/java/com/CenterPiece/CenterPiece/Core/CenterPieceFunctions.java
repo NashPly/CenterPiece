@@ -229,10 +229,10 @@ public class CenterPieceFunctions {
             updateCardList(agilityItemInformation, (JSONObject) trelloCard, isSameBoard);
         }
         // Your existing logic for updating Trello card
-        System.out.println("\n--- Updated a Trello Card ---");
+        System.out.println("\n--- Updating a Trello Card ---");
         TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + firstResult.getString("id")),
-                agilityDataForTrelloGather(salesOrderData, agilityItemInformation, agilityItemInformation.getString("idList")
-                        .equals(firstResult.getString("idList"))));
+                agilityDataForTrelloGather(salesOrderData, agilityItemInformation,
+                        agilityItemInformation.getString("idList").equals(firstResult.getString("idList"))));
         var response = trelloCalls.putTrelloAPICall(new JSONObject());
 
         checkTrelloCardForEmptyCustomFields(response.getString("id"), agilityItemInformation, salesOrderData);
@@ -413,7 +413,7 @@ public class CenterPieceFunctions {
 
     public String agilityDataForTrelloGather(JSONObject jsonSO, JSONObject itemInformation, boolean sameList){
 
-        System.out.println("\n----Formatting Data for Trello URL Parameters ----\n");
+        System.out.println("\n----Formatting Data for Trello URL Parameters - SO " + jsonSO.getNumber("OrderID") + "----\n");
 
         String boardID = itemInformation.getString("boardID");
         String idList = itemInformation.getString("idList");

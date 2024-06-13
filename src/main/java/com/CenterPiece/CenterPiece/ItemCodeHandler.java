@@ -621,7 +621,7 @@ public class ItemCodeHandler {
 
                         //To Be Picked
                         System.out.println(" - " + board + " To Be Picked - ");
-                        return whichBoard(new TrelloListIDs(TrelloLists.INBOX, "NASHVILLE", environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS", environment).getListID(), board);
+                        return whichBoard(new TrelloListIDs(TrelloLists.TO_BE_PICKED, "NASHVILLE", environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "CABINETS", environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "TOPSHOP", environment).getListID(), new TrelloListIDs(TrelloLists.TO_BE_PICKED, "COMPONENTS", environment).getListID(), board);
                     }
                 }
                 case "Picked" -> {
