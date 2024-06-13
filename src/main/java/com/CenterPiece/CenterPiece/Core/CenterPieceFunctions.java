@@ -423,18 +423,16 @@ public class CenterPieceFunctions {
 
         String orderDate = jsonSO.getString("OrderDate");
 
-        String dueDate = jsonSO.getString("ExpectedDate");
+        String dueDate = "";
+        if(!jsonSO.isNull("ExpectedDate"))
+            dueDate = "&due=" + trelloDateAdjuster(jsonSO.getString("ExpectedDate"));
 
         String desc = String.format("Contact: %s - %s; ShipTo Phone: %s; BillTo Phone: %s" +
                         "",
                 jsonSO.getString("ContactName"), jsonSO.getString("ContactPhone"),
                 jsonSO.getString("ShipToPhone"), jsonSO.getString("BillToPhone"));
 
-
-
         orderDate = trelloDateAdjuster(orderDate);
-
-        dueDate = trelloDateAdjuster(dueDate);
 
         System.out.println("\n----Formatting Address for Trello URL Parameters ----\n");
 
@@ -483,7 +481,7 @@ public class CenterPieceFunctions {
 
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&coordinates=%s" +
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"%s&coordinates=%s" +
                             "&locationName=%s&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
                     boardID, idList, name, idLabels,dueDate,
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
@@ -492,7 +490,7 @@ public class CenterPieceFunctions {
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&due=%s&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"%s&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
                     boardID, idList, name, idLabels, dueDate, urlify(desc));
         }
 
