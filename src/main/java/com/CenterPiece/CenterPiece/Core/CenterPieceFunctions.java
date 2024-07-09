@@ -280,7 +280,6 @@ public class CenterPieceFunctions {
                 }
         }
     }
-
 // Other helper functions can be added as needed
 
     private List<String> compareContrastLabels(List<String> trelloLabels, List<String> centerPieceLabels, String cardId) {
@@ -434,14 +433,14 @@ public class CenterPieceFunctions {
 
         orderDate = trelloDateAdjuster(orderDate);
 
-        System.out.println("\n----Formatting Address for Trello URL Parameters ----\n");
+
 
         String address = "";
         String city = "";
         String state = "";
         String zip = "";
 
-        String name = (
+        String name = urlify(
                 "SO "+
                         jsonSO.getNumber("OrderID") +
                         " - " +
@@ -450,7 +449,9 @@ public class CenterPieceFunctions {
                         jsonSO.getString("TransactionJob")
         );
 
-        name = urlify(name);
+        //name = urlify(name);
+
+        System.out.println("\n----Formatting Address for Trello URL Parameters ----\n");
 
         boolean address1ContainsNumbers = checkIfAddressHasStreetNumbers(jsonSO.getString("ShipToAddress1"));
 

@@ -133,6 +133,7 @@ public class ItemCodeHandler {
         for(int i=0; i < length; i++){
             item = salesOrderItemsArray.getJSONObject(i);
             itemCode = item.getString("ItemCode");
+
             if(itemCode.equals("CBUILD")){
                 return item.getInt("TotalOrderedQuantity");
             }
