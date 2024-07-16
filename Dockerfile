@@ -17,6 +17,7 @@
 #How to https://docs.docker.com/language/java/build-images/
 FROM eclipse-temurin:17-jdk-jammy
 
+
 WORKDIR /app
 
 COPY .mvn/ .mvn
