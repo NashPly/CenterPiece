@@ -500,7 +500,7 @@ public class CenterPieceFunctions {
     }
 
     private String addOrRemoveOrderDate(String orderDate){
-        if(this.branch.equals("CABINETS")) return "";
+        if(this.branch.equals("CABINETS") || this.branch.equals("FABRICATION") || this.branch.equals("NASHVILLE")) return "";
         else return "&start=" + orderDate;
     }
 
