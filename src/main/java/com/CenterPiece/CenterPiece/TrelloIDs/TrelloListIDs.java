@@ -1477,7 +1477,8 @@ public class TrelloListIDs {
                 offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
                         TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,TrelloLists.ON_ORDER,
                         TrelloLists.RECEIVING, TrelloLists.PARTIAL_RECEIPT, TrelloLists.ON_HOLD, TrelloLists.SCHEDULING_POOL,
-                        TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.ORDER_STAGED, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,
+                        TrelloLists.TO_BE_PICKED, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION,
+                        TrelloLists.ORDER_STAGED, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,
                         TrelloLists.TO_BE_LOADED_ROUTED, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID, TrelloLists.RECEIVED));
             }
 
