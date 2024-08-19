@@ -366,6 +366,8 @@ public class TrelloLabelIds {
                     case KK_CABINET -> "62869b5c1351de037ffd2d26";
                     case LEGACY_CABINET -> "62869db3e04b83468347996b";
                     case CHOICE_CABINET -> "62869b5c1351de037ffd2d32";
+                    case QWIKKIT_DOORS -> "66c34d929de3e9bb23ad988d";
+                    case CULLMAN_DOORS -> "66c34d9f7792edea8b47e7c2";
                     case WHSE -> "65a9526ced9de1398df49ae3";
                     case WILLCALL -> "65a952409cdbee377a23b6f7";
                     case NONE -> "633d78eb95e9c201251a9264";
@@ -413,6 +415,8 @@ public class TrelloLabelIds {
                     case KK_CABINET -> "6596e948627ec8be307b2c36";
                     case LEGACY_CABINET -> "6596e948627ec8be307b2c48";
                     case CHOICE_CABINET -> "6596e948627ec8be307b2c42";
+                    case QWIKKIT_DOORS -> "66c34dbc029478341f2d1b16";
+                    case CULLMAN_DOORS -> "66c34dc35fa012aa63af4e31";
                     case WHSE -> "65b03b61c814fd09e5c1104f";
                     case WILLCALL -> "65b03b67fba3b9aec1b794d6";
                     case NONE -> "6596e948627ec8be307b2c5a";
@@ -451,7 +455,7 @@ public class TrelloLabelIds {
 
         List<TrelloLabels> brandLabelList = new ArrayList<>(Arrays.asList(TrelloLabels.CNC_CABINET,
                 TrelloLabels.KK_CABINET, TrelloLabels.CHOICE_CABINET, TrelloLabels.LEGACY_CABINET,
-                TrelloLabels.TOPS, TrelloLabels.COMPONENTS));
+                TrelloLabels.CULLMAN_DOORS, TrelloLabels.QWIKKIT_DOORS, TrelloLabels.TOPS, TrelloLabels.COMPONENTS));
 
         return brandLabelList.contains(this.label);
     }

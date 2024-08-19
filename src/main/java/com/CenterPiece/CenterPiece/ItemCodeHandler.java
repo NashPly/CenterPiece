@@ -113,7 +113,7 @@ public class ItemCodeHandler {
             if(this.agilityItemSearchResult != null && !this.agilityItemSearchResult.has("Empty")){
             this.itemGroup = this.agilityItemSearchResult.getString("ItemGroupMajor");
                 if(this.itemCode != null){
-                    System.out.println("\n--- This Item Search was Null: " + this.itemCode + " ---");
+                    System.out.println("\n--- This Item Search was not Null: " + this.itemCode + " ---");
                 }
                 else if(item != null){
                     System.out.println("\n--- There was no item code in here: \n" + item +"---");
