@@ -165,6 +165,16 @@ public class TrelloLabelIds {
                 this.branch = "CABINET";
                 this.environment = "Production";
             }
+            case "66c34d929de3e9bb23ad988d" -> {
+                this.label = TrelloLabels.QWIKKIT_DOORS;
+                this.branch = "CABINET";
+                this.environment = "Production";
+            }
+            case "66c34d9f7792edea8b47e7c2" -> {
+                this.label = TrelloLabels.CULLMAN_DOORS;
+                this.branch = "CABINET";
+                this.environment = "Production";
+            }
 
             case "6596e948627ec8be307b2c4b" -> {
                 this.label = TrelloLabels.CNC_CABINET;
@@ -208,6 +218,16 @@ public class TrelloLabelIds {
             }
             case "6661c08635d9a6e2ea657b2f" -> {
                 this.label = TrelloLabels.COD_CC;
+                this.branch = "CABINET";
+                this.environment = "Test";
+            }
+            case "66c34dbc029478341f2d1b16" -> {
+                this.label = TrelloLabels.QWIKKIT_DOORS;
+                this.branch = "CABINET";
+                this.environment = "Test";
+            }
+            case "66c34dc35fa012aa63af4e31" -> {
+                this.label = TrelloLabels.CULLMAN_DOORS;
                 this.branch = "CABINET";
                 this.environment = "Test";
             }
