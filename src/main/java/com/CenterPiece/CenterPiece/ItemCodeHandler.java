@@ -312,13 +312,22 @@ public class ItemCodeHandler {
             }
             case "3200" -> {
                 //Cullman Doors
+                String orderBranch = "";
+                TrelloBoardIDs trelloBoardIDs = null;
+                if(this.branch == "CABINETS") {
+                    orderBranch = "CABINETS";
+                    trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, orderBranch, this.environment);
+                } else {
+                    orderBranch = "NASHVILLE";
+                    trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.NASHVILLE, orderBranch, this.environment);
+                }
 
-                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
-                idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
+                idList = orderStatusLogic(orderBranch, this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CULLMAN_DOORS, "CABINETS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CULLMAN_DOORS, orderBranch, this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
                 idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
@@ -326,17 +335,15 @@ public class ItemCodeHandler {
                 linkedPoID = this.linkedTranPoID;
                 linkedRmID = this.linkedTranRmID;
 
-                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloNoOfBuildsFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.NUMBER_OF_BUILDS, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, orderBranch, this.environment);
+                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, orderBranch, this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, orderBranch, this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, orderBranch, this.environment);
 
                 colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
                 rmCustomField = trelloRemanCustomFieldID.getFieldID();
                 agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
-                countOfBuildsCustomField = trelloNoOfBuildsFieldID.getFieldID();
 
             }
             case "3250" -> {
@@ -359,13 +366,11 @@ public class ItemCodeHandler {
                 TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "CABINETS", this.environment);
                 TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
                 TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloNoOfBuildsFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.NUMBER_OF_BUILDS, "CABINETS", this.environment);
 
                 colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
                 rmCustomField = trelloRemanCustomFieldID.getFieldID();
                 agilityPoCustomField = trelloAgilityPoCustomFieldID.getFieldID();
                 customerPoCustomField = trelloCustomerPoFieldID.getFieldID();
-                countOfBuildsCustomField = trelloNoOfBuildsFieldID.getFieldID();
 
             }
             case "3300" -> {
