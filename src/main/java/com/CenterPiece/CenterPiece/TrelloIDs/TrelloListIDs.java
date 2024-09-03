@@ -43,6 +43,11 @@ public class TrelloListIDs {
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
             }
+            case "66cf793aa00b02df4c95b395" -> {
+                this.list = TrelloLists.SO_JAMES_CHECK;
+                this.branch = "TOPSHOP";
+                this.environment = "Production";
+            }
             case "64873f48560219742046283c" -> {
                 this.list = TrelloLists.DRAWING_RECHECK;
                 this.branch = "TOPSHOP";
@@ -507,6 +512,12 @@ public class TrelloListIDs {
                 this.branch = "TOPSHOP";
                 this.environment = "Test";
             }
+            //Same as Sid Check
+//            case "6596e9210326360265ae3354" -> {
+//                this.list = TrelloLists.SO_JAMES_CHECK;
+//                this.branch = "TOPSHOP";
+//                this.environment = "Test";
+//            }
             case "6596e9210326360265ae3351" -> {
                 this.list = TrelloLists.ON_HOLD;
                 this.branch = "TOPSHOP";
@@ -963,6 +974,9 @@ public class TrelloListIDs {
                     case SO_SID_CHECK -> {
                         return "62c4430fcdfa097c5642436b";
                     }
+                    case SO_JAMES_CHECK -> {
+                        return "66cf793aa00b02df4c95b395";
+                    }
                     case ON_HOLD -> {
                         return "61c1e06cdc22878b2e8c7ae7";
                     }
@@ -1246,6 +1260,9 @@ public class TrelloListIDs {
                     case SO_SID_CHECK -> {
                         return "6596e9210326360265ae3354";
                     }
+//                    case SO_JAMES_CHECK -> {
+//                        return "asdf";
+//                    }
                     case ON_HOLD -> {
                         return "6596e9210326360265ae3351";
                     }
@@ -1475,10 +1492,10 @@ public class TrelloListIDs {
             }
             case "TOPSHOP" ->{
                 offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
-                        TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,TrelloLists.ON_ORDER,
-                        TrelloLists.RECEIVING, TrelloLists.PARTIAL_RECEIPT, TrelloLists.ON_HOLD, TrelloLists.SCHEDULING_POOL,
-                        TrelloLists.TO_BE_PICKED, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION,
-                        TrelloLists.ORDER_STAGED, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,
+                        TrelloLists.SO_JAMES_CHECK, TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
+                        TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.PARTIAL_RECEIPT, TrelloLists.ON_HOLD,
+                        TrelloLists.SCHEDULING_POOL, TrelloLists.TO_BE_PICKED, TrelloLists.PRODUCTION_QUEUE,
+                        TrelloLists.IN_PRODUCTION, TrelloLists.ORDER_STAGED, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,
                         TrelloLists.TO_BE_LOADED_ROUTED, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID, TrelloLists.RECEIVED));
             }
 
@@ -1489,10 +1506,11 @@ public class TrelloListIDs {
 //                        TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID, TrelloLists.RECEIVED));
 //            }
             default ->{
-                offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK, TrelloLists.SO_SID_CHECK,
-                            TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
-                            TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.TO_BE_LOADED_ROUTED,
-                            TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
+                offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
+                        TrelloLists.SO_JAMES_CHECK,TrelloLists.SO_SID_CHECK, TrelloLists.ON_HOLD, TrelloLists.CREDIT_HOLD,
+                        TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED, TrelloLists.ON_ORDER, TrelloLists.RECEIVING,
+                        TrelloLists.SCHEDULING_POOL, TrelloLists.PRODUCTION_QUEUE, TrelloLists.IN_PRODUCTION, TrelloLists.TO_BE_LOADED_ROUTED,
+                        TrelloLists.TRANSFERRED_TO_NASHVILLE, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID ));
             }
         }
 
