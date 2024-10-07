@@ -468,7 +468,9 @@ public class CenterPieceFunctions {
         if(address.isBlank() || jsonSO.getString("ShipToCity").isBlank() ||
                 jsonSO.getString("ShipToState").isBlank() || jsonSO.getString("ShipToZip").isBlank())
             addressBlank = true;
-
+        
+        //Temp while TomTom is having a bad day
+        addressBlank = true
         String parameters;
         if(!addressBlank) {
 
