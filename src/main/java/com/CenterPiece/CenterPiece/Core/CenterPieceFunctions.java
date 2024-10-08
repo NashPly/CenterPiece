@@ -470,7 +470,7 @@ public class CenterPieceFunctions {
             addressBlank = true;
         
         //Temp while TomTom is having a bad day
-        addressBlank = true
+        addressBlank = true;
         String parameters;
         if(!addressBlank) {
 
