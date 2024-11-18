@@ -5,10 +5,7 @@ import com.CenterPiece.CenterPiece.APICalls.TrelloCalls;
 import com.CenterPiece.CenterPiece.ItemCodeHandler;
 import com.CenterPiece.CenterPiece.Objects.SalesOrder;
 import com.CenterPiece.CenterPiece.Objects.ShipToAddress;
-import com.CenterPiece.CenterPiece.TrelloIDs.TrelloCustomFieldIDs;
-import com.CenterPiece.CenterPiece.TrelloIDs.TrelloCustomFields;
-import com.CenterPiece.CenterPiece.TrelloIDs.TrelloLabelIds;
-import com.CenterPiece.CenterPiece.TrelloIDs.TrelloListIDs;
+import com.CenterPiece.CenterPiece.TrelloIDs.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -88,7 +85,7 @@ public class CenterPieceFunctions {
                 if(openTrelloCards.size() > 1){
 
                     JSONObject desiredCard = new JSONObject();
-                    JSONArray partialCards = new JSONArray();
+                    JSONArray partialAndStuckCards = new JSONArray();
 
                     TrelloCalls trelloCalls = new TrelloCalls(client,"cards/");
 
@@ -97,6 +94,7 @@ public class CenterPieceFunctions {
                         if(!openTrelloCards.get(i).getJSONArray("labels").isEmpty()){
 
                             for(int q = 0; q < openTrelloCards.get(i).getJSONArray("labels").length(); q++){
+                                String currentLabel = openTrelloCards.get(i).getJSONArray("labels").getJSONObject(q).getString("id");
                                 if(!openTrelloCards.isEmpty()){
                                     if (openTrelloCards.get(i).getJSONArray("labels").getJSONObject(q).get("name").equals("Partial")) {
                                         //Check the partial box
@@ -120,7 +118,15 @@ public class CenterPieceFunctions {
 
                                         updateCustomFieldTrello(openTrelloCards.get(i).getString("id"), partialCustomFieldID, "true");
 
-                                        partialCards.put(partialCards.length(),openTrelloCards.get(i));
+                                        partialAndStuckCards.put(partialAndStuckCards.length(),openTrelloCards.get(i));
+                                        q = openTrelloCards.get(i).getJSONArray("labels").length();
+                                        openTrelloCards.remove(i);
+                                        if(i!=0)
+                                            i--;
+                                        continue;
+                                    } else if(new TrelloLabelIds(currentLabel).isManualOrStuckLabel()){
+                                        System.out.println("Its a ManuStuck");
+                                        partialAndStuckCards.put(partialAndStuckCards.length(),openTrelloCards.get(i));
                                         q = openTrelloCards.get(i).getJSONArray("labels").length();
                                         openTrelloCards.remove(i);
                                         if(i!=0)
@@ -150,8 +156,8 @@ public class CenterPieceFunctions {
 
                     JSONArray jsonArray = new JSONArray().put(0, desiredCard);
 
-                    for(int v = 0; v < partialCards.length(); v++) {
-                        jsonArray.put(jsonArray.length(),partialCards.getJSONObject(v));
+                    for(int v = 0; v < partialAndStuckCards.length(); v++) {
+                        jsonArray.put(jsonArray.length(),partialAndStuckCards.getJSONObject(v));
                     }
 
                     return jsonArray;
@@ -210,7 +216,7 @@ public class CenterPieceFunctions {
             ItemCodeHandler salesDataItemHandler = new ItemCodeHandler(this.client, this.contextID, salesOrderData.getNumber("OrderID").toString(), salesOrderData, this.branch, this.environment);
 
             if (firstResult != null && firstResult.has("id") && !firstResult.getString("id").equals("Empty")) {
-                updateTrelloCard(firstResult, salesDataItemHandler.itemParseProcess(), trelloSearchResultArray, salesOrderData);
+                updateTrelloCard(firstResult, salesDataItemHandler, trelloSearchResultArray, salesOrderData);
             } else {
                 System.out.println("\n- Trello Hasn't Updated Yet -");
                 // TODO: Work out some way to create a card if there isn't one on Trello yet
@@ -220,46 +226,63 @@ public class CenterPieceFunctions {
         }
     }
 
-    private void updateTrelloCard(JSONObject firstResult, JSONObject agilityItemInformation, JSONArray trelloSearchResultArray, JSONObject salesOrderData) {
-        boolean isSameBoard = agilityItemInformation.getString("boardID").equals(trelloSearchResultArray.getJSONObject(0).getJSONObject("board").getString("id"));
+    private void updateTrelloCard(JSONObject firstResult, ItemCodeHandler salesDataItemHandler, JSONArray trelloSearchResultArray, JSONObject salesOrderData) {
+        boolean staysOnSameBoard = false;
+
+        JSONObject agilityItemInformation = salesDataItemHandler.itemParseProcess();
+
 
         for(Object trelloCard: trelloSearchResultArray) {
-            updateCardLabels(agilityItemInformation, (JSONObject) trelloCard, isSameBoard);
 
-            updateCardList(agilityItemInformation, (JSONObject) trelloCard, isSameBoard);
+            staysOnSameBoard = agilityItemInformation.getString("boardID").equals(((JSONObject) trelloCard).getJSONObject("board").getString("id"));
+
+            if (!staysOnSameBoard){
+
+                salesDataItemHandler.setBoard(new TrelloBoardIDs(((JSONObject) trelloCard).getJSONObject("board").getString("id")).getBranch());
+
+                agilityItemInformation = salesDataItemHandler.getCardDestinationFromItemCodeResult();
+            }
+
+
+            updateCardLabels(agilityItemInformation, (JSONObject) trelloCard, staysOnSameBoard);
+
+            updateCardList(agilityItemInformation, (JSONObject) trelloCard, staysOnSameBoard);
+
+            // Your existing logic for updating Trello card
+            System.out.println("\n--- Updating a Trello Card ---");
+            TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + ((JSONObject) trelloCard).getString("id")),
+                    agilityDataForTrelloGather(salesOrderData, agilityItemInformation,
+                            agilityItemInformation.getString("idList").equals(((JSONObject) trelloCard).getString("idList"))));
+            var response = trelloCalls.putTrelloAPICall(new JSONObject());
+
+            checkTrelloCardForEmptyCustomFields(response.getString("id"), agilityItemInformation, salesOrderData);
+
+            System.out.println("\nUpdates Applied");
+
         }
-        // Your existing logic for updating Trello card
-        System.out.println("\n--- Updating a Trello Card ---");
-        TrelloCalls trelloCalls = new TrelloCalls(client, ("cards/" + firstResult.getString("id")),
-                agilityDataForTrelloGather(salesOrderData, agilityItemInformation,
-                        agilityItemInformation.getString("idList").equals(firstResult.getString("idList"))));
-        var response = trelloCalls.putTrelloAPICall(new JSONObject());
 
-        checkTrelloCardForEmptyCustomFields(response.getString("id"), agilityItemInformation, salesOrderData);
-
-        System.out.println("\nUpdates Applied");
     }
 
-    private void updateCardLabels(JSONObject agilityItemInformation, JSONObject trelloCard, boolean isSameBoard) {
+    private void updateCardLabels(JSONObject agilityItemInformation, JSONObject trelloCard, boolean staysOnSameBoard) {
         System.out.println("\n--- Updating Card Labels ---");
-        List<String> labelIds = new ArrayList<>();
-        List<String> trelloLabelIds = null;
+        List<String> trelloCardlabelIds = new ArrayList<>();
+        List<String> cpLabelIds = null;
 
         if(agilityItemInformation.has("idLabel") && agilityItemInformation.get("idLabel") != null)
-            trelloLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
+            cpLabelIds = new ArrayList<>(List.of(agilityItemInformation.getString("idLabel").split(",")));
 
         JSONArray labelsArray = trelloCard.getJSONArray("labels");
 
-        if (trelloCard.has("labels") && trelloLabelIds != null && isSameBoard) {
+        if (trelloCard.has("labels") && cpLabelIds != null && staysOnSameBoard) {
             for (Object labelObject : labelsArray) {
                 if (labelObject instanceof JSONObject) {
                     String labelId = ((JSONObject) labelObject).getString("id");
-                    labelIds.add(labelId);
+                    trelloCardlabelIds.add(labelId);
                 }
             }
 
             agilityItemInformation.remove("idLabel");
-            agilityItemInformation.put("idLabel", String.join(",", compareContrastLabels(labelIds, trelloLabelIds, trelloCard.getString("id"))));
+            agilityItemInformation.put("idLabel", String.join(",", compareContrastLabels(trelloCardlabelIds, cpLabelIds, trelloCard.getString("id"))));
         }
 
     }
@@ -271,15 +294,46 @@ public class CenterPieceFunctions {
                         || agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))
                 && sameBoard ){
 
-                TrelloListIDs listIDs = new TrelloListIDs(trelloCard.getString("idList"));
+            TrelloListIDs listIDs = new TrelloListIDs(trelloCard.getString("idList"));
 
-                if(listIDs.offLimits(this.branch) || trelloCard.getJSONArray("labels").toList().contains("638e5d85e978f805fbcbf36f")) {
-                    //If either of those two are true, leave it where it is
-                    agilityItemInformation.remove("idList");
-                    agilityItemInformation.put("idList", listIDs.getListID());
-                }
+            if(listIDs.offLimits(this.branch) || trelloCard.getJSONArray("labels").toList().contains("638e5d85e978f805fbcbf36f")) {
+                //If either of those two are true, leave it where it is
+                agilityItemInformation.remove("idList");
+                agilityItemInformation.put("idList", listIDs.getListID());
+            }
         }
     }
+//    private void updateCardList(JSONObject agilityItemInformation, JSONObject trelloCard, boolean staysOnSameBoard) {
+//        System.out.println("\n--- Updating Card List ---");
+//
+//        boolean manuStuck = false;
+//        for (Object labelObject: trelloCard.getJSONArray("labels")){
+//            if (labelObject instanceof JSONObject) {
+//                String labelId = ((JSONObject) labelObject).getString("id");
+//                if(new TrelloLabelIds(((JSONObject) labelObject).getString("id")).isManualOrStuckLabel())
+//                    manuStuck=true;
+//            }
+//        }
+//
+//        TrelloListIDs listIDs = new TrelloListIDs(trelloCard.getString("idList"));
+//
+//        if(trelloCard.has("idList") &&
+//                !(agilityItemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4")
+//                        || agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))
+//                && staysOnSameBoard){
+//
+//                if(listIDs.offLimits(this.branch) || manuStuck) {
+//                    //If either of those two are true, leave it where it is
+//                    agilityItemInformation.remove("idList");
+//                    agilityItemInformation.put("idList", listIDs.getListID());
+//                }
+//        }
+////        else if(manuStuck){
+////                //If either of those two are true, leave it where it is
+////                agilityItemInformation.remove("idList");
+////                agilityItemInformation.put("idList", listIDs.getListID());
+////            }
+//    }
 // Other helper functions can be added as needed
 
     private List<String> compareContrastLabels(List<String> trelloLabels, List<String> centerPieceLabels, String cardId) {
@@ -469,6 +523,9 @@ public class CenterPieceFunctions {
                 jsonSO.getString("ShipToState").isBlank() || jsonSO.getString("ShipToZip").isBlank())
             addressBlank = true;
 
+        //Temp while TomTom is throwing a fit
+        addressBlank = true;
+
         String parameters;
         if(!addressBlank) {
 
@@ -480,6 +537,7 @@ public class CenterPieceFunctions {
 
             TomTomCalls tomTomCalls = new TomTomCalls(shipToAddress, client);
 
+
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
                             "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"%s&coordinates=%s" +
@@ -488,6 +546,12 @@ public class CenterPieceFunctions {
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
                     urlify(tomTomCalls.getResponseAddress()),
                     urlify(desc));
+
+            //For when Tom Tom Doesn't want to play
+            parameters = String.format(
+                    "idBoard=%s&idList=%s&name=%s" +
+                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
+                    boardID, idList, name, idLabels,dueDate, urlify(desc));
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +

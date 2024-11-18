@@ -28,6 +28,8 @@ public class ItemCodeHandler {
     private JSONObject agilityItemSearchResult;
     private final String branch;
 
+    private String board = "";
+
     public ItemCodeHandler(HttpClient cl, String context, String branch, String environment){
         this.client = cl;
         this.contextId = context;
@@ -42,6 +44,10 @@ public class ItemCodeHandler {
         this.salesOrder = salesOrder;
         this.branch = branch;
         this.environment = environment;
+    }
+
+    public void setBoard(String board) {
+        this.board = board;
     }
 
     public JSONObject itemParseProcess() {
@@ -402,6 +408,8 @@ public class ItemCodeHandler {
             case "3350" -> {
                 //cnc cabinets
 
+                this.board = this.branch.equals("") ? this.board : "CABINETS";
+
                 TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
@@ -427,12 +435,18 @@ public class ItemCodeHandler {
             case "3450" -> {
                 //choice cabinets
 
-                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(TrelloBoards.CABINETS, "CABINETS", this.environment);
+                this.board = this.board.isBlank() ? this.branch: this.board;
+
+//                if(this.board.isEmpty()){
+//                    this.board = this.branch;
+//                }
+
+                TrelloBoardIDs trelloBoardIDs = new TrelloBoardIDs(this.board, this.environment);
                 boardID = trelloBoardIDs.getBoardID();
 
-                idList = orderStatusLogic("CABINETS", this.salesOrder, this.environment, this.linkedTranPoID);
+                idList = orderStatusLogic(this.board, this.salesOrder, this.environment, this.linkedTranPoID);
 
-                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CHOICE_CABINET, "CABINETS", this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
+                TrelloLabelIds trelloLabelIds = new TrelloLabelIds(TrelloLabels.CHOICE_CABINET, this.board, this.environment, this.salesOrder.getString("SaleType"), this.salesOrder.getString("PayTermsCode"));
                 idLabel = trelloLabelIds.getAllRelevantLabelIDs();
 
                 colorCode = this.agilityItemSearchResult.getString("ItemDescription").split(" ")[0];
@@ -440,11 +454,11 @@ public class ItemCodeHandler {
                 linkedPoID = this.linkedTranPoID;
                 linkedRmID = this.linkedTranRmID;
 
-                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, "CABINETS", this.environment);
-                TrelloCustomFieldIDs trelloNoOfBuildsFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.NUMBER_OF_BUILDS, "CABINETS", this.environment);
+                TrelloCustomFieldIDs trelloColorCodeCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.COLOR_CODE, this.board, this.environment);
+                TrelloCustomFieldIDs trelloRemanCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.REMAN_NUMBER, this.board, this.environment);
+                TrelloCustomFieldIDs trelloAgilityPoCustomFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.AGILITY_PO_NUMBER, this.board, this.environment);
+                TrelloCustomFieldIDs trelloCustomerPoFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.CUSTOMER_PO_NUMBER, this.board, this.environment);
+                TrelloCustomFieldIDs trelloNoOfBuildsFieldID = new TrelloCustomFieldIDs(TrelloCustomFields.NUMBER_OF_BUILDS, this.board, this.environment);
 
                 colorCustomFieldID = trelloColorCodeCustomFieldID.getFieldID();
                 rmCustomField = trelloRemanCustomFieldID.getFieldID();

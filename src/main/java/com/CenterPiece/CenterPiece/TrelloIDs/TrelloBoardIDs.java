@@ -14,9 +14,15 @@ public class TrelloBoardIDs {
         this.environment = environment;
     }
 
-    public TrelloBoardIDs(TrelloBoards boards) {this.board = board;}
+    public TrelloBoardIDs(String branch, String environment) {
+        this.branch = branch;
+        this.environment = environment;
+        setBoard(getBoardID());
+    }
 
-    public TrelloBoardIDs(String idBoard){this.setBoard(idBoard);}
+    public TrelloBoardIDs(String idBoard) {
+        this.boardId = idBoard;
+        this.setBoard(idBoard);}
 
     public void setBoard(String board) {
 
@@ -110,6 +116,9 @@ public class TrelloBoardIDs {
         return this.boardId;
     }
 
+    public String getBranch(){
+        return this.branch;
+    }
     public void setBranch(String branch) {
         this.branch = branch;
     }
