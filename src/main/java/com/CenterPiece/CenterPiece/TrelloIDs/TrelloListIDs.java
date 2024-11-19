@@ -48,6 +48,11 @@ public class TrelloListIDs {
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
             }
+            case "672b921339cdbc1a22156eaf" -> {
+                this.list = TrelloLists.HOLD_FOR_BATCHING;
+                this.branch = "TOPSHOP";
+                this.environment = "Production";
+            }
             case "64873f48560219742046283c" -> {
                 this.list = TrelloLists.DRAWING_RECHECK;
                 this.branch = "TOPSHOP";
@@ -110,6 +115,11 @@ public class TrelloListIDs {
             }
             case "60c26dfb44555566d32ae64d" -> {
                 this.list = TrelloLists.SENT_TO_PICK;
+                this.branch = "TOPSHOP";
+                this.environment = "Production";
+            }
+            case "66fb42d45d0e784e0eeb5608" -> {
+                this.list = TrelloLists.ORDER_IN_STAGING_BIN;
                 this.branch = "TOPSHOP";
                 this.environment = "Production";
             }
@@ -502,22 +512,26 @@ public class TrelloListIDs {
                 this.branch = "TOPSHOP";
                 this.environment = "Test";
             }
-            case "6596e9210326360265ae3353" -> {
-                this.list = TrelloLists.DRAWING_RECHECK;
-                this.branch = "TOPSHOP";
-                this.environment = "Test";
-            }
             case "6596e9210326360265ae3354" -> {
                 this.list = TrelloLists.SO_SID_CHECK;
                 this.branch = "TOPSHOP";
                 this.environment = "Test";
             }
-            //Same as Sid Check
-//            case "6596e9210326360265ae3354" -> {
-//                this.list = TrelloLists.SO_JAMES_CHECK;
-//                this.branch = "TOPSHOP";
-//                this.environment = "Test";
-//            }
+            case "6596e9210326360265ae3353" -> {
+                this.list = TrelloLists.HOLD_FOR_BATCHING;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "673cbfd77864151ad40481f7" -> {
+                this.list = TrelloLists.DRAWING_RECHECK;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "673cbe78332fec7d08f9f50a" -> {
+                this.list = TrelloLists.SO_JAMES_CHECK;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
             case "6596e9210326360265ae3351" -> {
                 this.list = TrelloLists.ON_HOLD;
                 this.branch = "TOPSHOP";
@@ -570,6 +584,11 @@ public class TrelloListIDs {
             }
             case "6596e9210326360265ae335f" -> {
                 this.list = TrelloLists.SENT_TO_PICK;
+                this.branch = "TOPSHOP";
+                this.environment = "Test";
+            }
+            case "673cc04d3c89516c7c8aaaa4" -> {
+                this.list = TrelloLists.ORDER_IN_STAGING_BIN;
                 this.branch = "TOPSHOP";
                 this.environment = "Test";
             }
@@ -1010,6 +1029,9 @@ public class TrelloListIDs {
                     case SENT_TO_PICK -> {
                         return "60c26dfb44555566d32ae64d";
                     }
+                    case ORDER_IN_STAGING_BIN -> {
+                        return "66fb42d45d0e784e0eeb5608";
+                    }
                     case ORDER_STAGED -> {
                         return "654b9a13fbfe562537ab4e84";
                     }
@@ -1255,14 +1277,14 @@ public class TrelloListIDs {
                         return "65c3934c9fd3a65c731bb696";
                     }
                     case DRAWING_RECHECK -> {
-                        return "6596e9210326360265ae3353";
+                        return "673cbfd77864151ad40481f7";
                     }
                     case SO_SID_CHECK -> {
                         return "6596e9210326360265ae3354";
                     }
-//                    case SO_JAMES_CHECK -> {
-//                        return "asdf";
-//                    }
+                    case SO_JAMES_CHECK -> {
+                        return "673cbe78332fec7d08f9f50a";
+                    }
                     case ON_HOLD -> {
                         return "6596e9210326360265ae3351";
                     }
@@ -1296,8 +1318,11 @@ public class TrelloListIDs {
                     case SENT_TO_PICK -> {
                         return "6596e9210326360265ae335f";
                     }
+                    case ORDER_IN_STAGING_BIN -> {
+                        return "asdf";
+                    }
                     case ORDER_STAGED -> {
-                        return "6596e9210326360265ae3360";
+                        return "673cc04d3c89516c7c8aaaa4";
                     }
                     case TO_BE_LOADED_ROUTED -> {
                         return "6596e9210326360265ae3361";
@@ -1492,16 +1517,16 @@ public class TrelloListIDs {
             }
             case "TOPSHOP" ->{
                 offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
-                        TrelloLists.SO_JAMES_CHECK, TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
+                        TrelloLists.SO_JAMES_CHECK, TrelloLists.HOLD_FOR_BATCHING , TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
                         TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.PARTIAL_RECEIPT, TrelloLists.ON_HOLD,
                         TrelloLists.SCHEDULING_POOL, TrelloLists.TO_BE_PICKED, TrelloLists.PRODUCTION_QUEUE,
-                        TrelloLists.IN_PRODUCTION, TrelloLists.ORDER_STAGED, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,
+                        TrelloLists.IN_PRODUCTION, TrelloLists.ORDER_STAGED, TrelloLists.ORDER_IN_STAGING_BIN, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,
                         TrelloLists.TO_BE_LOADED_ROUTED, TrelloLists.DELIVERED_PICKED_UP, TrelloLists.COD_TO_BE_PAID, TrelloLists.RECEIVED));
             }
 
             case "NASHVILLE" ->{
                 offLimitsTrelloBuckets = new ArrayList<>(Arrays.asList(TrelloLists.BATCHING, TrelloLists.DRAWING_RECHECK,
-                        TrelloLists.SO_JAMES_CHECK, TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
+                        TrelloLists.SO_JAMES_CHECK, TrelloLists.HOLD_FOR_BATCHING, TrelloLists.SO_SID_CHECK, TrelloLists.PROCESSING, TrelloLists.TO_BE_ORDERED,
                         TrelloLists.ON_ORDER, TrelloLists.RECEIVING, TrelloLists.PARTIAL_RECEIPT, TrelloLists.ON_HOLD,
                         TrelloLists.SCHEDULING_POOL, TrelloLists.TO_BE_PICKED, TrelloLists.PRODUCTION_QUEUE,
                         TrelloLists.IN_PRODUCTION, TrelloLists.ORDER_STAGED, TrelloLists.ON_TRUCK_ON_DELIVERY, TrelloLists.WILL_CALL,

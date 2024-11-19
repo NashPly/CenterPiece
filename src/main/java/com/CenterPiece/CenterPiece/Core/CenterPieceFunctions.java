@@ -303,37 +303,6 @@ public class CenterPieceFunctions {
             }
         }
     }
-//    private void updateCardList(JSONObject agilityItemInformation, JSONObject trelloCard, boolean staysOnSameBoard) {
-//        System.out.println("\n--- Updating Card List ---");
-//
-//        boolean manuStuck = false;
-//        for (Object labelObject: trelloCard.getJSONArray("labels")){
-//            if (labelObject instanceof JSONObject) {
-//                String labelId = ((JSONObject) labelObject).getString("id");
-//                if(new TrelloLabelIds(((JSONObject) labelObject).getString("id")).isManualOrStuckLabel())
-//                    manuStuck=true;
-//            }
-//        }
-//
-//        TrelloListIDs listIDs = new TrelloListIDs(trelloCard.getString("idList"));
-//
-//        if(trelloCard.has("idList") &&
-//                !(agilityItemInformation.getString("idList").equals("62869b5c1351de037ffd2cd4")
-//                        || agilityItemInformation.getString("idList").equals("61b360e35ab37c0d9037c19f"))
-//                && staysOnSameBoard){
-//
-//                if(listIDs.offLimits(this.branch) || manuStuck) {
-//                    //If either of those two are true, leave it where it is
-//                    agilityItemInformation.remove("idList");
-//                    agilityItemInformation.put("idList", listIDs.getListID());
-//                }
-//        }
-////        else if(manuStuck){
-////                //If either of those two are true, leave it where it is
-////                agilityItemInformation.remove("idList");
-////                agilityItemInformation.put("idList", listIDs.getListID());
-////            }
-//    }
 // Other helper functions can be added as needed
 
     private List<String> compareContrastLabels(List<String> trelloLabels, List<String> centerPieceLabels, String cardId) {
@@ -537,7 +506,6 @@ public class CenterPieceFunctions {
 
             TomTomCalls tomTomCalls = new TomTomCalls(shipToAddress, client);
 
-
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
                             "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"%s&coordinates=%s" +
@@ -546,12 +514,6 @@ public class CenterPieceFunctions {
                     urlify(tomTomCalls.getLatitude() + "," + tomTomCalls.getLongitude()),
                     urlify(tomTomCalls.getResponseAddress()),
                     urlify(desc));
-
-            //For when Tom Tom Doesn't want to play
-            parameters = String.format(
-                    "idBoard=%s&idList=%s&name=%s" +
-                            "&idLabels=%s"+ addOrRemoveOrderDate(orderDate) +"&desc=%s" + moveToTopIfCabinetsAndMoved(sameList),
-                    boardID, idList, name, idLabels,dueDate, urlify(desc));
         }else{
             parameters = String.format(
                     "idBoard=%s&idList=%s&name=%s" +
