@@ -34,8 +34,8 @@ public class CenterPieceApplication {
 //			CenterPieceSession centerPieceSessionFabrication = new CenterPieceSession("FABRICATION", client, environment);
 //			centerPieceSessionFabrication.mainProcess();
 
-//			CenterPieceSession centerPieceSessionNashville = new CenterPieceSession("NASHVILLE", client, environment);
-//			centerPieceSessionNashville.mainProcess();
+			CenterPieceSession centerPieceSessionNashville = new CenterPieceSession("NASHVILLE", client, environment);
+			centerPieceSessionNashville.mainProcess();
 
 		}, 0, 5, TimeUnit.MINUTES);
 	}
