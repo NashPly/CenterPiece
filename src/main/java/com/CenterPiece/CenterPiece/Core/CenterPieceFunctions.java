@@ -493,7 +493,7 @@ public class CenterPieceFunctions {
             addressBlank = true;
 
         //Temp while TomTom is throwing a fit
-        addressBlank = true;
+        //addressBlank = true;
 
         String parameters;
         if(!addressBlank) {
