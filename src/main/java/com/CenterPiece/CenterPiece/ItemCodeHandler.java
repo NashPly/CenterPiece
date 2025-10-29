@@ -530,7 +530,7 @@ public class ItemCodeHandler {
 //                countOfBuildsCustomField = trelloNoOfBuildsFieldID.getFieldID();
 //
 //            }
-            case "3500" -> {
+            case "3500", "3510", "3520", "3530", "3540" -> {
 
                 //counter tops
 
